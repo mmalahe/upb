@@ -66,10 +66,15 @@ class UPGameHandler(object):
         
         # Setup
         self._driver = webdriver.Chrome()
+        self._url = url
         self._driver.get(url)
         self._updateGameState()        
 
     # "Public" functions
+    def reset(self):
+        self._driver.get(self._url)
+        self._updateGameState()
+    
     def makeObservation(self, fields):
         self._updateGameState()
         observation = {}

@@ -80,8 +80,11 @@ class UPEnv(Env):
         # Set url where the game is hosted
         self._url = url
         
+        # Fresh game handler
+        self._handler = UPGameHandler(self._url)
+        
         # Action interval
-        self._min_action_interval_s = 1.0
+        self._min_action_interval_s = 0.1
         
         # Reset
         self.reset()
@@ -94,8 +97,8 @@ class UPEnv(Env):
         observation : the initial observation of the space. (Initial reward is assumed to be 0.)
         """
         
-        # Fresh game handler
-        self._handler = UPGameHandler(self._url)
+        # Reset page
+        self._handler.reset()
         
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
