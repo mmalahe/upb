@@ -42,7 +42,7 @@ class UPGameState:
         # Scalar values
         for field, finder in self._scalar_values_finders.iteritems():
             element = driver.find_elements(by=finder[0], value=finder[1])[0]
-            value = element.text
+            value = element.get_attribute('innerHTML')
             if value == None:
                 self._scalar_values[field] = None
             else:
@@ -68,6 +68,7 @@ class UPGameHandler:
 
     # "Public" functions
     def getState(self):
+        self._updateGameState()
         return self._state
         
     def takeAction(self, action_name):
