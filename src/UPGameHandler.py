@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-
 class UPGameState:
     _scalar_values = {
         'Paperclips': None,
@@ -42,43 +41,55 @@ class UPGameState:
                 except:
                     # Case where commas are used to separate thousands
                     self._scalar_values[field] = float(value.replace(",",""))
-                        
+        
+        # All kinds of values combined
+        self._all_values = {}
+        self._all_values.update(_scalar_values)
+        
+    def get(self, field):
+        return self._all_values[field]
+    
     def __str__(self):
         return self._scalar_values.__str__()        
 
 class UPGameHandler:
-    _all_buttons = {
-        'Make Paperclip': 'btnMakePaperclip',
-        'Lower Price': 'btnLowerPrice',
-        'Raise Price': 'btnRaisePrice',
-        'Expand Marketing': 'btnExpandMarketing',
-        'Buy Wire': 'btnBuyWire'
-    }
-    _driver = None
-    _state = None
     def __init__(self, url):
+        # Class constants
+        self._all_buttons = {
+            'Make Paperclip': 'btnMakePaperclip',
+            'Lower Price': 'btnLowerPrice',
+            'Raise Price': 'btnRaisePrice',
+            'Expand Marketing': 'btnExpandMarketing',
+            'Buy Wire': 'btnBuyWire'
+        }
+        self._all_actions = self._all_buttons.keys()
+        
+        # Setup
         self._driver = webdriver.Chrome()
         self._driver.get(url)
-        self._updateGameState()
+        self._updateGameState()        
 
     # "Public" functions
-    def getState(self):
+    def makeObservation(self, fields):
         self._updateGameState()
-        return self._state
-        
+        observation = {}
+        for field in fields:
+            observation[field] = self._state.get(field)
+    
     def takeAction(self, action_name):
         success = False
-        actions = ActionChains(self._driver)
-        button, clickable = self._findButton(action_name)
-        if clickable:
-            actions.click(button)
-            actions.perform()
-            success = True       
-        if not success:
+        if action_name in self._all_buttons:
+            success = self._clickButton(action_name)
+        else:
+            print "Not sure what to do with action "+action_name+"."
+        
+        if success:
+            print "Took action "+action_name+"!"
+        else:
             print "ERROR: Failed to take action "+action_name+"!"
         return success
     
-    # "Private" functions
+    # "Private" functions    
     def _updateGameState(self):
         self._state = self._getGameStateFromPage()
     
@@ -89,8 +100,21 @@ class UPGameHandler:
         button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
         clickable = not button.get_property('disabled')
         return button, clickable
-
-gh = UPGameHandler("http://www.decisionproblem.com/paperclips/index2.html")
-print gh.getState()
-gh.takeAction('Make Paperclip')
-print gh.getState()
+        
+    def _clickButton(self, button_name):
+        success = False
+        actions = ActionChains(self._driver)
+        button, clickable = self._findButton(button_name)
+        if clickable:
+            actions.click(button)
+            actions.perform()
+            success = True       
+        return success
+    
+    def _getAvailableActions(self):
+        available = []
+        for button_name in self._all_buttons:
+            button, clickable = self._findButton(button_name)
+            if clickable:
+                available.append(button_name)            
+        return available

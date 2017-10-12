@@ -1,0 +1,136 @@
+from UPGameHandler import *
+from rllab.envs.base import Env
+from rllab.space.discrete import Discrete
+from rllab.space.box import Box
+import numpy as np
+
+class UPObservationSpace(Box):
+    def __init__(self):
+        # Set up possible observations and their bounds
+        self._observations = {
+            'Paperclips': [0, np.inf],
+            'Available Funds': [0, np.inf],
+            'Unsold Inventory': [0, np.inf],
+            'Price per Clip': [0, np.inf],
+            'Public Demand': [0, np.inf],
+            'Marketing Level': [0, np.inf],
+            'Marketing Cost': [0, np.inf],
+            'Manufacturing Clips per Second': [0, np.inf],
+            'Wire Inches': [0, np.inf],
+            'Wire Cost': [0, np.inf]
+        }
+        self._keys = self._observations.keys()
+        self._nkeys = len(self._keys)
+        low = np.zeros(self._nkeys)
+        high = np.zeros(self._nkeys)
+        for i in range(self._nkeys):
+            low[i] = self._observations[self._keys[i]][0]
+            high[i] = self._observations[self._keys[i]][1]
+            
+        # Construct
+        super(UPEnv, self).__init__(low, high)
+    
+    def getPossibleObservations(self):
+        return self._keys
+        
+    def observationAsArray(self, observation):
+        obs_array = np.zeros(self._nkeys)
+        for i in range(nkeys):
+            obs_array[i] = observation[keys[i]]
+        return obs_array
+
+class UPActionSpace(Discrete):
+    def __init__(self):
+        # Set up possible actions
+        self._actions = {
+            'Make Paperclip',
+            'Lower Price',
+            'Raise Price',
+            'Expand Marketing',
+            'Buy Wire'
+        }
+        self._keys = self._observations.keys()
+        nkeys = len(self._keys)
+            
+        # Construct
+        super(UPEnv, self).__init__(nkeys)
+    
+    # Converts action into a form that can be read by the game handler
+    def actionAsString(action):
+        return self._keys[action]
+
+class UPEnv(Env):
+    def __init__(self, url):
+        # Call base class constructor
+        super(UPEnv, self).__init__()
+        
+        # Set url where the game is hosted
+        self._url = url
+        
+        # Reset
+        self.reset()
+    
+    def reset(self):
+        """
+        Resets the state of the environment, returning an initial observation.
+        Outputs
+        -------
+        observation : the initial observation of the space. (Initial reward is assumed to be 0.)
+        """
+        
+        # Fresh game handler
+        self._handler = UPGameHandler(self._url)
+        
+        # Initial values
+        self._prev_nclips = 0.0
+    
+    def reward(self, observation_from_handler):
+        return observation_from_handler['Paperclips'] - self.prev_n_clips
+    
+    def step(self, action):
+        """
+        Run one timestep of the environment's dynamics. When end of episode
+        is reached, reset() should be called to reset the environment's internal state.
+        Input
+        -----
+        action : an action provided by the environment
+        Outputs
+        -------
+        (observation, reward, done, info)
+        observation : agent's observation of the current environment
+        reward [Float] : amount of reward due to the previous action
+        done : a boolean, indicating whether the episode has ended
+        info : a dictionary containing other diagnostic information from the previous action
+        """
+        # Wall clock action rate control
+        
+        # Act
+        action_for_handler = self.action_space.actionAsString(action)
+        self._handler.takeAction(action_for_handler)
+        
+        # Observe
+        observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
+        observation = self.observation_space.observationAsArray(observation_from_handler)
+        
+        # Get reward
+        reward = self.reward(observation_from_handler)
+        
+        # Complete?
+        done = False
+        
+        # Additional info
+        info = {}
+        
+        # Update any additional state
+        self.prev_n_clips = observation_from_handler['Paperclips']
+        
+        # Return
+        return (observation, reward, done, info)
+
+    @property
+    def action_space(self):
+        return UPActionSpace()
+
+    @property
+    def observation_space(self):
+        return UPObservationSpace()
