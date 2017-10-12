@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-class UPGameState:
+class UPGameState(object):
     _scalar_values = {
         'Paperclips': None,
         'Available Funds': None,
@@ -44,7 +44,7 @@ class UPGameState:
         
         # All kinds of values combined
         self._all_values = {}
-        self._all_values.update(_scalar_values)
+        self._all_values.update(self._scalar_values)
         
     def get(self, field):
         return self._all_values[field]
@@ -52,7 +52,7 @@ class UPGameState:
     def __str__(self):
         return self._scalar_values.__str__()        
 
-class UPGameHandler:
+class UPGameHandler(object):
     def __init__(self, url):
         # Class constants
         self._all_buttons = {
@@ -75,6 +75,7 @@ class UPGameHandler:
         observation = {}
         for field in fields:
             observation[field] = self._state.get(field)
+        return observation
     
     def takeAction(self, action_name):
         success = False

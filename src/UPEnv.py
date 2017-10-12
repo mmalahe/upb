@@ -1,8 +1,21 @@
 from UPGameHandler import *
 from rllab.envs.base import Env
-from rllab.space.discrete import Discrete
-from rllab.space.box import Box
+from rllab.spaces.discrete import Discrete
+from rllab.spaces.box import Box
 import numpy as np
+from datetime import datetime
+import time
+
+# To microsecond precision
+# @fixme Resets at the month boundary
+def timeSeconds():
+    dt = datetime.now()
+    time_s = dt.day*86400.0
+    time_s += dt.hour*3600.0
+    time_s += dt.minute*60.0
+    time_s += dt.second
+    time_s += dt.microsecond/1000000.0;
+    return time_s
 
 class UPObservationSpace(Box):
     def __init__(self):
@@ -28,35 +41,35 @@ class UPObservationSpace(Box):
             high[i] = self._observations[self._keys[i]][1]
             
         # Construct
-        super(UPEnv, self).__init__(low, high)
+        super(UPObservationSpace, self).__init__(low, high)
     
     def getPossibleObservations(self):
         return self._keys
         
     def observationAsArray(self, observation):
         obs_array = np.zeros(self._nkeys)
-        for i in range(nkeys):
-            obs_array[i] = observation[keys[i]]
+        for i in range(self._nkeys):
+            obs_array[i] = observation[self._keys[i]]
         return obs_array
 
 class UPActionSpace(Discrete):
     def __init__(self):
         # Set up possible actions
         self._actions = {
-            'Make Paperclip',
-            'Lower Price',
-            'Raise Price',
-            'Expand Marketing',
-            'Buy Wire'
+            'Make Paperclip': '',
+            'Lower Price': '',
+            'Raise Price': '',
+            'Expand Marketing': '',
+            'Buy Wire': ''
         }
-        self._keys = self._observations.keys()
+        self._keys = self._actions.keys()
         nkeys = len(self._keys)
             
         # Construct
-        super(UPEnv, self).__init__(nkeys)
+        super(UPActionSpace, self).__init__(nkeys)
     
     # Converts action into a form that can be read by the game handler
-    def actionAsString(action):
+    def actionAsString(self, action):
         return self._keys[action]
 
 class UPEnv(Env):
@@ -66,6 +79,9 @@ class UPEnv(Env):
         
         # Set url where the game is hosted
         self._url = url
+        
+        # Action interval
+        self._min_action_interval_s = 1.0
         
         # Reset
         self.reset()
@@ -81,11 +97,21 @@ class UPEnv(Env):
         # Fresh game handler
         self._handler = UPGameHandler(self._url)
         
+        # Observe
+        observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
+        observation = self.observation_space.observationAsArray(observation_from_handler)
+        
         # Initial values
-        self._prev_nclips = 0.0
+        self._prev_n_clips = 0.0
+        self._prev_step_time = timeSeconds();
+        
+        # Return
+        return observation
     
     def reward(self, observation_from_handler):
-        return observation_from_handler['Paperclips'] - self.prev_n_clips
+        dclips = observation_from_handler['Paperclips'] - self._prev_n_clips
+        dt = self._step_time - self._prev_step_time
+        return dclips/dt
     
     def step(self, action):
         """
@@ -103,6 +129,10 @@ class UPEnv(Env):
         info : a dictionary containing other diagnostic information from the previous action
         """
         # Wall clock action rate control
+        self._step_time = timeSeconds();
+        dt = self._step_time - self._prev_step_time
+        if self._min_action_interval_s - dt > 0:
+            time.sleep(self._min_action_interval_s - dt)
         
         # Act
         action_for_handler = self.action_space.actionAsString(action)
@@ -122,7 +152,8 @@ class UPEnv(Env):
         info = {}
         
         # Update any additional state
-        self.prev_n_clips = observation_from_handler['Paperclips']
+        self._prev_n_clips = observation_from_handler['Paperclips']
+        self._prev_step_time = self._step_time
         
         # Return
         return (observation, reward, done, info)
