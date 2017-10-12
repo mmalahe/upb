@@ -1,9 +1,14 @@
 from UPEnv import *
 from rllab.algos.trpo import TRPO
+from rllab.algos.vpg import VPG
+from rllab.algos.npo import NPO
 from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
 from rllab.envs.normalized_env import normalize
 from rllab.policies.categorical_mlp_policy import CategoricalMLPPolicy
+from rllab.policies.deterministic_mlp_policy import DeterministicMLPPolicy
 from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
+from rllab.policies.gaussian_gru_policy import GaussianGRUPolicy
+from rllab.misc.instrument import run_experiment_lite
 
 # The training environment
 env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html"))
