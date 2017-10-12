@@ -48,7 +48,11 @@ class UPGameState:
 
 class UPGameHandler:
     _all_buttons = {
-        'Make Paperclip': 'btnMakePaperclip'
+        'Make Paperclip': 'btnMakePaperclip',
+        'Lower Price': 'btnLowerPrice',
+        'Raise Price': 'btnRaisePrice',
+        'Expand Marketing': 'btnExpandMarketing',
+        'Buy Wire': 'btnBuyWire'
     }
     _driver = None
     _state = None
@@ -65,14 +69,13 @@ class UPGameHandler:
     def takeAction(self, action_name):
         success = False
         actions = ActionChains(self._driver)
-        button = self._findButton(action_name)
-        actions.click(button)
-        try:
+        button, clickable = self._findButton(action_name)
+        if clickable:
+            actions.click(button)
             actions.perform()
-            success = True
-        except:
+            success = True       
+        if not success:
             print "ERROR: Failed to take action "+action_name+"!"
-            success = False
         return success
     
     # "Private" functions
@@ -83,7 +86,9 @@ class UPGameHandler:
         return UPGameState(self._driver)
         
     def _findButton(self, action_name):
-        return self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
+        button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
+        clickable = not button.get_property('disabled')
+        return button, clickable
 
 gh = UPGameHandler("http://www.decisionproblem.com/paperclips/index2.html")
 print gh.getState()
