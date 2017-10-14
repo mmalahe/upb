@@ -18,11 +18,9 @@ def timeSeconds():
     return time_s
 
 class UPObservationSpace(Box):
-    def __init__(self):
+    def __init__(self, observation_names):
         # Set up possible observations and their bounds
-        self._observations = {
-            'Paperclips': [0, np.inf],
-            'Available Funds': [0, np.inf],
+        self._all_observations = {
             'Unsold Inventory': [0, np.inf],
             'Price per Clip': [0, np.inf],
             'Public Demand': [0, np.inf],
@@ -30,8 +28,11 @@ class UPObservationSpace(Box):
             'Marketing Cost': [0, np.inf],
             'Manufacturing Clips per Second': [0, np.inf],
             'Wire Inches': [0, np.inf],
-            'Wire Cost': [0, np.inf]
+            'Wire Cost': [0, np.inf],
+            'Paperclips': [0, np.inf],
+            'Available Funds': [0, np.inf]
         }
+        self._observations = {key: self._all_observations[key] for key in observation_names}
         self._keys = list(self._observations.keys())
         self._nkeys = len(self._keys)
         low = np.zeros(self._nkeys)
@@ -53,15 +54,17 @@ class UPObservationSpace(Box):
         return obs_array
 
 class UPActionSpace(Discrete):
-    def __init__(self):
+    def __init__(self, action_names):
         # Set up possible actions
-        self._actions = {
+        self._all_actions = {
             'Make Paperclip': '',
             'Lower Price': '',
             'Raise Price': '',
             'Expand Marketing': '',
-            'Buy Wire': ''
+            'Buy Wire': '',
+            'Buy Autoclipper': ''
         }
+        self._actions = {key: self._all_actions[key] for key in action_names}
         self._keys = list(self._actions.keys())
         nkeys = len(self._keys)
             
@@ -73,7 +76,7 @@ class UPActionSpace(Discrete):
         return self._keys[action]
 
 class UPEnv(Env):
-    def __init__(self, url, verbose=False):
+    def __init__(self, url, observation_names, action_names, verbose=False):
         # Call base class constructor
         super(UPEnv, self).__init__()
         
@@ -85,6 +88,10 @@ class UPEnv(Env):
         
         # Action interval
         self._min_action_interval_s = 0.01
+        
+        # Spaces
+        self._observation_names = observation_names
+        self._action_names = action_names
         
         # Reset
         self.reset()
@@ -105,16 +112,28 @@ class UPEnv(Env):
         observation = self.observation_space.observationAsArray(observation_from_handler)
         
         # Initial values
-        self._prev_n_clips = observation_from_handler['Paperclips']
+        self._prev_observation_from_handler = observation_from_handler
         self._prev_step_time = timeSeconds();
         
         # Return
         return observation
     
     def reward(self, observation_from_handler):
-        dclips = observation_from_handler['Paperclips'] - self._prev_n_clips
-        dt = self._step_time - self._prev_step_time
+        return self.cashRateReward(observation_from_handler)
+        #~ return self.clipRateReward(observation_from_handler)
+    
+    def cashRateReward(self, observation_from_handler):
+        dcash = observation_from_handler['Available Funds'] - self._prev_observation_from_handler['Available Funds']
+        dt = self.getDt()
+        return dcash/dt
+    
+    def clipRateReward(self, observation_from_handler):
+        dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
+        dt = self.getDt()
         return dclips/dt
+    
+    def getDt(self):
+        return self._step_time - self._prev_step_time
     
     def step(self, action):
         """
@@ -155,7 +174,7 @@ class UPEnv(Env):
         info = {}
         
         # Update any additional state
-        self._prev_n_clips = observation_from_handler['Paperclips']
+        self._prev_observation_from_handler = observation_from_handler
         self._prev_step_time = self._step_time
         
         # Return
@@ -163,8 +182,8 @@ class UPEnv(Env):
 
     @property
     def action_space(self):
-        return UPActionSpace()
+        return UPActionSpace(self._action_names)
 
     @property
     def observation_space(self):
-        return UPObservationSpace()
+        return UPObservationSpace(self._observation_names)

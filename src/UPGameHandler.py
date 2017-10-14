@@ -60,7 +60,8 @@ class UPGameHandler(object):
             'Lower Price': 'btnLowerPrice',
             'Raise Price': 'btnRaisePrice',
             'Expand Marketing': 'btnExpandMarketing',
-            'Buy Wire': 'btnBuyWire'
+            'Buy Wire': 'btnBuyWire',
+            'Buy Autoclipper': 'btnMakeClipper'
         }
         self._all_actions = list(self._all_buttons.keys())
         

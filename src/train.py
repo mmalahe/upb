@@ -1,20 +1,18 @@
 from UPEnv import *
-from rllab.algos.trpo import TRPO
-from rllab.algos.vpg import VPG
 from rllab.algos.npo import NPO
 from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
 from rllab.envs.normalized_env import normalize
 from rllab.policies.categorical_mlp_policy import CategoricalMLPPolicy
-from rllab.policies.deterministic_mlp_policy import DeterministicMLPPolicy
-from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
-from rllab.policies.gaussian_gru_policy import GaussianGRUPolicy
-from rllab.misc.instrument import run_experiment_lite
+import pickle
 
+observation_names = ['Unsold Inventory', 'Price per Clip', 'Public Demand', 'Available Funds']
+action_names = ['Make Paperclip', 'Lower Price', 'Raise Price']
 path_length = 100
+policy_filename = 'latest_policy.pickle'
 
 def run_task(*_):
     # The training environment
-    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html"))
+    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", observation_names, action_names))
 
     # Solver
     policy = CategoricalMLPPolicy(
@@ -22,30 +20,7 @@ def run_task(*_):
         hidden_sizes=(10,)
     )
     
-    #~ policy = DeterministicMLPPolicy(
-        #~ env_spec=env.spec,
-        #~ hidden_sizes=(32, 32)
-    #~ )
     baseline = LinearFeatureBaseline(env_spec=env.spec)
-    
-    #~ algo = TRPO(
-        #~ env=env,
-        #~ policy=policy,
-        #~ baseline=baseline,
-        #~ batch_size=4000,
-        #~ whole_paths=True,
-        #~ max_path_length=100,
-        #~ n_itr=2,
-        #~ discount=0.99,
-        #~ step_size=0.01,
-        #~ #plot=True,
-    #~ )
-    
-    #~ algo = VPG(
-        #~ env=env,
-        #~ policy=policy,
-        #~ baseline=baseline,
-    #~ )
     
     algo = NPO(
         env=env,
@@ -65,25 +40,20 @@ def run_task(*_):
     # Get back the policy
     final_policy = algo.policy
     
-    # Observe it
-    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", verbose=True))
-    observation = env.reset()
-    for i in range(path_length):
-        action, _ = final_policy.get_action(observation)
-        observation, reward, done, info = env.step(action)
+    # Save policy
+    with open(policy_filename,'wb') as f:
+        pickle.dump(final_policy, f)
 
+# Train
 run_task()
 
-input("Press Enter to continue...")
+# Observe final policy
+with open(policy_filename,'rb') as f:
+    final_policy = pickle.load(f)
+env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", observation_names, action_names, verbose=True))
+observation = env.reset()
+for i in range(path_length):
+    action, _ = final_policy.get_action(observation)
+    observation, reward, done, info = env.step(action)
 
-#~ run_experiment_lite(
-    #~ run_task,
-    #~ # Number of parallel workers for sampling
-    #~ n_parallel=8,
-    #~ # Only keep the snapshot parameters for the last iteration
-    #~ snapshot_mode="last",
-    #~ # Specifies the seed for the experiment. If this is not provided, a random seed
-    #~ # will be used
-    #~ seed=1,
-    #~ # plot=True,
-#~ )
+input("Press Enter to continue...")
