@@ -62,7 +62,7 @@ class UPGameHandler(object):
             'Expand Marketing': 'btnExpandMarketing',
             'Buy Wire': 'btnBuyWire'
         }
-        self._all_actions = self._all_buttons.keys()
+        self._all_actions = list(self._all_buttons.keys())
         
         # Setup
         self._driver = webdriver.Chrome()
