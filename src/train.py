@@ -10,7 +10,7 @@ from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
 from rllab.policies.gaussian_gru_policy import GaussianGRUPolicy
 from rllab.misc.instrument import run_experiment_lite
 
-def run_task():
+def run_task(*_):
     # The training environment
     env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html"))
 
