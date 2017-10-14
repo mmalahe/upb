@@ -32,7 +32,7 @@ class UPObservationSpace(Box):
             'Wire Inches': [0, np.inf],
             'Wire Cost': [0, np.inf]
         }
-        self._keys = self._observations.keys()
+        self._keys = list(self._observations.keys())
         self._nkeys = len(self._keys)
         low = np.zeros(self._nkeys)
         high = np.zeros(self._nkeys)
@@ -62,7 +62,7 @@ class UPActionSpace(Discrete):
             'Expand Marketing': '',
             'Buy Wire': ''
         }
-        self._keys = self._actions.keys()
+        self._keys = list(self._actions.keys())
         nkeys = len(self._keys)
             
         # Construct

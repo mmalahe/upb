@@ -10,32 +10,60 @@ from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
 from rllab.policies.gaussian_gru_policy import GaussianGRUPolicy
 from rllab.misc.instrument import run_experiment_lite
 
-# The training environment
-env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html"))
+def run_task():
+    # The training environment
+    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html"))
 
-# Solver
-policy = CategoricalMLPPolicy(
-    env_spec=env.spec,
-    hidden_sizes=(32, 32)
-)
+    # Solver
+    policy = CategoricalMLPPolicy(
+        env_spec=env.spec,
+        hidden_sizes=(32, 32)
+    )
+    
+    #~ policy = DeterministicMLPPolicy(
+        #~ env_spec=env.spec,
+        #~ hidden_sizes=(32, 32)
+    #~ )
+    baseline = LinearFeatureBaseline(env_spec=env.spec)
+    
+    #~ algo = TRPO(
+        #~ env=env,
+        #~ policy=policy,
+        #~ baseline=baseline,
+        #~ batch_size=4000,
+        #~ whole_paths=True,
+        #~ max_path_length=100,
+        #~ n_itr=2,
+        #~ discount=0.99,
+        #~ step_size=0.01,
+        #~ #plot=True,
+    #~ )
+    
+    #~ algo = VPG(
+        #~ env=env,
+        #~ policy=policy,
+        #~ baseline=baseline,
+    #~ )
+    
+    algo = NPO(
+        env=env,
+        policy=policy,
+        baseline=baseline,
+    )
 
-#~ policy = GaussianMLPPolicy(
-    #~ env_spec=env.spec,
-    #~ hidden_sizes=(32, 32)
+    # Do the training
+    algo.train()
+
+run_task()
+
+#~ run_experiment_lite(
+    #~ run_task,
+    #~ # Number of parallel workers for sampling
+    #~ n_parallel=8,
+    #~ # Only keep the snapshot parameters for the last iteration
+    #~ snapshot_mode="last",
+    #~ # Specifies the seed for the experiment. If this is not provided, a random seed
+    #~ # will be used
+    #~ seed=1,
+    #~ # plot=True,
 #~ )
-
-baseline = LinearFeatureBaseline(env_spec=env.spec)
-algo = TRPO(
-    env=env,
-    policy=policy,
-    baseline=baseline,
-    batch_size=4000,
-    whole_paths=True,
-    max_path_length=100,
-    n_itr=40,
-    discount=0.99,
-    step_size=0.01,
-)
-
-# Do the training
-algo.train()

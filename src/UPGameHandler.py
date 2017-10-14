@@ -30,7 +30,7 @@ class UPGameState(object):
     
     def __init__(self, driver):        
         # Scalar values
-        for field, finder in self._scalar_values_finders.iteritems():
+        for field, finder in self._scalar_values_finders.items():
             element = driver.find_elements(by=finder[0], value=finder[1])[0]
             value = element.get_attribute('innerHTML')
             if value == None:
@@ -87,12 +87,12 @@ class UPGameHandler(object):
         if action_name in self._all_buttons:
             success = self._clickButton(action_name)
         else:
-            print "Not sure what to do with action "+action_name+"."
+            print("Not sure what to do with action "+action_name+".")
         
         if success:
-            print "Took action "+action_name+"!"
+            print("Took action "+action_name+"!")
         else:
-            print "ERROR: Failed to take action "+action_name+"!"
+            print("ERROR: Failed to take action "+action_name+"!")
         return success
     
     # "Private" functions    

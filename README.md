@@ -3,8 +3,31 @@ A bot that plays Universal Paperclips.
 Intended for learning about reinforcement learning.
 
 # Dependencies
-- Python 2.7
-	- Beautiful Soup 4
+
+## General
+- Python 3
+
+## Game Handler
+- Python modules:
 	- Selenium
-- Chromium as the webdriver
-	- e.g. on Ubuntu: sudo apt-get install chromium-browser. chromium-chromedriver
+		- With Chromium as the webdriver. e.g. on Ubuntu: sudo apt-get install chromium-browser chromium-chromedriver
+
+## Learning
+- Python modules:
+	- rllab: https://github.com/rll/rllab
+
+# Known issues
+
+## Known issue 1
+You get a message like:
+"""
+/yourpythonpath/lasagne/layers/pool.py", line 6, in <module>
+    from theano.tensor.signal import downsample
+ImportError: cannot import name 'downsample'
+"""
+See https://github.com/Theano/Theano/issues/4337. Fix is to change line 6 of pool.py to 
+"from theano.tensor.signal import pool"
+and change instance(s) of
+"downsample.max_pool_2d"
+to
+"pool.pool_2d".
