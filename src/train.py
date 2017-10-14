@@ -61,8 +61,20 @@ def run_task(*_):
 
     # Do the training
     algo.train()
+    
+    # Get back the policy
+    final_policy = algo.policy
+    
+    # Observe it
+    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", verbose=True))
+    observation = env.reset()
+    for i in range(path_length):
+        action, _ = final_policy.get_action(observation)
+        observation, reward, done, info = env.step(action)
 
 run_task()
+
+input("Press Enter to continue...")
 
 #~ run_experiment_lite(
     #~ run_task,
