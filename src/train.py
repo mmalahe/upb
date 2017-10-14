@@ -17,7 +17,7 @@ def run_task(*_):
     # Solver
     policy = CategoricalMLPPolicy(
         env_spec=env.spec,
-        hidden_sizes=(32, 32)
+        hidden_sizes=(10,)
     )
     
     #~ policy = DeterministicMLPPolicy(
