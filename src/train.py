@@ -10,6 +10,8 @@ from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
 from rllab.policies.gaussian_gru_policy import GaussianGRUPolicy
 from rllab.misc.instrument import run_experiment_lite
 
+path_length = 100
+
 def run_task(*_):
     # The training environment
     env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html"))
@@ -49,6 +51,12 @@ def run_task(*_):
         env=env,
         policy=policy,
         baseline=baseline,
+        whole_paths=True,
+        batch_size=path_length,
+        max_path_length=path_length,
+        n_itr=100,
+        discount=0.99,
+        step_size=0.01,
     )
 
     # Do the training
