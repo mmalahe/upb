@@ -73,7 +73,7 @@ class UPActionSpace(Discrete):
         return self._keys[action]
 
 class UPEnv(Env):
-    def __init__(self, url):
+    def __init__(self, url, verbose=False):
         # Call base class constructor
         super(UPEnv, self).__init__()
         
@@ -81,7 +81,7 @@ class UPEnv(Env):
         self._url = url
         
         # Fresh game handler
-        self._handler = UPGameHandler(self._url)
+        self._handler = UPGameHandler(self._url, verbose)
         
         # Action interval
         self._min_action_interval_s = 0.01
@@ -105,7 +105,7 @@ class UPEnv(Env):
         observation = self.observation_space.observationAsArray(observation_from_handler)
         
         # Initial values
-        self._prev_n_clips = 0.0
+        self._prev_n_clips = observation_from_handler['Paperclips']
         self._prev_step_time = timeSeconds();
         
         # Return

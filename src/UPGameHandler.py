@@ -53,7 +53,7 @@ class UPGameState(object):
         return self._scalar_values.__str__()        
 
 class UPGameHandler(object):
-    def __init__(self, url):
+    def __init__(self, url, verbose=False):
         # Class constants
         self._all_buttons = {
             'Make Paperclip': 'btnMakePaperclip',
@@ -67,8 +67,9 @@ class UPGameHandler(object):
         # Setup
         self._driver = webdriver.Chrome()
         self._url = url
+        self._verbose = verbose
         self._driver.get(url)
-        self._updateGameState()        
+        self._updateGameState()
 
     # "Public" functions
     def reset(self):
@@ -89,10 +90,11 @@ class UPGameHandler(object):
         else:
             print("Not sure what to do with action "+action_name+".")
         
-        if success:
-            print("Took action "+action_name+"!")
-        else:
-            print("ERROR: Failed to take action "+action_name+"!")
+        if self._verbose:
+            if success:
+                print("Took action "+action_name+"!")
+            else:
+                print("ERROR: Failed to take action "+action_name+"!")
         return success
     
     # "Private" functions    
