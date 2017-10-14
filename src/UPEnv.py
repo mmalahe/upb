@@ -84,7 +84,7 @@ class UPEnv(Env):
         self._handler = UPGameHandler(self._url)
         
         # Action interval
-        self._min_action_interval_s = 0.1
+        self._min_action_interval_s = 0.01
         
         # Reset
         self.reset()

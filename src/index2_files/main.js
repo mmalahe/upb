@@ -3576,6 +3576,7 @@ if (dismantle >= 7) {
 var saveTimer = 0;
 var secTimer = 0;
 
+var gameTickRateMilliseconds = 10
 
 window.setInterval(function(){
     
@@ -3612,7 +3613,7 @@ window.setInterval(function(){
     }
     
     
-}, 100);
+}, gameTickRateMilliseconds);
      
 
 // Saving and Loading
