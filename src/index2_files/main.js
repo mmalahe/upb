@@ -3211,6 +3211,8 @@ if (localStorage.getItem("savePrestige") != null) {
 
 
 // MAIN LOOP
+var gameSpeedupFactor = 2
+var gameTickRateMilliseconds = 10.0/gameSpeedupFactor
 
 window.setInterval(function(){
  
@@ -3569,14 +3571,14 @@ if (dismantle >= 7) {
 
     
     
-}, 10);
+}, gameTickRateMilliseconds);
 
 // Slow Loop
 
 var saveTimer = 0;
 var secTimer = 0;
 
-var gameSlowTickRateMilliseconds = 100
+var gameSlowTickRateMilliseconds = 100.0/gameSpeedupFactor
 
 window.setInterval(function(){
     

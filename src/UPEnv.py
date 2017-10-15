@@ -154,9 +154,9 @@ class UPEnv(Env):
         # Wall clock action rate control
         self._step_time = timeSeconds();
         dt = self._step_time - self._prev_step_time
-        print(dt)
-        if self._min_action_interval_s - dt > 0:
-            time.sleep(self._min_action_interval_s - dt)
+        print("dt="+str(dt))
+        #~ if self._min_action_interval_s - dt > 0:
+            #~ time.sleep(self._min_action_interval_s - dt)
         
         # Act
         action_for_handler = self.action_space.actionAsString(action)
