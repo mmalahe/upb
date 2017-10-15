@@ -29,8 +29,11 @@ class UPObservationSpace(Box):
             'Manufacturing Clips per Second': [0, np.inf],
             'Wire Inches': [0, np.inf],
             'Wire Cost': [0, np.inf],
+            'Number of Autoclippers': [0, np.inf],
+            'Autoclipper Cost': [0, np.inf],
+            'Autoclipper Purchasable': [0, 1],
             'Paperclips': [0, np.inf],
-            'Available Funds': [0, np.inf]
+            'Available Funds': [0, np.inf]           
         }
         self._observations = {key: self._all_observations[key] for key in observation_names}
         self._keys = list(self._observations.keys())
@@ -124,12 +127,10 @@ class UPEnv(Env):
     
     def cashRateReward(self, observation_from_handler):
         dcash = observation_from_handler['Available Funds'] - self._prev_observation_from_handler['Available Funds']
-        #~ dt = self.getDt()
         return dcash
     
     def clipRateReward(self, observation_from_handler):
         dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
-        #~ dt = self.getDt()
         return dclips
     
     def getDt(self):
@@ -153,6 +154,7 @@ class UPEnv(Env):
         # Wall clock action rate control
         self._step_time = timeSeconds();
         dt = self._step_time - self._prev_step_time
+        print(dt)
         if self._min_action_interval_s - dt > 0:
             time.sleep(self._min_action_interval_s - dt)
         

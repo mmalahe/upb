@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from bs4 import BeautifulSoup
 
 class UPGameState(object):
     _scalar_values = {
@@ -13,7 +14,10 @@ class UPGameState(object):
         'Marketing Cost': None,
         'Manufacturing Clips per Second': None,
         'Wire Inches': None,
-        'Wire Cost': None
+        'Wire Cost': None,
+        'Autoclipper Cost': None,
+        'Number of Autoclippers': None
+        
     }
     _scalar_values_finders = {
         'Paperclips': ['id','clips'],
@@ -25,26 +29,50 @@ class UPGameState(object):
         'Marketing Cost': ['id','adCost'],
         'Manufacturing Clips per Second': ['id','clipmakerRate'],
         'Wire Inches': ['id','wire'],
-        'Wire Cost': ['id','wireCost']
+        'Wire Cost': ['id','wireCost'],
+        'Autoclipper Cost': ['id','clipperCost'],
+        'Number of Autoclippers': ['id','clipmakerLevel2']
+    }
+    _derived_scalar_values = {
+        'Autoclipper Purchasable': None
     }
     
     def __init__(self, driver):        
+        # The soup
+        html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")
+        soup = BeautifulSoup(html_source)
+        
         # Scalar values
         for field, finder in self._scalar_values_finders.items():
-            element = driver.find_elements(by=finder[0], value=finder[1])[0]
-            value = element.get_attribute('innerHTML')
+            # Find value         
+            if finder[0] == 'id':
+                value = soup.find(id=finder[1]).contents[0]
+            else:
+                raise NotImplementedError("Don't know how to find things by "+finder[0])
+            
+            # Convert value
             if value == None:
                 self._scalar_values[field] = None
             else:
                 try:
                     self._scalar_values[field] = float(value)
                 except:
-                    # Case where commas are used to separate thousands
+                    # Case where commas are used to separate thousands.
+                    # Sometimes they're used for decimals, but that scaling
+                    # should be captured by any learning system regardless
                     self._scalar_values[field] = float(value.replace(",",""))
+                    
+                    # Special cases where the exact value is actually important
+                    if field == 'Autoclipper Cost':
+                        self._scalar_values[field] /= 100.0
+        
+        # Derived values
+        self._derived_scalar_values['Autoclipper Purchasable'] = 1.0*(self._scalar_values['Available Funds'] >= self._scalar_values['Autoclipper Cost'])
         
         # All kinds of values combined
         self._all_values = {}
         self._all_values.update(self._scalar_values)
+        self._all_values.update(self._derived_scalar_values)
         
     def get(self, field):
         return self._all_values[field]
