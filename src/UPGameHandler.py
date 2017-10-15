@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import selenium.webdriver.chrome as chrome
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 
 class UPGameState(object):
     _scalar_values = {
@@ -41,7 +41,8 @@ class UPGameState(object):
     def __init__(self, driver):        
         # The soup
         html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")
-        soup = BeautifulSoup(html_source)
+        strainer = SoupStrainer("span")
+        soup = BeautifulSoup(html_source, parse_only=strainer)
         
         # Scalar values
         for field, finder in self._scalar_values_finders.items():
