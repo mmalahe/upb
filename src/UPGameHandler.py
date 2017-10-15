@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+import selenium.webdriver.chrome as chrome
 from bs4 import BeautifulSoup
 
 class UPGameState(object):
@@ -81,7 +82,7 @@ class UPGameState(object):
         return self._scalar_values.__str__()        
 
 class UPGameHandler(object):
-    def __init__(self, url, verbose=False):
+    def __init__(self, url, verbose=False, headless=True):
         # Class constants
         self._all_buttons = {
             'Make Paperclip': 'btnMakePaperclip',
@@ -94,7 +95,10 @@ class UPGameHandler(object):
         self._all_actions = list(self._all_buttons.keys())
         
         # Setup
-        self._driver = webdriver.Chrome()
+        chrome_options = chrome.options.Options()
+        if headless:
+            chrome_options.add_argument("--headless")
+        self._driver = webdriver.Chrome(chrome_options=chrome_options)
         self._url = url
         self._verbose = verbose
         self._driver.get(url)
