@@ -124,13 +124,13 @@ class UPEnv(Env):
     
     def cashRateReward(self, observation_from_handler):
         dcash = observation_from_handler['Available Funds'] - self._prev_observation_from_handler['Available Funds']
-        dt = self.getDt()
-        return dcash/dt
+        #~ dt = self.getDt()
+        return dcash
     
     def clipRateReward(self, observation_from_handler):
         dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
-        dt = self.getDt()
-        return dclips/dt
+        #~ dt = self.getDt()
+        return dclips
     
     def getDt(self):
         return self._step_time - self._prev_step_time

@@ -7,7 +7,7 @@ import pickle
 
 observation_names = ['Unsold Inventory', 'Price per Clip', 'Public Demand', 'Available Funds']
 action_names = ['Make Paperclip', 'Lower Price', 'Raise Price']
-path_length = 100
+path_length = 200
 policy_filename = 'latest_policy.pickle'
 
 def run_task(*_):
@@ -17,7 +17,7 @@ def run_task(*_):
     # Solver
     policy = CategoricalMLPPolicy(
         env_spec=env.spec,
-        hidden_sizes=(10,)
+        hidden_sizes=(32,32)
     )
     
     baseline = LinearFeatureBaseline(env_spec=env.spec)
@@ -27,10 +27,10 @@ def run_task(*_):
         policy=policy,
         baseline=baseline,
         whole_paths=True,
-        batch_size=path_length,
+        batch_size=4*path_length,
         max_path_length=path_length,
-        n_itr=100,
-        discount=0.99,
+        n_itr=500,
+        discount=1.00,
         step_size=0.01,
     )
 
