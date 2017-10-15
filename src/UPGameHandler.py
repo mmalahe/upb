@@ -93,6 +93,7 @@ class UPGameHandler(object):
             'Buy Wire': 'btnBuyWire',
             'Buy Autoclipper': 'btnMakeClipper'
         }
+        self._acquired_buttons = {}
         self._all_actions = list(self._all_buttons.keys())
         
         # Setup
@@ -139,7 +140,10 @@ class UPGameHandler(object):
         return UPGameState(self._driver)
         
     def _findButton(self, action_name):
-        button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
+        if action_name not in self._acquired_buttons.keys():
+            button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
+        else:
+            button = self._acquired_buttons[action_name]
         clickable = not button.get_property('disabled')
         return button, clickable
         
