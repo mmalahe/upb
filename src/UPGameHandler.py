@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+import selenium.common.exceptions
 import selenium.webdriver.chrome as chrome
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -40,9 +41,9 @@ class UPGameState(object):
     
     def __init__(self, driver):        
         # The soup
-        html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")
+        html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")            
         strainer = SoupStrainer("span")
-        soup = BeautifulSoup(html_source, parse_only=strainer)
+        soup = BeautifulSoup(html_source, "lxml", parse_only=strainer)
         
         # Scalar values
         for field, finder in self._scalar_values_finders.items():
@@ -83,7 +84,7 @@ class UPGameState(object):
         return self._scalar_values.__str__()        
 
 class UPGameHandler(object):
-    def __init__(self, url, verbose=False, headless=True):
+    def __init__(self, url, selenium_executor=None, verbose=False, headless=True):
         # Class constants
         self._all_buttons = {
             'Make Paperclip': 'btnMakePaperclip',
@@ -96,11 +97,17 @@ class UPGameHandler(object):
         self._acquired_buttons = {}
         self._all_actions = list(self._all_buttons.keys())
         
-        # Setup
+        # Web driver setup
         chrome_options = chrome.options.Options()
         if headless:
-            chrome_options.add_argument("--headless")
-        self._driver = webdriver.Chrome(chrome_options=chrome_options)
+            chrome_options.add_argument("--headless")        
+        if selenium_executor == None:
+            self._driver = webdriver.Chrome(chrome_options=chrome_options)
+        else:
+            capabilities = chrome_options.to_capabilities()
+            self._driver = webdriver.Remote(command_executor=selenium_executor, desired_capabilities=capabilities)
+        
+        # Remaining setup
         self._url = url
         self._verbose = verbose
         self._driver.get(url)
@@ -137,13 +144,21 @@ class UPGameHandler(object):
         self._state = self._getGameStateFromPage()
     
     def _getGameStateFromPage(self):
-        return UPGameState(self._driver)
+        try:
+            return UPGameState(self._driver)
+        except selenium.common.exceptions.StaleElementReferenceException:
+            print("WARNING: Got a stale element exception, reloading page.")
+            self._driver.get(self._url)
+            return UPGameState(self._driver)
         
     def _findButton(self, action_name):
-        if action_name not in self._acquired_buttons.keys():
+        try:
             button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
-        else:
-            button = self._acquired_buttons[action_name]
+        except selenium.common.exceptions.StaleElementReferenceException:
+            print("WARNING: Got a stale element exception, reloading page.")
+            self._driver.get(self._url)
+            button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
+            
         clickable = not button.get_property('disabled')
         return button, clickable
         

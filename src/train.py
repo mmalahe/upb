@@ -3,57 +3,87 @@ from rllab.algos.npo import NPO
 from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
 from rllab.envs.normalized_env import normalize
 from rllab.policies.categorical_mlp_policy import CategoricalMLPPolicy
+from rllab.misc.instrument import run_experiment_lite
 import pickle
 
-observation_names = ['Unsold Inventory', 'Price per Clip', 'Public Demand', 'Available Funds']
-action_names = ['Make Paperclip', 'Lower Price', 'Raise Price']
-path_length = 200
+observation_names_stage1 = ['Unsold Inventory', 'Price per Clip', 'Public Demand', 'Available Funds']
+action_names_stage1 = ['Make Paperclip', 'Lower Price', 'Raise Price']
+
+observation_names_stage2 = ['Unsold Inventory', 'Price per Clip', 'Public Demand', 'Available Funds', 'Autoclipper Cost', 'Autoclipper Purchasable', 'Number of Autoclippers']
+action_names_stage2 = ['Make Paperclip', 'Lower Price', 'Raise Price', 'Buy Autoclipper']
+
+observation_names = observation_names_stage2
+action_names = action_names_stage2
+
+path_length = 100
+batch_size = 2*path_length
+n_snapshots = 500
+n_itr_per_snapshot = 1
 policy_filename = 'latest_policy.pickle'
+selenium_executor = 'http://127.0.0.1:4440/wd/hub'
 
 def run_task(*_):
     # The training environment
-    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", observation_names, action_names))
+    env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", observation_names, action_names, selenium_executor=selenium_executor))
 
-    # Solver
-    policy = CategoricalMLPPolicy(
-        env_spec=env.spec,
-        hidden_sizes=(32,32)
-    )
+    # Fresh policy
+    #~ policy = CategoricalMLPPolicy(
+        #~ env_spec=env.spec,
+        #~ hidden_sizes=(32,32)
+    #~ )
+    
+    # Load policy
+    with open(policy_filename,'rb') as f:
+        policy = pickle.load(f)
     
     baseline = LinearFeatureBaseline(env_spec=env.spec)
     
-    algo = NPO(
-        env=env,
-        policy=policy,
-        baseline=baseline,
-        whole_paths=True,
-        batch_size=4*path_length,
-        max_path_length=path_length,
-        n_itr=500,
-        discount=1.00,
-        step_size=0.01,
-    )
+    for i_snapshot in range(n_snapshots):     
+        print("Snapshot number "+str(i_snapshot))  
+        algo = NPO(
+            env=env,
+            policy=policy,
+            baseline=baseline,
+            whole_paths=True,
+            batch_size=batch_size,
+            max_path_length=path_length,
+            n_itr=n_itr_per_snapshot,
+            discount=1.00,
+            step_size=0.01,
+        )
 
-    # Do the training
-    algo.train()
+        # Do the training
+        algo.train()
+        
+        # Get back the policy
+        policy = algo.policy
     
-    # Get back the policy
-    final_policy = algo.policy
-    
-    # Save policy
-    with open(policy_filename,'wb') as f:
-        pickle.dump(final_policy, f)
+        # Save policy
+        with open(policy_filename,'wb') as f:
+            pickle.dump(policy, f)
 
 # Train
-run_task()
+#~ run_task()
+
+run_experiment_lite(
+    run_task,
+    # Number of parallel workers for sampling
+    n_parallel=2,
+    # Only keep the snapshot parameters for the last iteration
+    snapshot_mode="last",
+    # Specifies the seed for the experiment. If this is not provided, a random seed
+    # will be used
+    #seed=1,
+    # plot=True,
+)
 
 # Observe final policy
-with open(policy_filename,'rb') as f:
-    final_policy = pickle.load(f)
-env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", observation_names, action_names, verbose=True))
-observation = env.reset()
-for i in range(path_length):
-    action, _ = final_policy.get_action(observation)
-    observation, reward, done, info = env.step(action)
+#~ with open(policy_filename,'rb') as f:
+    #~ final_policy = pickle.load(f)
+#~ env = normalize(UPEnv("file:///home/mikl/projects/upb/src/index2.html", observation_names, action_names, verbose=True, headless=False))
+#~ observation = env.reset()
+#~ for i in range(path_length):
+    #~ action, _ = final_policy.get_action(observation)
+    #~ observation, reward, done, info = env.step(action)
 
-input("Press Enter to continue...")
+#~ input("Press Enter to continue...")
