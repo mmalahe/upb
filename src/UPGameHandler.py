@@ -60,6 +60,9 @@ class UPGameState(object):
                 try:
                     self._scalar_values[field] = float(value)
                 except:
+                    # Cases where html spaces have been used
+                    value = value.replace("&nbsp;","")
+                    
                     # Case where commas are used to separate thousands.
                     # Sometimes they're used for decimals, but that scaling
                     # should be captured by any learning system regardless
@@ -100,23 +103,36 @@ class UPGameHandler(object):
         # Web driver setup
         chrome_options = chrome.options.Options()
         if headless:
-            chrome_options.add_argument("--headless")        
-        if selenium_executor == None:
-            self._driver = webdriver.Chrome(chrome_options=chrome_options)
+            chrome_options.add_argument("--headless")
+        self._selenium_executor = selenium_executor
+        if self._selenium_executor == None:
+            self._chrome_options = chrome_options
+            self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
         else:
-            capabilities = chrome_options.to_capabilities()
-            self._driver = webdriver.Remote(command_executor=selenium_executor, desired_capabilities=capabilities)
+            self._driver_capabilities = chrome_options.to_capabilities()
+            self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
         
         # Remaining setup
         self._url = url
         self._verbose = verbose
-        self._driver.get(url)
+        self._driver.get(self._url)
         self._updateGameState()
 
     # "Public" functions
     def reset(self):
+        if self._selenium_executor == None:
+            self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
+        else:
+            self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
         self._driver.get(self._url)
         self._updateGameState()
+    
+    def quit(self):
+        try:
+            self._driver.quit()
+            self._driver.stop_client()
+        except selenium.common.exceptions.WebDriverException:
+            print("Session already closed.")
     
     def makeObservation(self, fields):
         self._updateGameState()
@@ -149,17 +165,19 @@ class UPGameHandler(object):
         except selenium.common.exceptions.StaleElementReferenceException:
             print("WARNING: Got a stale element exception, reloading page.")
             self._driver.get(self._url)
-            return UPGameState(self._driver)
+            return self._getGameStateFromPage()
+        except selenium.common.exceptions.WebDriverException:
+            print("WARNING: Got web driver exception, resetting.")
+            self.reset()
         
     def _findButton(self, action_name):
         try:
             button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
+            clickable = not button.get_property('disabled')
         except selenium.common.exceptions.StaleElementReferenceException:
             print("WARNING: Got a stale element exception, reloading page.")
             self._driver.get(self._url)
-            button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
-            
-        clickable = not button.get_property('disabled')
+            return self._findButton(action_name)       
         return button, clickable
         
     def _clickButton(self, button_name):
