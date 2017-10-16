@@ -3211,7 +3211,7 @@ if (localStorage.getItem("savePrestige") != null) {
 
 
 // MAIN LOOP
-var gameSpeedupFactor = 2
+var gameSpeedupFactor = 1
 var gameTickRateMilliseconds = 10.0/gameSpeedupFactor
 
 window.setInterval(function(){
