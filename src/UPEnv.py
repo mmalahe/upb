@@ -79,7 +79,7 @@ class UPActionSpace(Discrete):
         return self._keys[action]
 
 class UPEnv(Env):
-    def __init__(self, url, observation_names, action_names, selenium_executor=None, verbose=False):
+    def __init__(self, url, observation_names, action_names, selenium_executor=None, headless=True, verbose=False):
         # Call base class constructor
         super(UPEnv, self).__init__()
         
@@ -87,7 +87,7 @@ class UPEnv(Env):
         self._url = url
         
         # Fresh game handler
-        self._handler = UPGameHandler(self._url, selenium_executor=selenium_executor, verbose=verbose)
+        self._handler = UPGameHandler(self._url, selenium_executor=selenium_executor, headless=headless, verbose=verbose)
         
         # Action interval
         self._min_action_interval_s = 0.01
