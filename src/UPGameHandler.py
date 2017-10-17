@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import selenium.common.exceptions
 import selenium.webdriver.chrome as chrome
-from bs4 import BeautifulSoup, SoupStrainer
+import lxml.html
 
 class UPGameState(object):
     _scalar_values = {
@@ -41,15 +41,15 @@ class UPGameState(object):
     
     def __init__(self, driver):        
         # The soup
-        html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")            
-        strainer = SoupStrainer("span")
-        soup = BeautifulSoup(html_source, "lxml", parse_only=strainer)
+        html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")        
+        html_parser = lxml.html.document_fromstring(html_source)
         
         # Scalar values
         for field, finder in self._scalar_values_finders.items():
             # Find value         
             if finder[0] == 'id':
-                value = soup.find(id=finder[1]).contents[0]
+                #~ value = soup.find(id=finder[1]).contents[0]
+                value = html_parser.get_element_by_id(finder[1]).text_content()
             else:
                 raise NotImplementedError("Don't know how to find things by "+finder[0])
             
