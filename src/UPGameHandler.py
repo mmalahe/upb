@@ -108,7 +108,8 @@ class UPGameHandler(object):
         self._selenium_executor = selenium_executor
         if self._selenium_executor == None:
             self._chrome_options = chrome_options
-            self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
+            self._driver = webdriver.PhantomJS("/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
+            #~ self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
         else:
             self._driver_capabilities = chrome_options.to_capabilities()
             self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
@@ -122,7 +123,8 @@ class UPGameHandler(object):
     # "Public" functions
     def reset(self):
         if self._selenium_executor == None:
-            self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
+            #~ self._driver = webdriver.PhantomJS()
+            self._driver = webdriver.PhantomJS("/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
         else:
             self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
         self._acquired_buttons = {}
@@ -162,30 +164,16 @@ class UPGameHandler(object):
         self._state = self._getGameStateFromPage()
     
     def _getGameStateFromPage(self):
-        try:
-            return UPGameState(self._driver)
-        except selenium.common.exceptions.StaleElementReferenceException:
-            print("WARNING: Got a stale element exception, reloading page.")
-            self._driver.get(self._url)
-            return self._getGameStateFromPage()
-        except selenium.common.exceptions.WebDriverException:
-            print("WARNING: Got web driver exception, resetting.")
-            self.reset()
+        return UPGameState(self._driver)
         
     def _findButton(self, name):
         if name in self._acquired_buttons.keys():
             button = self._acquired_buttons[name]
         else:
-            try:
-                button = self._driver.find_elements_by_id(self._all_buttons[name])[0]
-            except selenium.common.exceptions.StaleElementReferenceException:
-                print("WARNING: Got a stale element exception, reloading page.")
-                self._driver.get(self._url)
-                return self._findButton(action_name)
+            button = self._driver.find_elements_by_id(self._all_buttons[name])[0]
             self._acquired_buttons[name] = button
-        #~ clickable = not button.get_property('disabled')
-        clickable = True
-        return button, clickable
+        clickable = not button.get_property('disabled')
+        return button
         
     def _clickButton(self, button_name):
         success = False
