@@ -19,7 +19,8 @@ Intended for learning about reinforcement learning.
 
 ## Learning
 - Python modules:
-	- rllab: https://github.com/rll/rllab
+	- Numpy
+	- [rllab](https://github.com/rll/rllab)
 
 # Known issues
 
