@@ -66,7 +66,9 @@ class UPGameState(object):
                     # Case where commas are used to separate thousands.
                     # Sometimes they're used for decimals, but that scaling
                     # should be captured by any learning system regardless
-                    self._scalar_values[field] = float(value.replace(",",""))
+                    value = value.replace(",","")
+                    value = value.replace(u'\xa0',"")
+                    self._scalar_values[field] = float(value)
                     
                     # Special cases where the exact value is actually important
                     if field == 'Autoclipper Cost':
