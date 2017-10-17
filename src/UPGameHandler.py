@@ -172,14 +172,19 @@ class UPGameHandler(object):
             print("WARNING: Got web driver exception, resetting.")
             self.reset()
         
-    def _findButton(self, action_name):
-        try:
-            button = self._driver.find_elements_by_id(self._all_buttons[action_name])[0]
-            clickable = not button.get_property('disabled')
-        except selenium.common.exceptions.StaleElementReferenceException:
-            print("WARNING: Got a stale element exception, reloading page.")
-            self._driver.get(self._url)
-            return self._findButton(action_name)       
+    def _findButton(self, name):
+        if name in self._acquired_buttons.keys():
+            button = self._acquired_buttons[name]
+        else:
+            try:
+                button = self._driver.find_elements_by_id(self._all_buttons[name])[0]
+            except selenium.common.exceptions.StaleElementReferenceException:
+                print("WARNING: Got a stale element exception, reloading page.")
+                self._driver.get(self._url)
+                return self._findButton(action_name)
+            self._acquired_buttons[name] = button
+        #~ clickable = not button.get_property('disabled')
+        clickable = True
         return button, clickable
         
     def _clickButton(self, button_name):
