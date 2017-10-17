@@ -99,7 +99,6 @@ class UPGameHandler(object):
             'Buy Wire': 'btnBuyWire',
             'Buy Autoclipper': 'btnMakeClipper'
         }
-        self._acquired_buttons = {}
         self._all_actions = list(self._all_buttons.keys())
         
         # Web driver setup
@@ -126,6 +125,7 @@ class UPGameHandler(object):
             self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
         else:
             self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
+        self._acquired_buttons = {}
         self._driver.get(self._url)
         self._updateGameState()
     
