@@ -1,4 +1,4 @@
-A bot that plays Universal Paperclips.
+A bot that plays [Universal Paperclips](http://decisionproblem.com/paperclips/index2.html).
 
 Intended for learning about reinforcement learning.
 
@@ -10,7 +10,12 @@ Intended for learning about reinforcement learning.
 ## Game Handler
 - Python modules:
 	- Selenium
-		- With Chromium as the webdriver. e.g. on Ubuntu: sudo apt-get install chromium-browser chromium-chromedriver
+	- lxml
+- One of the following webrivers:
+	- Chromium
+		- e.g. On Ubuntu: sudo apt install chromium-browser chromium-chromedriver
+	- PhantomJS built with ghostdriver support
+		- The binary distribution from http://phantomjs.org/ is best.
 
 ## Learning
 - Python modules:
@@ -26,8 +31,8 @@ You get a message like:
 ImportError: cannot import name 'downsample'
 """
 See https://github.com/Theano/Theano/issues/4337. Fix is to change line 6 of pool.py to 
-"from theano.tensor.signal import pool"
+	"from theano.tensor.signal import pool"
 and change instance(s) of
-"downsample.max_pool_2d"
+	"downsample.max_pool_2d"
 to
-"pool.pool_2d".
+	"pool.pool_2d".

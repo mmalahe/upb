@@ -79,7 +79,16 @@ class UPActionSpace(Discrete):
         return self._keys[action]
 
 class UPEnv(Env):
-    def __init__(self, url, observation_names, action_names, selenium_executor=None, headless=True, verbose=False):
+    def __init__(self,
+                 url, 
+                 observation_names,                  
+                 action_names,
+                 min_action_interval=None,
+                 webdriver_name='Chrome',
+                 webdriver_path=None,
+                 headless=False,
+                 verbose=False):
+        
         # Call base class constructor
         super(UPEnv, self).__init__()
         
@@ -87,14 +96,19 @@ class UPEnv(Env):
         self._url = url
         
         # Fresh game handler
-        self._handler = UPGameHandler(self._url, selenium_executor=selenium_executor, headless=headless, verbose=verbose)
-        
-        # Action interval
-        self._min_action_interval_s = 0.01
+        self._handler = UPGameHandler(self._url, 
+                                      webdriver_name=webdriver_name,
+                                      webdriver_path=webdriver_path,
+                                      headless=headless, 
+                                      verbose=verbose)
         
         # Spaces
         self._observation_names = observation_names
         self._action_names = action_names
+        
+        # Other
+        self._min_action_interval = min_action_interval
+        self._verbose = verbose
         
         # Reset
         self.reset()
@@ -122,19 +136,24 @@ class UPEnv(Env):
         return observation
     
     def reward(self, observation_from_handler):
-        return self.cashRateReward(observation_from_handler)
-        #~ return self.clipRateReward(observation_from_handler)
+        return self.cashReward(observation_from_handler) + self.assetsReward(observation_from_handler)
     
-    def cashRateReward(self, observation_from_handler):
+    def assetsReward(self, observation_from_handler):
+        wire_per_spool = 1000.0
+        dwire = observation_from_handler['Wire Inches'] - self._prev_observation_from_handler['Wire Inches']
+        dautoclippers = observation_from_handler['Number of Autoclippers'] - self._prev_observation_from_handler['Number of Autoclippers']
+        wire_cost = self._prev_observation_from_handler['Wire Cost']/wire_per_spool
+        autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']
+        dassets = dwire*wire_cost + dautoclippers*autoclipper_cost
+        return dassets
+    
+    def cashReward(self, observation_from_handler):
         dcash = observation_from_handler['Available Funds'] - self._prev_observation_from_handler['Available Funds']
         return dcash
     
-    def clipRateReward(self, observation_from_handler):
+    def clipReward(self, observation_from_handler):
         dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
         return dclips
-    
-    def getDt(self):
-        return self._step_time - self._prev_step_time
     
     def step(self, action):
         """
@@ -154,9 +173,12 @@ class UPEnv(Env):
         # Wall clock action rate control
         self._step_time = timeSeconds();
         dt = self._step_time - self._prev_step_time
-        #~ print("dt="+str(dt))
-        #~ if self._min_action_interval_s - dt > 0:
-            #~ time.sleep(self._min_action_interval_s - dt)
+        if self._verbose:
+            print("action interval = {} s".format(dt))
+        if self._min_action_interval != None:
+            time_remaining = self._min_action_interval - dt
+            if time_remaining > 0:
+                time.sleep(time_remaining)
         
         # Act
         action_for_handler = self.action_space.actionAsString(action)
@@ -183,8 +205,7 @@ class UPEnv(Env):
         return (observation, reward, done, info)
     
     def terminate(self):
-        self._handler.quit()
-            
+        self._handler.quit()            
     
     @property
     def action_space(self):

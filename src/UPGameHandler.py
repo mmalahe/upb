@@ -48,7 +48,6 @@ class UPGameState(object):
         for field, finder in self._scalar_values_finders.items():
             # Find value         
             if finder[0] == 'id':
-                #~ value = soup.find(id=finder[1]).contents[0]
                 value = html_parser.get_element_by_id(finder[1]).text_content()
             else:
                 raise NotImplementedError("Don't know how to find things by "+finder[0])
@@ -89,7 +88,13 @@ class UPGameState(object):
         return self._scalar_values.__str__()        
 
 class UPGameHandler(object):
-    def __init__(self, url, selenium_executor=None, verbose=False, headless=True):
+    def __init__(self, 
+                 url, 
+                 webdriver_name='Chrome', 
+                 webdriver_path=None, 
+                 verbose=False, 
+                 headless=False):
+                     
         # Class constants
         self._all_buttons = {
             'Make Paperclip': 'btnMakePaperclip',
@@ -102,41 +107,30 @@ class UPGameHandler(object):
         self._all_actions = list(self._all_buttons.keys())
         
         # Web driver setup
-        chrome_options = chrome.options.Options()
-        if headless:
-            chrome_options.add_argument("--headless")
-        self._selenium_executor = selenium_executor
-        if self._selenium_executor == None:
-            self._chrome_options = chrome_options
-            self._driver = webdriver.PhantomJS("/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
-            #~ self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
-        else:
-            self._driver_capabilities = chrome_options.to_capabilities()
-            self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
+        self._webdriver_name = webdriver_name
+        self._webdriver_path = webdriver_path
+        self._headless = headless
+        self._setUpWebdriver()
         
         # Remaining setup
         self._url = url
         self._verbose = verbose
-        self._driver.get(self._url)
-        self._updateGameState()
+        self.reset()
 
     # "Public" functions
     def reset(self):
-        if self._selenium_executor == None:
-            #~ self._driver = webdriver.PhantomJS()
-            self._driver = webdriver.PhantomJS("/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
-        else:
-            self._driver = webdriver.Remote(command_executor=self._selenium_executor, desired_capabilities=self._driver_capabilities)
+        try:
+            self._driver.get(self._url)
+        except:
+            print("WARNING: Unable to fetch page on reset. Starting new driver.")
+            self._setUpWebdriver()
+            self.reset()      
         self._acquired_buttons = {}
-        self._driver.get(self._url)
         self._updateGameState()
     
     def quit(self):
-        try:
-            self._driver.quit()
-            self._driver.stop_client()
-        except selenium.common.exceptions.WebDriverException:
-            print("Session already closed.")
+        self._driver.quit()
+        self._driver.stop_client()
     
     def makeObservation(self, fields):
         self._updateGameState()
@@ -150,7 +144,8 @@ class UPGameHandler(object):
         if action_name in self._all_buttons:
             success = self._clickButton(action_name)
         else:
-            print("Not sure what to do with action "+action_name+".")
+            print("WARNING: Not sure what to do with action "+action_name+".")
+            print("Doing nothing.")
         
         if self._verbose:
             if success:
@@ -159,7 +154,26 @@ class UPGameHandler(object):
                 print("ERROR: Failed to take action "+action_name+"!")
         return success
     
-    # "Private" functions    
+    # "Private" functions
+    def _setUpWebdriver(self):
+        if self._webdriver_name == 'Chrome':            
+            self._chrome_options = chrome.options.Options()
+            if self._headless:
+                self._chrome_options.add_argument("--headless")
+            self._driver = webdriver.Chrome(chrome_options=self._chrome_options)
+        elif self._webdriver_name == 'PhantomJS':
+            if self._webdriver_path == None:
+                try:
+                    self._driver = webdriver.PhantomJS()
+                except:
+                    raise Exception("Failed to find phantomjs on system. Need to specify webdriver_path=/path/to/phantomjs.")
+            else:
+                self._driver = webdriver.PhantomJS(self._webdriver_path)
+            if self._headless == False:
+                print("WARNING: Specified not headless, but PhantomJS is headless only.")
+        else:
+            raise NotImplementedError("No implementation for webdriver {}.".format(self._webdriver_name))
+       
     def _updateGameState(self):
         self._state = self._getGameStateFromPage()
     
@@ -173,7 +187,7 @@ class UPGameHandler(object):
             button = self._driver.find_elements_by_id(self._all_buttons[name])[0]
             self._acquired_buttons[name] = button
         clickable = not button.get_property('disabled')
-        return button
+        return button, clickable
         
     def _clickButton(self, button_name):
         success = False
