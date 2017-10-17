@@ -11,7 +11,7 @@ Intended for learning about reinforcement learning.
 - Python modules:
 	- Selenium
 	- lxml
-- One of the following webrivers:
+- One of the following webdrivers:
 	- Chromium
 		- e.g. On Ubuntu: sudo apt install chromium-browser chromium-chromedriver
 	- PhantomJS built with ghostdriver support
