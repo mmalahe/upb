@@ -20,7 +20,8 @@ Intended for learning about reinforcement learning.
 ## Learning
 - Python modules:
 	- Numpy
-	- [rllab](https://github.com/rll/rllab)
+	- [OpenAI Gym](https://github.com/openai/gym)
+	- [OpenAI Baselines](https://github.com/openai/baselines)
 
 # Known issues
 

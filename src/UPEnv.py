@@ -1,7 +1,6 @@
 from UPGameHandler import *
-from rllab.envs.base import Env
-from rllab.spaces.discrete import Discrete
-from rllab.spaces.box import Box
+from gym import Env
+from gym.spaces import Discrete, Box
 import numpy as np
 from datetime import datetime
 import time
@@ -83,14 +82,12 @@ class UPEnv(Env):
                  url, 
                  observation_names,                  
                  action_names,
+                 episode_length=None,
                  min_action_interval=None,
                  webdriver_name='Chrome',
                  webdriver_path=None,
                  headless=False,
                  verbose=False):
-        
-        # Call base class constructor
-        super(UPEnv, self).__init__()
         
         # Set url where the game is hosted
         self._url = url
@@ -107,13 +104,14 @@ class UPEnv(Env):
         self._action_names = action_names
         
         # Other
+        self._episode_length = episode_length
         self._min_action_interval = min_action_interval
         self._verbose = verbose
         
         # Reset
         self.reset()
     
-    def reset(self):
+    def _reset(self):
         """
         Resets the state of the environment, returning an initial observation.
         Outputs
@@ -131,6 +129,7 @@ class UPEnv(Env):
         # Initial values
         self._prev_observation_from_handler = observation_from_handler
         self._prev_step_time = timeSeconds();
+        self._n_steps_taken = 0
         
         # Return
         return observation
@@ -155,7 +154,7 @@ class UPEnv(Env):
         dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
         return dclips
     
-    def step(self, action):
+    def _step(self, action):
         """
         Run one timestep of the environment's dynamics. When end of episode
         is reached, reset() should be called to reset the environment's internal state.
@@ -191,21 +190,31 @@ class UPEnv(Env):
         # Get reward
         reward = self.reward(observation_from_handler)
         
+        # Update any additional state
+        self._prev_observation_from_handler = observation_from_handler
+        self._prev_step_time = self._step_time        
+        self._n_steps_taken += 1
+        
         # Complete?
-        done = False
+        if self._episode_length == None:
+            done = False
+        else:
+            done = self._n_steps_taken >= self._episode_length
         
         # Additional info
         info = {}
         
-        # Update any additional state
-        self._prev_observation_from_handler = observation_from_handler
-        self._prev_step_time = self._step_time
-        
         # Return
         return (observation, reward, done, info)
     
-    def terminate(self):
-        self._handler.quit()            
+    def _close(self):
+        self._handler.quit()
+        
+    def _render(self, mode='human', close=False):
+        return
+        
+    def _seed(self, seed=None):
+        return []
     
     @property
     def action_space(self):

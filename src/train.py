@@ -1,13 +1,23 @@
-from UPEnv import *
-from rllab.algos.npo import NPO
-from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
-from rllab.envs.normalized_env import normalize
-from rllab.policies.categorical_mlp_policy import CategoricalMLPPolicy
-from rllab.misc.instrument import run_experiment_lite
+"""Usage example: mpirun -np 4 python3 train.py
+"""
+
+import sys
 import pickle
 
+from mpi4py import MPI
+
+import gym, logging
+
+from baselines import logger
+from baselines import bench
+from baselines.ppo1 import pposgd_simple, mlp_policy
+from baselines.common import tf_util
+
+from UPEnv import *
+
 # What to do
-do_train = True
+do_train = False
+use_fresh_policy = False
 do_observe = False
 
 # Game handler
@@ -22,20 +32,23 @@ url_observation = "file:///home/mikl/projects/upb/src/game/index2.html"
 min_action_interval_observation = 0.2
 
 # Training parameters
-use_fresh_policy = False
 stage = 2
-path_length = 1000
-batch_size = 4*path_length
-n_snapshots = 2
-n_itr_per_snapshot = 1
-policy_filename = 'latest_policy_stage{}.pickle'.format(stage)
+episode_length = 1024
+timesteps_per_batch = episode_length
+max_iters = 10
+policy_filename = 'policy_stage{}.pickle'.format(stage)
 
 # Stage 1
 observation_names_stage1 = [
     'Unsold Inventory', 
     'Price per Clip', 
     'Public Demand', 
-    'Available Funds']
+    'Available Funds',
+    'Wire Inches',
+    'Number of Autoclippers',
+    'Wire Cost',
+    'Autoclipper Cost'
+    ]
 action_names_stage1 = [
     'Make Paperclip', 
     'Lower Price', 
@@ -68,72 +81,48 @@ elif stage == 2:
     observation_names = observation_names_stage2
     action_names = action_names_stage2
 
-def train(*_):   
+def train():
+    # MPI setup
+    rank = MPI.COMM_WORLD.Get_rank()
+    sess = tf_util.single_threaded_session()
+    sess.__enter__()
+    if rank != 0:
+        logger.set_level(logger.DISABLED)
+     
     # The training environment
-    env = normalize(UPEnv(url_training, 
-                          observation_names, 
-                          action_names,
-                          min_action_interval=min_action_interval_training,
-                          webdriver_name=webdriver_name_training,
-                          webdriver_path=webdriver_path_training,
-                          headless=True                          
-                          ))
-
-    # Initial policy
-    if use_fresh_policy:
-        policy = CategoricalMLPPolicy(
-            env_spec=env.spec,
-            hidden_sizes=(32,32)
-        )
-    else:
-        with open(policy_filename,'rb') as f:
-            policy = pickle.load(f)
+    env = UPEnv(url_training, 
+                observation_names, 
+                action_names,
+                episode_length=episode_length,
+                min_action_interval=min_action_interval_training,
+                webdriver_name=webdriver_name_training,
+                webdriver_path=webdriver_path_training,
+                headless=True                    
+                )
     
-    # Baseline
-    baseline = LinearFeatureBaseline(env_spec=env.spec)
+    # Monitoring
+    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), "%i.monitor.json"%rank))
+    gym.logger.setLevel(logging.WARN)    
     
-    # Training loop
-    for i_snapshot in range(n_snapshots):     
-        print("SNAPSHOT NUMBER {}".format(i_snapshot)) 
-        algo = NPO(
-            env=env,
-            policy=policy,
-            baseline=baseline,
-            whole_paths=True,
-            batch_size=batch_size,
-            max_path_length=path_length,
-            n_itr=n_itr_per_snapshot,
-            discount=1.00,
-            step_size=0.01,
-        )
-
-        # Do the training
-        algo.train()
-        
-        # Get back the policy
-        policy = algo.policy
+    # Learn
+    def policy_fn(name, ob_space, ac_space):
+        return mlp_policy.MlpPolicy(name=name, 
+                                    ob_space=env.observation_space, 
+                                    ac_space=env.action_space, 
+                                    hid_size=32, 
+                                    num_hid_layers=2)
     
-        # Save policy
-        with open(policy_filename,'wb') as f:
-            pickle.dump(policy, f)
+    pposgd_simple.learn(env, policy_fn,
+        max_iters=max_iters,
+        timesteps_per_batch=timesteps_per_batch,
+        clip_param=0.2, entcoeff=0.01,
+        optim_epochs=4, optim_stepsize=1e-3, optim_batchsize=64,
+        gamma=0.99, lam=0.95,
+        schedule='constant'
+    )
 
-if do_train:
+def main():
     train()
 
-if do_observe:
-    with open(policy_filename,'rb') as f:
-        final_policy = pickle.load(f)
-    env = normalize(UPEnv(url_observation, 
-                          observation_names, 
-                          action_names,
-                          min_action_interval=min_action_interval_observation,
-                          webdriver_name=webdriver_name_observation,
-                          webdriver_path=webdriver_path_observation,
-                          headless=False,
-                          verbose=True                        
-                          ))
-    observation = env.reset()
-    for i in range(path_length):
-        action, _ = final_policy.get_action(observation)
-        observation, reward, done, info = env.step(action)
-    input("Press Enter to continue...")
+if __name__ == "__main__":
+    main()
