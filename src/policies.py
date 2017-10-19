@@ -2,9 +2,9 @@ from baselines.common import tf_util
 from baselines.ppo1.mlp_policy import MlpPolicy
 import pickle
 
-class MLPPolicySaveable(MlpPolicy):
+class MlpPolicySaveable(MlpPolicy):
     def __init__(self, name, *args, **kwargs):
-        super(MLPPolicySaveable, self).__init__(name, *args, **kwargs)
+        super(MlpPolicySaveable, self).__init__(name, *args, **kwargs)
         
     def save_state(self, filename):
         py_vars = {}
