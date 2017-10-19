@@ -10,22 +10,6 @@ up_observation_names_stage1 = [
     'Unsold Inventory', 
     'Price per Clip', 
     'Public Demand', 
-    'Available Funds',
-    'Wire Inches',
-    'Number of Autoclippers',
-    'Wire Cost',
-    'Autoclipper Cost'
-    ]
-up_action_names_stage1 = [
-    'Make Paperclip', 
-    'Lower Price', 
-    'Raise Price']
-
-# Stage 2
-up_observation_names_stage2 = [
-    'Unsold Inventory', 
-    'Price per Clip', 
-    'Public Demand', 
     'Available Funds', 
     'Autoclipper Cost', 
     'Autoclipper Purchasable', 
@@ -33,7 +17,7 @@ up_observation_names_stage2 = [
     'Wire Inches',
     'Wire Cost'
 ]
-up_action_names_stage2 = [
+up_action_names_stage1 = [
     'Make Paperclip', 
     'Lower Price', 
     'Raise Price', 
