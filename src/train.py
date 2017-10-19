@@ -12,7 +12,7 @@ import tensorflow as tf
 
 from baselines import logger
 from baselines import bench
-from baselines.ppo1 import pposgd_simple, 
+from baselines.ppo1 import pposgd_simple
 from baselines.common import tf_util
 
 from UPEnv import *

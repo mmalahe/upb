@@ -1,8 +1,8 @@
 from baselines.common import tf_util
-from baselines.ppo1 import mlp_policy
+from baselines.ppo1.mlp_policy import MlpPolicy
 import pickle
 
-class MLPPolicySaveable(mlp_policy):
+class MLPPolicySaveable(MlpPolicy):
     def __init__(self, name, *args, **kwargs):
         super(MLPPolicySaveable, self).__init__(name, *args, **kwargs)
         
