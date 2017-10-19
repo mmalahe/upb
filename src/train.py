@@ -16,6 +16,7 @@ from baselines.ppo1 import pposgd_simple
 from baselines.common import tf_util
 
 from UPEnv import *
+from UPUtil import *
 from policies import *
 
 # Load the initial policy from file
