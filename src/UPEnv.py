@@ -5,6 +5,41 @@ import numpy as np
 from datetime import datetime
 import time
 
+# Stage 1
+up_observation_names_stage1 = [
+    'Unsold Inventory', 
+    'Price per Clip', 
+    'Public Demand', 
+    'Available Funds',
+    'Wire Inches',
+    'Number of Autoclippers',
+    'Wire Cost',
+    'Autoclipper Cost'
+    ]
+up_action_names_stage1 = [
+    'Make Paperclip', 
+    'Lower Price', 
+    'Raise Price']
+
+# Stage 2
+up_observation_names_stage2 = [
+    'Unsold Inventory', 
+    'Price per Clip', 
+    'Public Demand', 
+    'Available Funds', 
+    'Autoclipper Cost', 
+    'Autoclipper Purchasable', 
+    'Number of Autoclippers',
+    'Wire Inches',
+    'Wire Cost'
+]
+up_action_names_stage2 = [
+    'Make Paperclip', 
+    'Lower Price', 
+    'Raise Price', 
+    'Buy Autoclipper',
+    'Buy Wire']
+
 # To microsecond precision
 # @fixme Resets at the month boundary
 def timeSeconds():

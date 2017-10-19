@@ -38,40 +38,6 @@ timesteps_per_batch = episode_length
 max_iters = 10
 policy_filename = 'policy_stage{}.pickle'.format(stage)
 
-# Stage 1
-observation_names_stage1 = [
-    'Unsold Inventory', 
-    'Price per Clip', 
-    'Public Demand', 
-    'Available Funds',
-    'Wire Inches',
-    'Number of Autoclippers',
-    'Wire Cost',
-    'Autoclipper Cost'
-    ]
-action_names_stage1 = [
-    'Make Paperclip', 
-    'Lower Price', 
-    'Raise Price']
-
-# Stage 2
-observation_names_stage2 = [
-    'Unsold Inventory', 
-    'Price per Clip', 
-    'Public Demand', 
-    'Available Funds', 
-    'Autoclipper Cost', 
-    'Autoclipper Purchasable', 
-    'Number of Autoclippers',
-    'Wire Inches',
-    'Wire Cost'
-]
-action_names_stage2 = [
-    'Make Paperclip', 
-    'Lower Price', 
-    'Raise Price', 
-    'Buy Autoclipper',
-    'Buy Wire']
 
 # Pick stage
 if stage == 1:
