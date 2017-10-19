@@ -18,9 +18,10 @@ from baselines.common import tf_util
 from UPEnv import *
 from UPUtil import *
 from policies import *
+import os
 
-# Load the initial policy from file
-do_load_policy = False
+# Resume learning from file
+do_resume_learning = True
 
 # Game handler
 webdriver_name_training = 'PhantomJS'
@@ -30,20 +31,23 @@ min_action_interval_training = None
 
 # Training parameters
 stage = 1
-episode_length = 2000
+episode_length = 100
 timesteps_per_batch = episode_length
 max_iters = 1000000
 iters_per_render = 10
 iters_per_save = 10
-policy_filename_latest_base = 'data/policy_stage{}_latest'.format(stage)
+data_dir = "data"
+policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
+learning_state_filename_latest = os.path.join(data_dir,"learning_stage{}_latest.tf".format(stage))
+
+# Set up data directory
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
 
 # Pick stage
 if stage == 1:
     observation_names = up_observation_names_stage1
     action_names = up_action_names_stage1
-elif stage == 2:
-    observation_names = up_observation_names_stage2
-    action_names = up_action_names_stage2
 
 def train():
     # MPI setup
@@ -68,27 +72,37 @@ def train():
     # Callbacks to execute inside the trainer
     def save_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
-        if iters_so_far % iters_per_save == 0:
-            policy_filename_iter_base = 'data/policy_stage{}_iter{}'.format(stage, iters_so_far)
-            
-            oldpi = loc['oldpi']
-            oldpi.save_state(policy_filename_iter_base+".oldpi")
-            oldpi.save_state(policy_filename_latest_base+".oldpi")
-        
+        if iters_so_far % iters_per_save == 0 and iters_so_far > 0:
+            # Save policy
+            policy_filename_iter = os.path.join(data_dir,"policy_stage{}_iter{}.pickle".format(stage, iters_so_far))    
             pi = loc['pi']            
-            pi.save_state(policy_filename_iter_base+".pi")
-            pi.save_state(policy_filename_latest_base+".pi")
+            pi.save_state(policy_filename_iter)
+            pi.save_state(policy_filename_latest)
+            
+            # Save full learning state to make resuming easier
+            learning_state_filename_iter = os.path.join(data_dir,"learning_stage{}_iter{}.tf".format(stage, iters_so_far))
+            tf_util.save_state(learning_state_filename_iter)
+            tf_util.save_state(learning_state_filename_latest)
     
     def observe_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
-        if iters_so_far % iters_per_render == 0:
+        if iters_so_far % iters_per_render == 0 and iters_so_far > 0:
             policy = loc['pi']
             env = loc['env'].env
             rollout(env, policy)
             env.save_screenshot("data/iter_{:05d}.png".format(iters_so_far))
+            
+    def resume_callback(loc, glob):
+        if do_resume_learning:
+            iters_so_far = loc['iters_so_far']
+            if iters_so_far == 0:
+                print("Resuming tf state.")
+                tf_util.load_state(learning_state_filename_latest)
+                MPI.COMM_WORLD.Barrier()
                 
     def callback(loc, glob):
-        if rank == 0:
+        resume_callback(loc, glob)
+        if rank == 0:            
             save_callback(loc, glob)
             observe_callback(loc, glob)
     
@@ -98,16 +112,11 @@ def train():
     
     # Policy
     def policy_fn(name, ob_space, ac_space):
-        policy = MlpPolicySaveable(name=name, 
+        return MlpPolicySaveable(name=name, 
                                     ob_space=env.observation_space, 
                                     ac_space=env.action_space, 
                                     hid_size=32, 
                                     num_hid_layers=2)
-        
-        if do_load_policy:
-            policy.load_state(policy_filename_latest_base+"."+name)               
-        
-        return policy
                 
     # Learn
     pposgd_simple.learn(env, policy_fn,
