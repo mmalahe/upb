@@ -4,27 +4,25 @@
 from UPEnv import *
 from UPUtil import *
 from policies import *
+from mpi4py import MPI
 
 # Game handler
 webdriver_name_observation = 'Chrome'
 webdriver_path_observation = None
 url_observation = "file:///home/mikl/projects/upb/src/game/index2.html"
-min_action_interval_observation = 0.2
+desired_action_interval_observation = 0.2
 
 # Environment parameters
 stage = 1
-episode_length = 100
+episode_length = 2000
 
 # Policy
-policy_filename = 'policy_stage{}_latest.pi'.format(stage)
+policy_filename = 'data_01/policy_stage{}_iter440.pi'.format(stage)
 
 # Pick stage
 if stage == 1:
     observation_names = up_observation_names_stage1
     action_names = up_action_names_stage1
-elif stage == 2:
-    observation_names = up_observation_names_stage2
-    action_names = up_action_names_stage2
     
 def observe():
      # MPI setup
@@ -38,14 +36,14 @@ def observe():
                 observation_names, 
                 action_names,
                 episode_length=episode_length,
-                min_action_interval=min_action_interval_observation,
+                desired_action_interval=desired_action_interval_observation,
                 webdriver_name=webdriver_name_observation,
                 webdriver_path=webdriver_path_observation,
                 headless=False                  
                 )
                 
     # The policy
-    policy = MlpPolicySaveable(name=name, 
+    policy = MlpPolicySaveable(name='pi', 
                                ob_space=env.observation_space, 
                                ac_space=env.action_space, 
                                hid_size=32, 

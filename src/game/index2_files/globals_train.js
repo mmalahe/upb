@@ -1,4 +1,4 @@
-var gameSpeedupFactor = 8;
+var gameSpeedupFactor = 3;
 var clips = 0;
 var unusedClips = 0;
 var clipRate = 0;

@@ -102,7 +102,7 @@ class UPEnv(Env):
                  observation_names,                  
                  action_names,
                  episode_length=None,
-                 min_action_interval=None,
+                 desired_action_interval=0.2,
                  webdriver_name='Chrome',
                  webdriver_path=None,
                  headless=False,
@@ -124,7 +124,7 @@ class UPEnv(Env):
         
         # Other
         self._episode_length = episode_length
-        self._min_action_interval = min_action_interval
+        self._desired_action_interval = desired_action_interval
         self._verbose = verbose
         
         # Reset
@@ -147,7 +147,7 @@ class UPEnv(Env):
         
         # Initial values
         self._prev_observation_from_handler = observation_from_handler
-        self._prev_step_time = timeSeconds();
+        self._prev_act_time = None
         self._n_steps_taken = 0
         
         # Return
@@ -188,18 +188,18 @@ class UPEnv(Env):
         done : a boolean, indicating whether the episode has ended
         info : a dictionary containing other diagnostic information from the previous action
         """
-        # Wall clock action rate control
-        self._step_time = timeSeconds();
-        dt = self._step_time - self._prev_step_time
-        if self._verbose:
-            print("action interval = {} s".format(dt))
-        if self._min_action_interval != None:
-            time_remaining = self._min_action_interval - dt
+        # Wall clock action rate control        
+        if self._prev_act_time != None:
+            dt = timeSeconds() - self._prev_act_time
+            time_remaining = self._desired_action_interval - dt
             if time_remaining > 0:
                 time.sleep(time_remaining)
+            else:
+                print("WARNING: Took {:1.2g} s for step, which is more than the desired {:1.2g} s.".format(dt, self._desired_action_interval))
         
         # Act
-        action_for_handler = self.action_space.actionAsString(action)
+        self._prev_act_time = timeSeconds();
+        action_for_handler = self.action_space.actionAsString(action)        
         self._handler.takeAction(action_for_handler)
         
         # Observe
@@ -210,8 +210,7 @@ class UPEnv(Env):
         reward = self.reward(observation_from_handler)
         
         # Update any additional state
-        self._prev_observation_from_handler = observation_from_handler
-        self._prev_step_time = self._step_time        
+        self._prev_observation_from_handler = observation_from_handler    
         self._n_steps_taken += 1
         
         # Complete?
