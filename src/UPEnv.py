@@ -207,6 +207,9 @@ class UPEnv(Env):
         # Return
         return (observation, reward, done, info)
     
+    def save_screenshot(self, filename):
+        self._handler.save_screenshot(filename)
+    
     def _close(self):
         self._handler.quit()
         

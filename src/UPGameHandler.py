@@ -4,6 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import selenium.common.exceptions
 import selenium.webdriver.chrome as chrome
 import lxml.html
+import http
 
 class UPGameState(object):
     _scalar_values = {
@@ -142,7 +143,13 @@ class UPGameHandler(object):
     def takeAction(self, action_name):
         success = False
         if action_name in self._all_buttons:
-            success = self._clickButton(action_name)
+            try:
+                success = self._clickButton(action_name)
+            except http.client.RemoteDisconnected:
+                print("ERROR: Disconnected while attempting action.")
+                print("WARNING: Handling this by resetting. If this was in the middle of a sample path it's going to mess it up a lot.")
+                self.reset()
+                self.takeAction(action_name)
         else:
             print("WARNING: Not sure what to do with action "+action_name+".")
             print("Doing nothing.")
@@ -153,6 +160,9 @@ class UPGameHandler(object):
             else:
                 print("ERROR: Failed to take action "+action_name+"!")
         return success
+    
+    def save_screenshot(self, filename):
+        self._driver.save_screenshot(filename)
     
     # "Private" functions
     def _setUpWebdriver(self):
@@ -178,7 +188,13 @@ class UPGameHandler(object):
         self._state = self._getGameStateFromPage()
     
     def _getGameStateFromPage(self):
-        return UPGameState(self._driver)
+        try:
+            return UPGameState(self._driver)
+        except http.client.RemoteDisconnected:
+            print("ERROR: Disconnected while attempting to fetch game state.")
+            print("WARNING: Handling this by resetting. If this was in the middle of a sample path it's going to mess it up a lot.")
+            self.reset()
+            return self._getGameStateFromPage()     
         
     def _findButton(self, name):
         if name in self._acquired_buttons.keys():
