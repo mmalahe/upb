@@ -34,7 +34,7 @@ timesteps_per_batch = episode_length
 max_iters = 1000000
 iters_per_render = 10
 iters_per_save = 10
-policy_filename_latest_base = 'policy_stage{}_latest'.format(stage)
+policy_filename_latest_base = 'data/policy_stage{}_latest'.format(stage)
 
 # Pick stage
 if stage == 1:
@@ -68,7 +68,7 @@ def train():
     def save_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
         if iters_so_far % iters_per_save == 0:
-            policy_filename_iter_base = 'policy_stage{}_iter{}'.format(stage, iters_so_far)
+            policy_filename_iter_base = 'data/policy_stage{}_iter{}'.format(stage, iters_so_far)
             
             oldpi = loc['oldpi']
             oldpi.save_state(policy_filename_iter_base+".oldpi")
@@ -84,7 +84,7 @@ def train():
             policy = loc['pi']
             env = loc['env'].env
             rollout(env, policy)
-            env.save_screenshot("iter_{:05d}.png".format(iters_so_far))
+            env.save_screenshot("data/iter_{:05d}.png".format(iters_so_far))
                 
     def callback(loc, glob):
         if rank == 0:
