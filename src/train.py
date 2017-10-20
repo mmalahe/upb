@@ -24,10 +24,12 @@ import os
 do_resume_learning = False
 
 # Game handler
+use_emulator = True
 webdriver_name_training = 'PhantomJS'
 webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
 url_training = "file:///home/mikl/projects/upb/src/game/index2_train.html"
-desired_action_interval_training = 0.067
+#~ desired_action_interval_training = 0.067
+desired_action_interval_training = 0.2
 
 # Training parameters
 stage = 1
@@ -64,6 +66,7 @@ def train():
                 action_names,
                 episode_length=episode_length,
                 desired_action_interval=desired_action_interval_training,
+                use_emulator=use_emulator,
                 webdriver_name=webdriver_name_training,
                 webdriver_path=webdriver_path_training,
                 headless=True                    

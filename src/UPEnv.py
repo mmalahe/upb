@@ -1,4 +1,5 @@
 from UPGameHandler import *
+from emulation.UPEmulator import *
 from gym import Env
 from gym.spaces import Discrete, Box
 import numpy as np
@@ -99,6 +100,7 @@ class UPEnv(Env):
                  url, 
                  observation_names,                  
                  action_names,
+                 use_emulator=False,
                  episode_length=None,
                  desired_action_interval=0.2,
                  webdriver_name='Chrome',
@@ -110,11 +112,15 @@ class UPEnv(Env):
         self._url = url
         
         # Fresh game handler
-        self._handler = UPGameHandler(self._url, 
-                                      webdriver_name=webdriver_name,
-                                      webdriver_path=webdriver_path,
-                                      headless=headless, 
-                                      verbose=verbose)
+        self._use_emulator = use_emulator
+        if use_emulator:
+            self._handler = UPEmulator()
+        else:
+            self._handler = UPGameHandler(self._url, 
+                                          webdriver_name=webdriver_name,
+                                          webdriver_path=webdriver_path,
+                                          headless=headless, 
+                                          verbose=verbose)
         
         # Spaces
         self._observation_names = observation_names
@@ -186,14 +192,15 @@ class UPEnv(Env):
         done : a boolean, indicating whether the episode has ended
         info : a dictionary containing other diagnostic information from the previous action
         """
-        # Wall clock action rate control        
-        if self._prev_act_time != None:
-            dt = timeSeconds() - self._prev_act_time
-            time_remaining = self._desired_action_interval - dt
-            if time_remaining > 0:
-                time.sleep(time_remaining)
-            else:
-                print("WARNING: Took {:1.2g} s for step, which is more than the desired {:1.2g} s.".format(dt, self._desired_action_interval))
+        # Wall clock action rate control
+        if not self._use_emulator:       
+            if self._prev_act_time != None:
+                dt = timeSeconds() - self._prev_act_time
+                time_remaining = self._desired_action_interval - dt
+                if time_remaining > 0:
+                    time.sleep(time_remaining)
+                else:
+                    print("WARNING: Took {:1.2g} s for step, which is more than the desired {:1.2g} s.".format(dt, self._desired_action_interval))
         
         # Act
         self._prev_act_time = timeSeconds();
@@ -208,6 +215,8 @@ class UPEnv(Env):
         reward = self.reward(observation_from_handler)
         
         # Update any additional state
+        if self._use_emulator:
+            self._handler.advanceTime(self._desired_action_interval)
         self._prev_observation_from_handler = observation_from_handler    
         self._n_steps_taken += 1
         
@@ -224,7 +233,11 @@ class UPEnv(Env):
         return (observation, reward, done, info)
     
     def save_screenshot(self, filename):
-        self._handler.save_screenshot(filename)
+        if self._use_emulator:
+            print("WARNING: Attempted to take screenshot, which emulator can't do. Printing state instead.")
+            print(self._handler.makeObservation(up_observation_names_stage1))
+        else:
+            self._handler.save_screenshot(filename)
     
     def _close(self):
         self._handler.quit()
