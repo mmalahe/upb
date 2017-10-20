@@ -197,32 +197,32 @@ function manageProjects(){
 
 function displayProjects(project){
     
-    var element = //document.getElementById("projectListTop"); 
-    var newProject = //document.createElement("button");
-    newProject.setAttribute("id", project.id);
+    //~ var element = document.getElementById("projectListTop"); 
+    //~ var newProject = document.createElement("button");
+    //~ newProject.setAttribute("id", project.id);
     
-    newProject.onclick = function(){project.effect()};
+    //~ newProject.onclick = function(){project.effect()};
     
-    newProject.setAttribute("class", "projectButton");
-    element.appendChild(newProject, element.firstChild);
+    //~ newProject.setAttribute("class", "projectButton");
+    //~ element.appendChild(newProject, element.firstChild);
     
-    var span = //document.createElement("span");
-    span.style.fontWeight = "bold";
-    newProject.appendChild(span);
+    //~ var span = document.createElement("span");
+    //~ span.style.fontWeight = "bold";
+    //~ newProject.appendChild(span);
     
-    var title = //document.createTextNode(project.title);
-    span.appendChild(title);    
+    //~ var title = document.createTextNode(project.title);
+    //~ span.appendChild(title);    
     
-    var cost = //document.createTextNode(project.priceTag);
-    newProject.appendChild(cost);
+    //~ var cost = document.createTextNode(project.priceTag);
+    //~ newProject.appendChild(cost);
     
-    var div = //document.createElement("div");
-    newProject.appendChild(div);
+    //~ var div = document.createElement("div");
+    //~ newProject.appendChild(div);
     
-    var description = //document.createTextNode(project.description);
-    newProject.appendChild(description);
+    //~ var description = document.createTextNode(project.description);
+    //~ newProject.appendChild(description);
     
-    blink(project.id);
+    //~ blink(project.id);
     
 }
 
@@ -232,45 +232,44 @@ function displayProjects(project){
 longBlinkCounter = 0;
 
 function longBlink(elemID){
-    var e;
-    e = //document.getElementById(elemID);
+    //~ e = document.getElementById(elemID);
     
-    { 
-    var handle = setInterval(function(){longToggleVisibility(elemID)}, 32);    
-    }
+    //~ { 
+    //~ var handle = setInterval(function(){longToggleVisibility(elemID)}, 32);    
+    //~ }
     
-    function longToggleVisibility(elemID){
-    longBlinkCounter++;    
+    //~ function longToggleVisibility(elemID){
+    //~ longBlinkCounter++;    
         
-    if (longBlinkCounter > 5 && longBlinkCounter < 10){
-        //document.getElementById("hypnoDroneText").innerHTML="Release"; 
-        }    
+    //~ if (longBlinkCounter > 5 && longBlinkCounter < 10){
+        //~ //document.getElementById("hypnoDroneText").innerHTML="Release"; 
+        //~ }    
     
-    if (longBlinkCounter > 30 && longBlinkCounter < 40){
-        //document.getElementById("hypnoDroneText").innerHTML="<br /><br /><br />Release"; 
-        }   
+    //~ if (longBlinkCounter > 30 && longBlinkCounter < 40){
+        //~ //document.getElementById("hypnoDroneText").innerHTML="<br /><br /><br />Release"; 
+        //~ }   
         
-    if (longBlinkCounter > 45 && longBlinkCounter < 55){
-        //document.getElementById("hypnoDroneText").innerHTML="<br />Release";
-        }       
+    //~ if (longBlinkCounter > 45 && longBlinkCounter < 55){
+        //~ //document.getElementById("hypnoDroneText").innerHTML="<br />Release";
+        //~ }       
         
-     if (longBlinkCounter > 55){
-        //document.getElementById("hypnoDroneText").innerHTML="Release<br/>the<br/>Hypno<br/>Drones";
-        }       
+     //~ if (longBlinkCounter > 55){
+        //~ //document.getElementById("hypnoDroneText").innerHTML="Release<br/>the<br/>Hypno<br/>Drones";
+        //~ }       
         
-    if (longBlinkCounter >= 120){
-        console.log("weed wizzard");
-        clearInterval(handle);
-        longBlinkCounter = 0;
-        e.style.display = "none";
-    } else {
-        if (e.style.display != ""){
-        e.style.display = "";
-        } else {
-        e.style.display = "none";    
-        }
-      }   
-    }
+    //~ if (longBlinkCounter >= 120){
+        //~ console.log("weed wizzard");
+        //~ clearInterval(handle);
+        //~ longBlinkCounter = 0;
+        //~ e.style.display = "none";
+    //~ } else {
+        //~ if (e.style.display != ""){
+        //~ e.style.display = "";
+        //~ } else {
+        //~ e.style.display = "none";    
+        //~ }
+      //~ }   
+    //~ }
         
     }
 
@@ -295,27 +294,27 @@ function displayMessage(msg){
 // BLINK
 
 function blink(elemID){
-    var e = //document.getElementById(elemID);
+    //~ var e = document.getElementById(elemID);
     
-    { 
-    var handle = setInterval(function(){toggleVisibility(elemID)}, 30);    
-    }
+    //~ { 
+    //~ var handle = setInterval(function(){toggleVisibility(elemID)}, 30);    
+    //~ }
     
-    function toggleVisibility(elemID){
-    blinkCounter = blinkCounter+1;    
+    //~ function toggleVisibility(elemID){
+    //~ blinkCounter = blinkCounter+1;    
     
-    if (blinkCounter >= 12){
-        clearInterval(handle);
-        blinkCounter = 0;
-        e.style.visibility = "visible";
-    } else {
-        if (e.style.visibility != "hidden"){
-        e.style.visibility = "hidden";
-        } else {
-        e.style.visibility = "visible";    
-        }
-      }   
-    }
+    //~ if (blinkCounter >= 12){
+        //~ clearInterval(handle);
+        //~ blinkCounter = 0;
+        //~ e.style.visibility = "visible";
+    //~ } else {
+        //~ if (e.style.visibility != "hidden"){
+        //~ e.style.visibility = "hidden";
+        //~ } else {
+        //~ e.style.visibility = "visible";    
+        //~ }
+      //~ }   
+    //~ }
         
     }
 
@@ -1627,8 +1626,9 @@ function round(roundNum){
     }
     
 window.setInterval(function(){
-    
-pick = //document.getElementById("stratPicker").value;
+
+var pick;//@EMUWORK
+//pick = document.getElementById("stratPicker").value;
     
 }, 100);
 
