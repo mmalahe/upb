@@ -278,14 +278,14 @@ function Battle(){
   battleRestart();    
 	
 	this.initialize = function(){
-    canvas  = document.getElementById("canvas");
+    //canvas  = document.getElementById("canvas");
 
-		context = canvas.getContext('2d');
+		//context = canvas.getContext('2d');
 			
-		canvas.width = battleWIDTH;
-		canvas.height = battleHEIGHT;
+		//canvas.width = battleWIDTH;
+		//canvas.height = battleHEIGHT;
         
-		var interval = setInterval(Update, 16/gameSpeedupFactor);
+		//var interval = setInterval(Update, 16/gameSpeedupFactor);
         
 		battleRestart();
 	}
@@ -306,7 +306,7 @@ function checkForBattleEnd(){
       if (numLeftShips == 0 || numRightShips == 0){
           
           if (project121.flag == 1){
-            document.getElementById("victoryDiv").style.visibility = "visible";    
+            //document.getElementById("victoryDiv").style.visibility = "visible";    
          
           if (numLeftShips == 0){
             if (honorCount == 0){  
@@ -314,17 +314,17 @@ function checkForBattleEnd(){
             honor = honor - battleLEFTSHIPS;
             honorCount =  1;   
             }    
-            document.getElementById("battleResult").innerHTML = "DEFEAT";
-            document.getElementById("battleResultSign").innerHTML = "-";
-            document.getElementById("honorAmount").innerHTML = battleLEFTSHIPS; 
-            document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();
+            //document.getElementById("battleResult").innerHTML = "DEFEAT";
+            //document.getElementById("battleResultSign").innerHTML = "-";
+            //document.getElementById("honorAmount").innerHTML = battleLEFTSHIPS; 
+            //document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();
             threnodyTitle = battleName;
             }
               
           if (numRightShips == 0){
             if (honorCount == 0){  
             honorReward = battleRIGHTSHIPS + bonusHonor;     
-            document.getElementById("honorAmount").innerHTML = honorReward;
+            //document.getElementById("honorAmount").innerHTML = honorReward;
             honor = honor + honorReward;    
                 
                 if (project134.flag == 1){    
@@ -334,9 +334,9 @@ function checkForBattleEnd(){
             honorCount =  1;  
             } 
               
-            document.getElementById("battleResult").innerHTML = "VICTORY";
-            document.getElementById("battleResultSign").innerHTML = "+";
-            document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();  
+            //document.getElementById("battleResult").innerHTML = "VICTORY";
+            //document.getElementById("battleResultSign").innerHTML = "+";
+            //document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();  
               
             }              
         
@@ -364,7 +364,7 @@ function checkForBattleEnd(){
 }    
   
 function endBattle(){
-    document.getElementById("victoryDiv").style.visibility = "hidden";
+    //document.getElementById("victoryDiv").style.visibility = "hidden";
     honorCount = 0;
     battleClock = 0;
     masterBattleClock = 0;
@@ -522,14 +522,14 @@ function battleRestart(){
                 if (unitSize>probeCount){unitSize=probeCount;}
                 probeCount = probeCount - unitSize;
                 probesLostCombat = probesLostCombat + unitSize;
-                document.getElementById('probesLostCombatDisplay').innerHTML = numberCruncher(probesLostCombat);
+                //document.getElementById('probesLostCombatDisplay').innerHTML = numberCruncher(probesLostCombat);
                 } else {
                 numRightShips--;
                 if (unitSize>drifterCount){unitSize=drifterCount;}
                 drifterCount = drifterCount - unitSize;
                 driftersKilled = driftersKilled + unitSize;  
-                document.getElementById('driftersKilled').innerHTML = numberCruncher(driftersKilled);
-                document.getElementById('drifterCount').innerHTML = numberCruncher(drifterCount);
+                //document.getElementById('driftersKilled').innerHTML = numberCruncher(driftersKilled);
+                //document.getElementById('drifterCount').innerHTML = numberCruncher(drifterCount);
             }
           }
             
@@ -742,7 +742,7 @@ function createBattle(){
     }
     
     if (unitSize<1) {unitSize=1};
-    document.getElementById('battleScale').innerHTML = numberCruncher(unitSize,0);
+    //document.getElementById('battleScale').innerHTML = numberCruncher(unitSize,0);
     
         
     var rr = Math.random()*drifterCount;
@@ -788,7 +788,7 @@ function createBattle(){
         battleName = generateBattleName();
         }
     
-    document.getElementById('battleName').innerHTML = battleName;
+    //document.getElementById('battleName').innerHTML = battleName;
     
     battles.push(newBattle);
     
