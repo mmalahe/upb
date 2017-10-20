@@ -2544,7 +2544,7 @@ function resetPrestige(){
     prestigeU = 0;
     prestigeS = 0;
     
-    localStorage.removeItem("savePrestige");
+    //@EMUWORK localStorage.removeItem("savePrestige");
     
 }
 
@@ -2555,7 +2555,7 @@ function cheatPrestigeU(){
         prestigeU: prestigeU,
         prestigeS: prestigeS,
         }
-        localStorage.setItem("savePrestige",JSON.stringify(savePrestige));
+        //@EMUWORK localStorage.setItem("savePrestige",JSON.stringify(savePrestige));
     
 }
 
@@ -2566,7 +2566,7 @@ function cheatPrestigeS(){
         prestigeU: prestigeU,
         prestigeS: prestigeS,
         }
-        localStorage.setItem("savePrestige",JSON.stringify(savePrestige));
+        //@EMUWORK localStorage.setItem("savePrestige",JSON.stringify(savePrestige));
     
 }
 
@@ -3227,18 +3227,18 @@ function processMatter(){
 
 // CHECK FOR SAVES
 
-if (localStorage.getItem("saveGame") != null) {
-    load();
-}
+//@EMUWORK if (localStorage.getItem("saveGame") != null) {
+    //~ load();
+//~ }
     
-if (localStorage.getItem("savePrestige") != null) {
-    loadPrestige();
-    refresh();
-}
+//@EMUWORK if (localStorage.getItem("savePrestige") != null) {
+    //~ loadPrestige();
+    //~ refresh();
+//~ }
 
 
 // MAIN LOOP
-function intervalLoop3 {
+function intervalLoop3() {
 //~ window.setInterval(function(){
  
     ticks = ticks + 1;
@@ -4020,11 +4020,11 @@ for(var i=0; i < activeProjects.length; i++){
     
         }
     
-    localStorage.setItem("saveGame",JSON.stringify(saveGame));
-    localStorage.setItem("saveProjectsUses",JSON.stringify(projectsUses));
-    localStorage.setItem("saveProjectsFlags",JSON.stringify(projectsFlags));
-    localStorage.setItem("saveProjectsActive",JSON.stringify(projectsActive));
-    localStorage.setItem("saveStratsActive",JSON.stringify(stratsActive));
+    //@EMUWORK localStorage.setItem("saveGame",JSON.stringify(saveGame));
+    //@EMUWORK localStorage.setItem("saveProjectsUses",JSON.stringify(projectsUses));
+    //@EMUWORK localStorage.setItem("saveProjectsFlags",JSON.stringify(projectsFlags));
+    //@EMUWORK localStorage.setItem("saveProjectsActive",JSON.stringify(projectsActive));
+    //@EMUWORK localStorage.setItem("saveStratsActive",JSON.stringify(stratsActive));
     
 }
 
@@ -4309,11 +4309,11 @@ for(var i=0; i < activeProjects.length; i++){
     
         }
     
-    localStorage.setItem("saveGame1",JSON.stringify(saveGame));
-    localStorage.setItem("saveProjectsUses1",JSON.stringify(projectsUses));
-    localStorage.setItem("saveProjectsFlags1",JSON.stringify(projectsFlags));
-    localStorage.setItem("saveProjectsActive1",JSON.stringify(projectsActive));
-    localStorage.setItem("saveStratsActive1",JSON.stringify(stratsActive));
+    //@EMUWORK localStorage.setItem("saveGame1",JSON.stringify(saveGame));
+    //@EMUWORK localStorage.setItem("saveProjectsUses1",JSON.stringify(projectsUses));
+    //@EMUWORK localStorage.setItem("saveProjectsFlags1",JSON.stringify(projectsFlags));
+    //@EMUWORK localStorage.setItem("saveProjectsActive1",JSON.stringify(projectsActive));
+    //@EMUWORK localStorage.setItem("saveStratsActive1",JSON.stringify(stratsActive));
     
 }
 
@@ -4598,11 +4598,11 @@ for(var i=0; i < activeProjects.length; i++){
     
         }
     
-    localStorage.setItem("saveGame2",JSON.stringify(saveGame));
-    localStorage.setItem("saveProjectsUses2",JSON.stringify(projectsUses));
-    localStorage.setItem("saveProjectsFlags2",JSON.stringify(projectsFlags));
-    localStorage.setItem("saveProjectsActive2",JSON.stringify(projectsActive));
-    localStorage.setItem("saveStratsActive2",JSON.stringify(stratsActive));
+    //@EMUWORK localStorage.setItem("saveGame2",JSON.stringify(saveGame));
+    //@EMUWORK localStorage.setItem("saveProjectsUses2",JSON.stringify(projectsUses));
+    //@EMUWORK localStorage.setItem("saveProjectsFlags2",JSON.stringify(projectsFlags));
+    //@EMUWORK localStorage.setItem("saveProjectsActive2",JSON.stringify(projectsActive));
+    //@EMUWORK localStorage.setItem("saveStratsActive2",JSON.stringify(stratsActive));
     
 }
 
@@ -5529,18 +5529,18 @@ function load2() {
 }
 
 function reset() {
-    localStorage.removeItem("saveGame");
-    localStorage.removeItem("saveProjectsUses");
-    localStorage.removeItem("saveProjectsFlags");
-    localStorage.removeItem("saveProjectsActive");
-    localStorage.removeItem("saveStratsActive");
+    //@EMUWORK localStorage.removeItem("saveGame");
+    //@EMUWORK localStorage.removeItem("saveProjectsUses");
+    //@EMUWORK localStorage.removeItem("saveProjectsFlags");
+    //@EMUWORK localStorage.removeItem("saveProjectsActive");
+    //@EMUWORK localStorage.removeItem("saveStratsActive");
     location.reload();
 }
 
 function loadPrestige() {
     
-        var loadPrestige = JSON.parse(localStorage.getItem("savePrestige"));
+        //@EMUWORK lvar loadPrestige = JSON.parse(localStorage.getItem("savePrestige"));
         
-        prestigeU = loadPrestige.prestigeU;
-        prestigeS = loadPrestige.prestigeS;
+        //@EMUWORK prestigeU = loadPrestige.prestigeU;
+        //@EMUWORK prestigeS = loadPrestige.prestigeS;
 }    
