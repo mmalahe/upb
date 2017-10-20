@@ -19,7 +19,7 @@ Intended for learning about reinforcement learning.
 
 ## Game Emulation
 - Python modules:
-	- dukpy
+	- py\_mini\_racer
 
 ## Learning
 - Python modules:

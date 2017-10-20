@@ -1,4 +1,4 @@
-import dukpy
+from py_mini_racer import py_mini_racer
 from os.path import abspath, dirname, join
 
 class UPEmulator(object):
@@ -46,13 +46,13 @@ class UPEmulator(object):
     
     def _init(self):
         # Set up interpreter
-        self._intp = dukpy.JSInterpreter()
+        self._intp = py_mini_racer.MiniRacer()
         self._time_cs = 0
         
         # Make initial source read
         for fname in self._js_filenames:            
             with open(fname, "r") as f:
-                self._intp.evaljs(f.read())
+                self._intp.eval(f.read())
     
     # "Public" members
     def reset(self):
@@ -65,12 +65,12 @@ class UPEmulator(object):
     def makeObservation(self, fields):
         obs = {}
         for field in fields:
-            obs[field] = self._intp.evaljs(self._obs_to_js[field])
+            obs[field] = self._intp.eval(self._obs_to_js[field])
         return obs
         
     def takeAction(self, action_name):
         # @todo Check if action should actually be available
-        self._intp.evaljs(self._action_to_js[action_name])
+        self._intp.eval(self._action_to_js[action_name])
         
     def advanceTime(self, dt_s):
         dt_cs = int(100.0*dt_s)
@@ -78,4 +78,4 @@ class UPEmulator(object):
             self._time_cs += 1
             for loop_name, loop_interval in self._interval_loops_cs.items():
                 if self._time_cs % loop_interval == 0:
-                    self._intp.evaljs(loop_name)
+                    self._intp.eval(loop_name)
