@@ -17,6 +17,10 @@ Intended for learning about reinforcement learning.
 	- PhantomJS built with ghostdriver support
 		- The binary distribution from http://phantomjs.org/ is best.
 
+## Game Emulation
+- Python modules:
+	- dukpy
+
 ## Learning
 - Python modules:
 	- Numpy
