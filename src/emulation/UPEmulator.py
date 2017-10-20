@@ -16,10 +16,11 @@ class UPEmulator:
                 self.intp.evaljs(f.read())
                 
         # Time intervals for interval loops
-        intervalLoops = {
+        self.interval_loops = {
             'intervalLoop1': 1000,
             'intervalLoop2': 2500,
-            
+            'intervalLoop3': 10,
+            'intervalLoop4': 100
         }
         
     def _getVal(self, name):

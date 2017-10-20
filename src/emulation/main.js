@@ -770,7 +770,7 @@ function investUpgrade(){
     investUpgradeCost = Math.floor(Math.pow(investLevel+1, Math.E)*100);
     //document.getElementById("investUpgradeCost").innerHTML=investUpgradeCost.toLocaleString();
     //document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
-    displayMessage("Investment engine upgraded, expected profit/loss ratio now "+stockGainThreshold);
+    //displayMessage("Investment engine upgraded, expected profit/loss ratio now "+stockGainThreshold);
 }
 
 
@@ -1441,7 +1441,7 @@ function declareWinner(){
         
     if (milestoneFlag < 15){    
        
-       displayMessage(strats[pick].name+" scored "+strats[pick].currentScore+" in the tournament. Yomi increased by "+strats[pick].currentScore * yomiBoost);
+       //displayMessage(strats[pick].name+" scored "+strats[pick].currentScore+" in the tournament. Yomi increased by "+strats[pick].currentScore * yomiBoost);
            
         }
         
@@ -1449,21 +1449,21 @@ function declareWinner(){
             yomi = yomi + 20000;
             
             if (milestoneFlag < 15){ 
-                displayMessage("Selected strategy won the tournament (or tied for first). +20,000 yomi");
+                //displayMessage("Selected strategy won the tournament (or tied for first). +20,000 yomi");
                 }
                 //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
             
             } else if (project128.flag == 1 && placeScore == strats[pick].currentScore) {
                 yomi = yomi + 15000;
                 if (milestoneFlag < 15){ 
-                displayMessage("Selected strategy finished in (or tied for) second place. +15,000 yomi");
+                //displayMessage("Selected strategy finished in (or tied for) second place. +15,000 yomi");
                 }
                 //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
                 
             } else if (project128.flag == 1 && showScore == strats[pick].currentScore) {
                 yomi = yomi + 10000;
                 if (milestoneFlag < 15){ 
-                displayMessage("Selected strategy finished in (or tied for) third place. +10,000 yomi");
+                //displayMessage("Selected strategy finished in (or tied for) third place. +10,000 yomi");
                 }
                 //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
         
@@ -1970,7 +1970,7 @@ function updateSwarm(){
         boredomFlag = 1;
         boredomLevel = 0;
             if (boredomMsg == 0) {
-            displayMessage("No matter to harvest. Inactivity has caused the Swarm to become bored");
+            //displayMessage("No matter to harvest. Inactivity has caused the Swarm to become bored");
             boredomMsg = 1;
             }  
         
@@ -1991,7 +1991,7 @@ function updateSwarm(){
     if (disorgCounter >= 100) {
         disorgFlag = 1;
         if (disorgMsg == 0) {
-            displayMessage("Imbalance between Harvester and Wire Drone levels has disorganized the Swarm");
+            //displayMessage("Imbalance between Harvester and Wire Drone levels has disorganized the Swarm");
             disorgMsg = 1;
             }    
     }
@@ -2007,7 +2007,7 @@ function updateSwarm(){
         swarmGifts = swarmGifts + nextGift;
         //document.getElementById("swarmGifts").innerHTML = numberCruncher(swarmGifts);
         if (milestoneFlag<15){
-            displayMessage("The swarm has generated a gift of "+nextGift+" additional computational capacity");
+            //displayMessage("The swarm has generated a gift of "+nextGift+" additional computational capacity");
             }
         
         giftCountdown = giftPeriod;
@@ -2577,35 +2577,35 @@ function setB(){
 function cheatClips(){
     clips = clips + 100000000;
     unusedClips = unusedClips + 100000000;
-    displayMessage("you just cheated");
+    //displayMessage("you just cheated");
     }
 
 function cheatMoney(){
     funds = funds + 10000000;
     //document.getElementById("funds").innerHTML = funds.toFixed(2);
-    displayMessage("LIZA just cheated");
+    //displayMessage("LIZA just cheated");
     }
 
 function cheatTrust(){
     trust = trust+1;
-    displayMessage("Hilary is nice. Also, Liza just cheated");
+    //displayMessage("Hilary is nice. Also, Liza just cheated");
     }
 
 function cheatOps(){
     standardOps = standardOps + 10000;
-    displayMessage("you just cheated, Liza");
+    //displayMessage("you just cheated, Liza");
     }
 
 function cheatCreat(){
     creativityOn = 1;
     creativity = creativity + 1000;
-    displayMessage("Liza just cheated. Very creative!");
+    //displayMessage("Liza just cheated. Very creative!");
     }
 
 function cheatYomi(){
     yomi = yomi + 1000000;
     //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
-    displayMessage("you just cheated");
+    //displayMessage("you just cheated");
     }
 
 function cheatHypno(){
@@ -2614,14 +2614,14 @@ function cheatHypno(){
 
 function zeroMatter(){
     availableMatter = 0;
-    displayMessage("you just cheated");
+    //displayMessage("you just cheated");
     }
     
 
 function calculateTrust(){
     if (clips>(nextTrust-1)){
         trust = trust +1;
-        displayMessage("Production target met: TRUST INCREASED, additional processor/memory capacity granted");
+        //displayMessage("Production target met: TRUST INCREASED, additional processor/memory capacity granted");
         var fibNext = fib1+fib2;
         nextTrust = fibNext*1000;
         fib1 = fib2;
@@ -2634,8 +2634,9 @@ function addProc(){
         creativitySpeed = Math.log10(processors) * Math.pow(processors,1.1) + processors-1;    
         //document.getElementById("processors").innerHTML = processors;
         if (creativityOn == 1){
-          displayMessage("Processor added, operations (or creativity) per sec increased")
-        } else {displayMessage("Processor added, operations per sec increased")}
+          //displayMessage("Processor added, operations (or creativity) per sec increased")
+        } else {//displayMessage("Processor added, operations per sec increased")
+            }
     
         if (humanFlag == 0){
             swarmGifts = swarmGifts - 1;
@@ -2644,7 +2645,7 @@ function addProc(){
 }
 
 function addMem(){
-        displayMessage("Memory added, max operations increased");
+        //displayMessage("Memory added, max operations increased");
         memory=memory+1;
         //document.getElementById("memory").innerHTML = memory;
     
@@ -2700,93 +2701,93 @@ function milestoneCheck(){
     
     if (milestoneFlag == 0 && funds >= 5){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("AutoClippers available for purchase");
+        //displayMessage("AutoClippers available for purchase");
     }
     
     if (milestoneFlag == 1 && Math.ceil(clips) >= 500){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("500 clips created in " + timeCruncher(ticks));
+        //displayMessage("500 clips created in " + timeCruncher(ticks));
     }
     if (milestoneFlag == 2 && Math.ceil(clips) >= 1000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("1,000 clips created in " + timeCruncher(ticks));
+        //displayMessage("1,000 clips created in " + timeCruncher(ticks));
     }
     
     
     if (compFlag == 0 && unsoldClips<1 && funds<wireCost && wire<1){
         compFlag = 1;    
         projectsFlag = 1;
-        displayMessage("Trust-Constrained Self-Modification enabled");
+        //displayMessage("Trust-Constrained Self-Modification enabled");
     }
     
     if (compFlag == 0 && Math.ceil(clips) >= 2000){    
         compFlag = 1;    
         projectsFlag = 1;
-        displayMessage("Trust-Constrained Self-Modification enabled");
+        //displayMessage("Trust-Constrained Self-Modification enabled");
     }
         
         
     if (milestoneFlag == 3 && Math.ceil(clips) >= 10000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("10,000 clips created in " + timeCruncher(ticks));
+        //displayMessage("10,000 clips created in " + timeCruncher(ticks));
     }
     if (milestoneFlag == 4 && Math.ceil(clips) >= 100000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("100,000 clips created in " + timeCruncher(ticks));
+        //displayMessage("100,000 clips created in " + timeCruncher(ticks));
     }
     if (milestoneFlag == 5 && Math.ceil(clips) >= 1000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("1,000,000 clips created in " + timeCruncher(ticks));    
+        //displayMessage("1,000,000 clips created in " + timeCruncher(ticks));    
     }   
     
     if (milestoneFlag == 6 && project35.flag == 1){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("Full autonomy attained in " + timeCruncher(ticks));    
+        //displayMessage("Full autonomy attained in " + timeCruncher(ticks));    
     }  
     
     if (milestoneFlag == 7 && Math.ceil(clips) >= 1000000000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("One Trillion Clips Created in " + timeCruncher(ticks));    
+        //displayMessage("One Trillion Clips Created in " + timeCruncher(ticks));    
     } 
     
     if (milestoneFlag == 8 && Math.ceil(clips) >= 1000000000000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("One Quadrillion Clips Created in " + timeCruncher(ticks));    
+        //displayMessage("One Quadrillion Clips Created in " + timeCruncher(ticks));    
     } 
     
     if (milestoneFlag == 9 && Math.ceil(clips) >= 1000000000000000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("One Quintillion Clips Created in " + timeCruncher(ticks));    
+        //displayMessage("One Quintillion Clips Created in " + timeCruncher(ticks));    
     } 
     
     if (milestoneFlag == 10 && Math.ceil(clips) >= 1000000000000000000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("One Sextillion Clips Created in " + timeCruncher(ticks));    
+        //displayMessage("One Sextillion Clips Created in " + timeCruncher(ticks));    
     } 
     
     if (milestoneFlag == 11 && Math.ceil(clips) >= 1000000000000000000000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("One Septillion Clips Created in " + timeCruncher(ticks));    
+        //displayMessage("One Septillion Clips Created in " + timeCruncher(ticks));    
     } 
     
     if (milestoneFlag == 12 && Math.ceil(clips) >= 1000000000000000000000000000){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("One Octillion Clips Created in " + timeCruncher(ticks));    
+        //displayMessage("One Octillion Clips Created in " + timeCruncher(ticks));    
     } 
     
     if (milestoneFlag == 13 && spaceFlag == 1){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("Terrestrial resources fully utilized in " + timeCruncher(ticks));    
+        //displayMessage("Terrestrial resources fully utilized in " + timeCruncher(ticks));    
     }   
     
     if (milestoneFlag == 14 && clips>=totalMatter){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("Universal Paperclips achieved in " + timeCruncher(ticks));    
+        //displayMessage("Universal Paperclips achieved in " + timeCruncher(ticks));    
     }    
     
     if (milestoneFlag == 14 && foundMatter>=totalMatter && availableMatter<1 && wire<1){
         milestoneFlag = milestoneFlag + 1;
-        displayMessage("Universal Paperclips achieved in " + timeCruncher(ticks));    
+        //displayMessage("Universal Paperclips achieved in " + timeCruncher(ticks));    
     }        
     
 }
@@ -2905,7 +2906,7 @@ function increaseProbeTrust(){
     probeTrustCost = Math.floor(Math.pow(probeTrust+1, 1.47)*200);
     //document.getElementById('probeTrustDisplay').innerHTML = probeTrust;
     //document.getElementById('probeTrustCostDisplay').innerHTML = Math.floor(probeTrustCost).toLocaleString();
-    displayMessage("WARNING: Risk of value drift increased");
+    //displayMessage("WARNING: Risk of value drift increased");
 }
 
 function increaseMaxTrust(){
@@ -2915,7 +2916,7 @@ function increaseMaxTrust(){
     // maxTrustCost = Math.floor(Math.pow(maxTrust, 1.17)*1000);
     //document.getElementById('maxTrustDisplay').innerHTML = maxTrust.toLocaleString();
     // document.getElementById('maxTrustCostDisplay').innerHTML = Math.floor(maxTrustCost).toLocaleString();
-    displayMessage("Maximum trust increased, probe design space expanded");
+    //displayMessage("Maximum trust increased, probe design space expanded");
 }
 
 function raiseProbeSpeed(){
@@ -3237,7 +3238,8 @@ if (localStorage.getItem("savePrestige") != null) {
 
 
 // MAIN LOOP
-window.setInterval(function(){
+function intervalLoop3 {
+//~ window.setInterval(function(){
  
     ticks = ticks + 1;
     milestoneCheck();
@@ -3281,7 +3283,7 @@ window.setInterval(function(){
     stockReportCounter++;
     if (investmentEngineFlag==1 && stockReportCounter>=10000){
         var r = (ledger+portTotal).toLocaleString();
-        displayMessage("Lifetime investment revenue report: $"+r);
+        //displayMessage("Lifetime investment revenue report: $"+r);
         stockReportCounter = 0;
     }
     
@@ -3566,27 +3568,27 @@ if (dismantle >= 7) {
     
     if (endTimer6>=500 && milestoneFlag == 15) {
         playThrenody();
-        displayMessage("Universal Paperclips");
+        //displayMessage("Universal Paperclips");
         milestoneFlag++;
     }
     
     if (endTimer6>=600 && milestoneFlag == 16) {
-        displayMessage("a game by Frank Lantz");
+        //displayMessage("a game by Frank Lantz");
         milestoneFlag++;
     }
     
     if (endTimer6>=700 && milestoneFlag == 17) {
-        displayMessage("combat programming by Bennett Foddy");
+        //displayMessage("combat programming by Bennett Foddy");
         milestoneFlag++;
     }
     
     if (endTimer6>=800 && milestoneFlag == 18) {
-        displayMessage("'Riversong' by Tonto's Expanding Headband used by kind permission of Malcolm Cecil");
+        //displayMessage("'Riversong' by Tonto's Expanding Headband used by kind permission of Malcolm Cecil");
         milestoneFlag++;
     }
     
     if (endTimer6>=900 && milestoneFlag == 19) {
-        displayMessage("&#169; 2017 Everybody House Games");
+        //displayMessage("&#169; 2017 Everybody House Games");
         milestoneFlag++;
     }
     
@@ -3594,14 +3596,16 @@ if (dismantle >= 7) {
 
     
     
-}, 10);
+//~ }, 10);
+}
 
 // Slow Loop
 
 var saveTimer = 0;
 var secTimer = 0;
 
-window.setInterval(function(){
+function intervalLoop4() {
+//~ window.setInterval(function(){
     
     // Wire Price Fluctuation
     
@@ -3636,7 +3640,8 @@ window.setInterval(function(){
     }
     
     
-}, 100);
+//~ }, 100);
+}
      
 
 // Saving and Loading
