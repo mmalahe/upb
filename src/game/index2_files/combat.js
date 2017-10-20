@@ -285,7 +285,7 @@ function Battle(){
 		canvas.width = battleWIDTH;
 		canvas.height = battleHEIGHT;
         
-		var interval = setInterval(Update, 16/gameSpeedupFactor);
+		var interval = setInterval(Update, 16);
         
 		battleRestart();
 	}

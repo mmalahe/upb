@@ -984,14 +984,16 @@ function updateStocks(){
     
 //~ }, 100);
 
-window.setInterval(function(){
+function intervalLoop1 () {  
+//~ window.setInterval(function(){
 if (humanFlag == 1){    
 stockShop();
-}    
-}, 1000);
+}
+//~ }, 1000);
+}
 
-
-window.setInterval(function(){
+function intervalLoop2 () {  
+//~ window.setInterval(function(){
     
 sellDelay = sellDelay+1;    
     
@@ -1004,7 +1006,8 @@ if (portfolioSize>0 && humanFlag == 1){
     updateStocks();  
     }
     
-}, 2500);
+//~ }, 2500);
+}
 
 //-------------------STRATEGY-----------------------------------------------------
 
@@ -1625,12 +1628,12 @@ function round(roundNum){
     }
     }
     
-window.setInterval(function(){
+//~ window.setInterval(function(){
 
-var pick;//@EMUWORK
+//~ var pick;//@EMUWORK
 //pick = document.getElementById("stratPicker").value;
     
-}, 100);
+//~ }, 100);
 
 
 //--------------------------------------------------------------------------------
@@ -3234,9 +3237,6 @@ if (localStorage.getItem("savePrestige") != null) {
 
 
 // MAIN LOOP
-var gameSpeedupFactor = 1
-var gameTickRateMilliseconds = 10.0/gameSpeedupFactor
-
 window.setInterval(function(){
  
     ticks = ticks + 1;
@@ -3594,14 +3594,12 @@ if (dismantle >= 7) {
 
     
     
-}, gameTickRateMilliseconds);
+}, 10);
 
 // Slow Loop
 
 var saveTimer = 0;
 var secTimer = 0;
-
-var gameSlowTickRateMilliseconds = 100.0/gameSpeedupFactor
 
 window.setInterval(function(){
     
@@ -3638,7 +3636,7 @@ window.setInterval(function(){
     }
     
     
-}, gameSlowTickRateMilliseconds);
+}, 100);
      
 
 // Saving and Loading
