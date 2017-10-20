@@ -12,7 +12,6 @@ up_observation_names_stage1 = [
     'Public Demand', 
     'Available Funds', 
     'Autoclipper Cost', 
-    'Autoclipper Purchasable', 
     'Number of Autoclippers',
     'Wire Inches',
     'Wire Cost'
@@ -49,7 +48,6 @@ class UPObservationSpace(Box):
             'Wire Cost': [0, np.inf],
             'Number of Autoclippers': [0, np.inf],
             'Autoclipper Cost': [0, np.inf],
-            'Autoclipper Purchasable': [0, 1],
             'Paperclips': [0, np.inf],
             'Available Funds': [0, np.inf]           
         }
