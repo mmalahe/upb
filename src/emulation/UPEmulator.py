@@ -1,11 +1,12 @@
 import dukpy
+from os.path import abspath, dirname, join
 
 class UPEmulator:
     def __init__(self, 
-                 combat_filename="combat.js",
-                 globals_filename="globals.js",
-                 projects_filename="projects.js",
-                 main_filename="main.js"):
+                 combat_filename=join(dirname(abspath(__file__)),"combat.js"),
+                 globals_filename=join(dirname(abspath(__file__)),"globals.js"),
+                 projects_filename=join(dirname(abspath(__file__)),"projects.js"),
+                 main_filename=join(dirname(abspath(__file__)),"main.js")):
         
         # Set up interpreter
         self.intp = dukpy.JSInterpreter()
