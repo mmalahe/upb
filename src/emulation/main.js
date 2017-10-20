@@ -2,7 +2,8 @@
 
 function playThrenody(){
     
-    var x = document.getElementById("threnody1");
+    var x;
+    x = document.getElementById("threnody1");
     x.play();
     
 }
@@ -23,17 +24,17 @@ function adjustWirePrice(){
         wirePriceCounter++;
         var wireAdjust = 6*(Math.sin(wirePriceCounter));
         wireCost = Math.ceil(wireBasePrice + wireAdjust);
-        document.getElementById("wireCost").innerHTML = wireCost;
+        //document.getElementById("wireCost").innerHTML = wireCost;
         }
 }
 
 function toggleWireBuyer(){
     if (wireBuyerStatus==1){
         wireBuyerStatus=0;
-        document.getElementById('wireBuyerStatus').innerHTML = "OFF";
+        //document.getElementById('wireBuyerStatus').innerHTML = "OFF";
     } else {
         wireBuyerStatus=1;
-        document.getElementById('wireBuyerStatus').innerHTML = "ON";
+        //document.getElementById('wireBuyerStatus').innerHTML = "ON";
     }
 }
 
@@ -44,8 +45,8 @@ function buyWire(){
         funds = funds - wireCost;
         wirePurchase = wirePurchase + 1;
         wireBasePrice = wireBasePrice + .05;
-        document.getElementById('wire').innerHTML = Math.floor(wire).toLocaleString();
-        document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        //document.getElementById('wire').innerHTML = Math.floor(wire).toLocaleString();
+        //document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 }
 
@@ -137,7 +138,7 @@ function quantumCompute(){
     qClock = qClock+.01;
     for (var i = 0; i<qChips.length; i++){
         qChips[i].value = Math.sin(qClock*qChips[i].waveSeed*qChips[i].active);
-        document.getElementById("qChip"+i).style.opacity=qChips[i].value;
+        //document.getElementById("qChip"+i).style.opacity=qChips[i].value;
     }
 }
 
@@ -149,7 +150,7 @@ function qComp(){
     
     
     if (qChips[0].active == 0){
-        document.getElementById("qCompDisplay").innerHTML = "Need Photonic Chips";   
+        //document.getElementById("qCompDisplay").innerHTML = "Need Photonic Chips";   
     } else {
     for (var i = 0; i<qChips.length; i++){
         q = q+qChips[i].value;
@@ -167,7 +168,7 @@ function qComp(){
             }
         
         standardOps = standardOps + qq;
-        document.getElementById("qCompDisplay").innerHTML = "qOps: " + Math.ceil(q*360).toLocaleString();
+        //document.getElementById("qCompDisplay").innerHTML = "qOps: " + Math.ceil(q*360).toLocaleString();
     }
     
 }
@@ -186,9 +187,9 @@ function manageProjects(){
         
     for(var i = 0; i < activeProjects.length; i++){
         if (activeProjects[i].cost()){
-            document.getElementById(activeProjects[i].id).disabled = false;
+            //document.getElementById(activeProjects[i].id).disabled = false;
         } else {
-            document.getElementById(activeProjects[i].id).disabled = true;
+            //document.getElementById(activeProjects[i].id).disabled = true;
         }   
     }
 }
@@ -196,8 +197,8 @@ function manageProjects(){
 
 function displayProjects(project){
     
-    var element = document.getElementById("projectListTop"); 
-    var newProject = document.createElement("button");
+    var element = //document.getElementById("projectListTop"); 
+    var newProject = //document.createElement("button");
     newProject.setAttribute("id", project.id);
     
     newProject.onclick = function(){project.effect()};
@@ -205,20 +206,20 @@ function displayProjects(project){
     newProject.setAttribute("class", "projectButton");
     element.appendChild(newProject, element.firstChild);
     
-    var span = document.createElement("span");
+    var span = //document.createElement("span");
     span.style.fontWeight = "bold";
     newProject.appendChild(span);
     
-    var title = document.createTextNode(project.title);
+    var title = //document.createTextNode(project.title);
     span.appendChild(title);    
     
-    var cost = document.createTextNode(project.priceTag);
+    var cost = //document.createTextNode(project.priceTag);
     newProject.appendChild(cost);
     
-    var div = document.createElement("div");
+    var div = //document.createElement("div");
     newProject.appendChild(div);
     
-    var description = document.createTextNode(project.description);
+    var description = //document.createTextNode(project.description);
     newProject.appendChild(description);
     
     blink(project.id);
@@ -227,11 +228,12 @@ function displayProjects(project){
 
 //  HYPNODRONE EVENT ----------------------------------------------------------------
 
-document.getElementById("hypnoDroneEventDiv").style.display = "none"; 
+//document.getElementById("hypnoDroneEventDiv").style.display = "none"; 
 longBlinkCounter = 0;
 
 function longBlink(elemID){
-    var e = document.getElementById(elemID);
+    var e;
+    e = //document.getElementById(elemID);
     
     { 
     var handle = setInterval(function(){longToggleVisibility(elemID)}, 32);    
@@ -241,19 +243,19 @@ function longBlink(elemID){
     longBlinkCounter++;    
         
     if (longBlinkCounter > 5 && longBlinkCounter < 10){
-        document.getElementById("hypnoDroneText").innerHTML="Release"; 
+        //document.getElementById("hypnoDroneText").innerHTML="Release"; 
         }    
     
     if (longBlinkCounter > 30 && longBlinkCounter < 40){
-        document.getElementById("hypnoDroneText").innerHTML="<br /><br /><br />Release"; 
+        //document.getElementById("hypnoDroneText").innerHTML="<br /><br /><br />Release"; 
         }   
         
     if (longBlinkCounter > 45 && longBlinkCounter < 55){
-        document.getElementById("hypnoDroneText").innerHTML="<br />Release";
+        //document.getElementById("hypnoDroneText").innerHTML="<br />Release";
         }       
         
      if (longBlinkCounter > 55){
-        document.getElementById("hypnoDroneText").innerHTML="Release<br/>the<br/>Hypno<br/>Drones";
+        //document.getElementById("hypnoDroneText").innerHTML="Release<br/>the<br/>Hypno<br/>Drones";
         }       
         
     if (longBlinkCounter >= 120){
@@ -273,7 +275,7 @@ function longBlink(elemID){
     }
 
 function hypnoDroneEvent(){
-    document.getElementById("hypnoDroneText").innerHTML="Release";
+    //document.getElementById("hypnoDroneText").innerHTML="Release";
     longBlink("hypnoDroneEventDiv");
 }     
 
@@ -282,18 +284,18 @@ function hypnoDroneEvent(){
 
 
 function displayMessage(msg){
-    document.getElementById("readout5").innerHTML=document.getElementById("readout4").innerHTML;
-    document.getElementById("readout4").innerHTML=document.getElementById("readout3").innerHTML;
-    document.getElementById("readout3").innerHTML=document.getElementById("readout2").innerHTML;
-    document.getElementById("readout2").innerHTML=document.getElementById("readout1").innerHTML;
-    document.getElementById("readout1").innerHTML=msg;
+    //document.getElementById("readout5").innerHTML=document.getElementById("readout4").innerHTML;
+    //document.getElementById("readout4").innerHTML=document.getElementById("readout3").innerHTML;
+    //document.getElementById("readout3").innerHTML=document.getElementById("readout2").innerHTML;
+    //document.getElementById("readout2").innerHTML=document.getElementById("readout1").innerHTML;
+    //document.getElementById("readout1").innerHTML=msg;
 }
 
 
 // BLINK
 
 function blink(elemID){
-    var e = document.getElementById(elemID);
+    var e = //document.getElementById(elemID);
     
     { 
     var handle = setInterval(function(){toggleVisibility(elemID)}, 30);    
@@ -322,49 +324,51 @@ function blink(elemID){
 function buttonUpdate(){
     
     if (spaceFlag==0){
-        document.getElementById("mdpsDiv").style.display="none";
+        //document.getElementById("mdpsDiv").style.display="none";
     } else if (spaceFlag==1) {
-        document.getElementById("mdpsDiv").style.display="";
+        //document.getElementById("mdpsDiv").style.display="";
     }
     
     
-    document.getElementById("factoryRebootToolTip").innerHTML = "+"+numberCruncher(factoryBill)+" clips";
+    //document.getElementById("factoryRebootToolTip").innerHTML = "+"+numberCruncher(factoryBill)+" clips";
     
-    document.getElementById("harvesterRebootToolTip").innerHTML = "+"+numberCruncher(harvesterBill)+" clips";
+    //document.getElementById("harvesterRebootToolTip").innerHTML = "+"+numberCruncher(harvesterBill)+" clips";
     
-    document.getElementById("wireDroneRebootToolTip").innerHTML = "+"+numberCruncher(wireDroneBill)+" clips";
+    //document.getElementById("wireDroneRebootToolTip").innerHTML = "+"+numberCruncher(wireDroneBill)+" clips";
     
-    document.getElementById("farmRebootToolTip").innerHTML = "+"+numberCruncher(farmBill)+" clips";
+    //document.getElementById("farmRebootToolTip").innerHTML = "+"+numberCruncher(farmBill)+" clips";
     
-    document.getElementById("batteryRebootToolTip").innerHTML = "+"+numberCruncher(batteryBill)+" clips";
+    //document.getElementById("batteryRebootToolTip").innerHTML = "+"+numberCruncher(batteryBill)+" clips";
     
     
     if (swarmFlag == 1){
-        document.getElementById("swarmSliderDiv").style.display="";
+        //document.getElementById("swarmSliderDiv").style.display="";
     } else {
-        document.getElementById("swarmSliderDiv").style.display="none";
+        //document.getElementById("swarmSliderDiv").style.display="none";
     }
     
-    document.getElementById("clipCountCrunched").innerHTML = numberCruncher(clips, 1);
+    //document.getElementById("clipCountCrunched").innerHTML = numberCruncher(clips, 1);
     
 if (autoTourneyFlag==1) {
-    document.getElementById("autoTourneyStatusDiv").style.display="";
-    document.getElementById("autoTourneyControl").style.display="";
+    //document.getElementById("autoTourneyStatusDiv").style.display="";
+    //document.getElementById("autoTourneyControl").style.display="";
     } else {
-    document.getElementById("autoTourneyStatusDiv").style.display="none";
-    document.getElementById("autoTourneyControl").style.display="none";   
+    //document.getElementById("autoTourneyStatusDiv").style.display="none";
+    //document.getElementById("autoTourneyControl").style.display="none";   
     }    
 
-document.getElementById("qCompDisplay").style.opacity = qFade;
+//document.getElementById("qCompDisplay").style.opacity = qFade;
     qFade = qFade - .001;
     
 if (wireBuyerFlag==1) {
-    document.getElementById("wireBuyerDiv").style.display="";
+    //document.getElementById("wireBuyerDiv").style.display="";
     } else {
-    document.getElementById("wireBuyerDiv").style.display="none";    
+    //document.getElementById("wireBuyerDiv").style.display="none";    
     }
-    
-if (resultsFlag == 1 && autoTourneyFlag == 1 && autoTourneyStatus ==1 && document.getElementById("tournamentResultsTable").style.display == "") {
+
+var tournamentResultsTableStyleDisplay = "";
+//tournamentResultsTableStyleDisplay = document.getElementById("tournamentResultsTable").style.display
+if (resultsFlag == 1 && autoTourneyFlag == 1 && autoTourneyStatus ==1 && tournamentResultsTableStyleDisplay == "") {
     resultsTimer++;
     
     if (resultsTimer>=300 && operations>=tourneyCost){
@@ -375,151 +379,151 @@ if (resultsFlag == 1 && autoTourneyFlag == 1 && autoTourneyStatus ==1 && documen
     }    
     
     
-document.getElementById("tournamentStuff").onmouseover = function() {revealGrid()};
-document.getElementById("tournamentStuff").onmouseout = function() {revealResults()};    
+//document.getElementById("tournamentStuff").onmouseover = function() {revealGrid()};
+//document.getElementById("tournamentStuff").onmouseout = function() {revealResults()};    
     
 if (project121.flag == 0){
-        document.getElementById("increaseMaxTrustDiv").style.display="none";
-        document.getElementById("honorDiv").style.display="none";
+        //document.getElementById("increaseMaxTrustDiv").style.display="none";
+        //document.getElementById("honorDiv").style.display="none";
     } else {
-        document.getElementById("increaseMaxTrustDiv").style.display="";
-        document.getElementById("honorDiv").style.display="";
+        //document.getElementById("increaseMaxTrustDiv").style.display="";
+        //document.getElementById("honorDiv").style.display="";
     }
     
 if (battleFlag == 0){
-        document.getElementById("drifterDiv").style.display="none";
+        //document.getElementById("drifterDiv").style.display="none";
     } else {
-        document.getElementById("drifterDiv").style.display="";
+        //document.getElementById("drifterDiv").style.display="";
     }     
     
 if (battleFlag == 0){
-        document.getElementById("battleCanvasDiv").style.display="none";
+        //document.getElementById("battleCanvasDiv").style.display="none";
     } else {
-        document.getElementById("battleCanvasDiv").style.display="";
+        //document.getElementById("battleCanvasDiv").style.display="";
     }    
     
 if (project131.flag == 0){
-    document.getElementById("combatButtonDiv").style.display = "none";
+    //document.getElementById("combatButtonDiv").style.display = "none";
     } else {
-    document.getElementById("combatButtonDiv").style.display = "";    
+    //document.getElementById("combatButtonDiv").style.display = "";    
     }     
     
 if (maxFactoryLevel>=50){
-    document.getElementById("factoryUpgradeDisplay").style.display = "none";
+    //document.getElementById("factoryUpgradeDisplay").style.display = "none";
     } 
     
  if (maxDroneLevel>=50000){   
-    document.getElementById("droneUpgradeDisplay").style.display = "none";
+    //document.getElementById("droneUpgradeDisplay").style.display = "none";
     }
     
-if (honor<maxTrustCost){document.getElementById("btnIncreaseMaxTrust").disabled = true;
+if (honor<maxTrustCost){//document.getElementById("btnIncreaseMaxTrust").disabled = true;
             } else {
-            document.getElementById("btnIncreaseMaxTrust").disabled = false;    
+            //document.getElementById("btnIncreaseMaxTrust").disabled = false;    
             }
      
-if (unusedClips<probeCost){document.getElementById("btnMakeProbe").disabled = true;
+if (unusedClips<probeCost){//document.getElementById("btnMakeProbe").disabled = true;
             } else {
-            document.getElementById("btnMakeProbe").disabled = false;    
+            //document.getElementById("btnMakeProbe").disabled = false;    
             }    
     
-if (probesLostHaz<1) {document.getElementById("hazardBodyCount").style.display = "none";
+if (probesLostHaz<1) {//document.getElementById("hazardBodyCount").style.display = "none";
             } else {
-            document.getElementById("hazardBodyCount").style.display = "";
+            //document.getElementById("hazardBodyCount").style.display = "";
                 
-            document.getElementById('probesLostHazardsDisplay').innerHTML = numberCruncher(probesLostHaz);
+            //document.getElementById('probesLostHazardsDisplay').innerHTML = numberCruncher(probesLostHaz);
                 
             }    
     
-if (probesLostDrift<1) {document.getElementById("driftBodyCount").style.display = "none";
+if (probesLostDrift<1) {//document.getElementById("driftBodyCount").style.display = "none";
             } else {
-            document.getElementById("driftBodyCount").style.display = "";
+            //document.getElementById("driftBodyCount").style.display = "";
             }     
     
-if (probesLostCombat<1) {document.getElementById("combatBodyCount").style.display = "none";
+if (probesLostCombat<1) {//document.getElementById("combatBodyCount").style.display = "none";
             } else {
-            document.getElementById("combatBodyCount").style.display = "";
+            //document.getElementById("combatBodyCount").style.display = "";
             }     
 
-if (prestigeU<1 && prestigeS<1) {document.getElementById("prestigeDiv").style.display = "none";
+if (prestigeU<1 && prestigeS<1) {//document.getElementById("prestigeDiv").style.display = "none";
             } else {
-            document.getElementById("prestigeDiv").style.display = ""; 
+            //document.getElementById("prestigeDiv").style.display = ""; 
             }  
     
-if (wire<1){document.getElementById("btnMakePaperclip").disabled = true;
+if (wire<1){//document.getElementById("btnMakePaperclip").disabled = true;
             } else {
-            document.getElementById("btnMakePaperclip").disabled = false;    
+            //document.getElementById("btnMakePaperclip").disabled = false;    
             }
-if (funds<wireCost){document.getElementById("btnBuyWire").disabled = true;
+if (funds<wireCost){//document.getElementById("btnBuyWire").disabled = true;
             } else {
-            document.getElementById("btnBuyWire").disabled = false;    
+            //document.getElementById("btnBuyWire").disabled = false;    
             }
-if (funds<clipperCost){document.getElementById("btnMakeClipper").disabled = true;
+if (funds<clipperCost){//document.getElementById("btnMakeClipper").disabled = true;
             } else {
-            document.getElementById("btnMakeClipper").disabled = false;    
+            //document.getElementById("btnMakeClipper").disabled = false;    
             }   
-if (funds<adCost){document.getElementById("btnExpandMarketing").disabled = true;
+if (funds<adCost){//document.getElementById("btnExpandMarketing").disabled = true;
             } else {
-            document.getElementById("btnExpandMarketing").disabled = false;    
+            //document.getElementById("btnExpandMarketing").disabled = false;    
             }    
-if (margin<=.01){document.getElementById("btnLowerPrice").disabled = true;
+if (margin<=.01){//document.getElementById("btnLowerPrice").disabled = true;
             } else {
-            document.getElementById("btnLowerPrice").disabled = false;    
+            //document.getElementById("btnLowerPrice").disabled = false;    
             } 
     
 if (trust<=processors+memory && swarmGifts <= 0){
-            document.getElementById("btnAddProc").disabled = true;
-            document.getElementById("btnAddMem").disabled = true;
+            //document.getElementById("btnAddProc").disabled = true;
+            //document.getElementById("btnAddMem").disabled = true;
             } else {
-            document.getElementById("btnAddProc").disabled = false;
-            document.getElementById("btnAddMem").disabled = false;    
+            //document.getElementById("btnAddProc").disabled = false;
+            //document.getElementById("btnAddMem").disabled = false;    
             }
 if (operations>=tourneyCost && tourneyInProg == 0){
-            document.getElementById("btnNewTournament").disabled = false;
+            //document.getElementById("btnNewTournament").disabled = false;
             } else {
-            document.getElementById("btnNewTournament").disabled = true;    
+            //document.getElementById("btnNewTournament").disabled = true;    
             }
 if (yomi<investUpgradeCost){
-            document.getElementById("btnImproveInvestments").disabled = true;
+            //document.getElementById("btnImproveInvestments").disabled = true;
             } else {
-            document.getElementById("btnImproveInvestments").disabled = false;   
+            //document.getElementById("btnImproveInvestments").disabled = false;   
             }  
 if (investmentEngineFlag == 0){
             
-            document.getElementById("investmentEngine").style.display="none";
-            document.getElementById("investmentEngineUpgrade").style.display="none";
+            //document.getElementById("investmentEngine").style.display="none";
+            //document.getElementById("investmentEngineUpgrade").style.display="none";
             } else {
                 
-            document.getElementById("investmentEngine").style.display="";
-            document.getElementById("investmentEngineUpgrade").style.display="";        
+            //document.getElementById("investmentEngine").style.display="";
+            //document.getElementById("investmentEngineUpgrade").style.display="";        
             }    
 
 if (strategyEngineFlag == 0){
             
-            document.getElementById("strategyEngine").style.display="none";
-            document.getElementById("tournamentManagement").style.display="none";
+            //document.getElementById("strategyEngine").style.display="none";
+            //document.getElementById("tournamentManagement").style.display="none";
             } else {
                 
-            document.getElementById("strategyEngine").style.display="";
-            document.getElementById("tournamentManagement").style.display="";        
+            //document.getElementById("strategyEngine").style.display="";
+            //document.getElementById("tournamentManagement").style.display="";        
             }     
     
 if (megaClipperFlag == 0){
             
-            document.getElementById("megaClipperDiv").style.display="none";
+            //document.getElementById("megaClipperDiv").style.display="none";
             } else {
-            document.getElementById("megaClipperDiv").style.display="";      
+            //document.getElementById("megaClipperDiv").style.display="";      
             } 
     
-if (funds<megaClipperCost){document.getElementById("btnMakeMegaClipper").disabled = true;
+if (funds<megaClipperCost){//document.getElementById("btnMakeMegaClipper").disabled = true;
             } else {
-            document.getElementById("btnMakeMegaClipper").disabled = false;    
+            //document.getElementById("btnMakeMegaClipper").disabled = false;    
             }   
     
 if (autoClipperFlag == 0){
             
-            document.getElementById("autoClipperDiv").style.display="none";
+            //document.getElementById("autoClipperDiv").style.display="none";
             } else {
-            document.getElementById("autoClipperDiv").style.display="";      
+            //document.getElementById("autoClipperDiv").style.display="";      
             } 
     
             if (funds>=5) {
@@ -528,127 +532,127 @@ if (autoClipperFlag == 0){
     
 if (revPerSecFlag == 0){
             
-            document.getElementById("revPerSecDiv").style.display="none";
+            //document.getElementById("revPerSecDiv").style.display="none";
             } else {
-            document.getElementById("revPerSecDiv").style.display="";      
+            //document.getElementById("revPerSecDiv").style.display="";      
             }     
     
     
 if (compFlag == 0){
             
-            document.getElementById("compDiv").style.display="none";
+            //document.getElementById("compDiv").style.display="none";
             } else {
-            document.getElementById("compDiv").style.display="";      
+            //document.getElementById("compDiv").style.display="";      
             }  
     
     
 if (creativityOn == 0){
-            document.getElementById("creativityDiv").style.display="none";
+            //document.getElementById("creativityDiv").style.display="none";
             } else {
-            document.getElementById("creativityDiv").style.display="";    
+            //document.getElementById("creativityDiv").style.display="";    
 }    
     
 if (projectsFlag == 0){
             
-            document.getElementById("projectsDiv").style.display="none";
+            //document.getElementById("projectsDiv").style.display="none";
             } else {
-            document.getElementById("projectsDiv").style.display="";      
+            //document.getElementById("projectsDiv").style.display="";      
             }      
 
 if (humanFlag == 0){
             
-            document.getElementById("businessDiv").style.display="none";
-            document.getElementById("manufacturingDiv").style.display="none";
-            document.getElementById("trustDiv").style.display="none";
+            //document.getElementById("businessDiv").style.display="none";
+            //document.getElementById("manufacturingDiv").style.display="none";
+            //document.getElementById("trustDiv").style.display="none";
             investmentEngineFlag = 0;
             wireBuyerFlag = 0;
-            document.getElementById("creationDiv").style.display="";
+            //document.getElementById("creationDiv").style.display="";
             } else {
-            document.getElementById("businessDiv").style.display="";
-            document.getElementById("manufacturingDiv").style.display="";
-            document.getElementById("trustDiv").style.display="";
-            document.getElementById("creationDiv").style.display="none";    
+            //document.getElementById("businessDiv").style.display="";
+            //document.getElementById("manufacturingDiv").style.display="";
+            //document.getElementById("trustDiv").style.display="";
+            //document.getElementById("creationDiv").style.display="none";    
             }  
     
 if (factoryFlag == 0){
             
-            document.getElementById("factoryDiv").style.display="none";
+            //document.getElementById("factoryDiv").style.display="none";
             } else {
-            document.getElementById("factoryDiv").style.display="";      
+            //document.getElementById("factoryDiv").style.display="";      
             }      
    
 if (wireProductionFlag == 0){
             
-            document.getElementById("wireProductionDiv").style.display="none";
+            //document.getElementById("wireProductionDiv").style.display="none";
             } else {
-            document.getElementById("wireProductionDiv").style.display="";
-            document.getElementById("wireTransDiv").style.display="none";    
+            //document.getElementById("wireProductionDiv").style.display="";
+            //document.getElementById("wireTransDiv").style.display="none";    
             } 
     
 if (harvesterFlag == 0){
             
-            document.getElementById("harvesterDiv").style.display="none";
+            //document.getElementById("harvesterDiv").style.display="none";
             } else {
-            document.getElementById("harvesterDiv").style.display="";      
+            //document.getElementById("harvesterDiv").style.display="";      
             }  
     
 if (wireDroneFlag == 0){
             
-            document.getElementById("wireDroneDiv").style.display="none";
+            //document.getElementById("wireDroneDiv").style.display="none";
             } else {
-            document.getElementById("wireDroneDiv").style.display="";      
+            //document.getElementById("wireDroneDiv").style.display="";      
             }  
     
 if (tothFlag == 0){
             
-            document.getElementById("tothDiv").style.display="none";
+            //document.getElementById("tothDiv").style.display="none";
             } else {
-            document.getElementById("tothDiv").style.display="";      
+            //document.getElementById("tothDiv").style.display="";      
             }    
     
 if (spaceFlag == 0){
-            document.getElementById("spaceDiv").style.display="none";
-            document.getElementById("factoryDivSpace").style.display="none";
-            document.getElementById("droneDivSpace").style.display="none";
-            document.getElementById("probeDesignDiv").style.display="none";
-            document.getElementById("increaseProbeTrustDiv").style.display="none";
+            //document.getElementById("spaceDiv").style.display="none";
+            //document.getElementById("factoryDivSpace").style.display="none";
+            //document.getElementById("droneDivSpace").style.display="none";
+            //document.getElementById("probeDesignDiv").style.display="none";
+            //document.getElementById("increaseProbeTrustDiv").style.display="none";
             } else {
-            document.getElementById("spaceDiv").style.display=""; 
-            document.getElementById("factoryDivSpace").style.display="";
-            document.getElementById("droneDivSpace").style.display="";
-            document.getElementById("probeDesignDiv").style.display="";
-            document.getElementById("increaseProbeTrustDiv").style.display="";    
-            document.getElementById("factoryDiv").style.display="none";
-            document.getElementById("harvesterDiv").style.display="none"; 
-            document.getElementById("wireDroneDiv").style.display="none";         
+            //document.getElementById("spaceDiv").style.display=""; 
+            //document.getElementById("factoryDivSpace").style.display="";
+            //document.getElementById("droneDivSpace").style.display="";
+            //document.getElementById("probeDesignDiv").style.display="";
+            //document.getElementById("increaseProbeTrustDiv").style.display="";    
+            //document.getElementById("factoryDiv").style.display="none";
+            //document.getElementById("harvesterDiv").style.display="none"; 
+            //document.getElementById("wireDroneDiv").style.display="none";         
             }  
     
 if (qFlag == 0){
-            document.getElementById("qComputing").style.display="none";     
+            //document.getElementById("qComputing").style.display="none";     
             } else {
-            document.getElementById("qComputing").style.display="";    
+            //document.getElementById("qComputing").style.display="";    
             }    
  
     
-if (unusedClips<factoryCost){document.getElementById("btnMakeFactory").disabled = true;
+if (unusedClips<factoryCost){//document.getElementById("btnMakeFactory").disabled = true;
             } else {
-            document.getElementById("btnMakeFactory").disabled = false;    
+            //document.getElementById("btnMakeFactory").disabled = false;    
             }     
      
     
-if (harvesterLevel==0){document.getElementById("btnHarvesterReboot").disabled = true;
+if (harvesterLevel==0){//document.getElementById("btnHarvesterReboot").disabled = true;
             } else {
-            document.getElementById("btnHarvesterReboot").disabled = false;    
+            //document.getElementById("btnHarvesterReboot").disabled = false;    
             }
     
-if (wireDroneLevel==0){document.getElementById("btnWireDroneReboot").disabled = true;
+if (wireDroneLevel==0){//document.getElementById("btnWireDroneReboot").disabled = true;
             } else {
-            document.getElementById("btnWireDroneReboot").disabled = false;    
+            //document.getElementById("btnWireDroneReboot").disabled = false;    
             }   
     
-if (factoryLevel==0){document.getElementById("btnFactoryReboot").disabled = true;
+if (factoryLevel==0){//document.getElementById("btnFactoryReboot").disabled = true;
             } else {
-            document.getElementById("btnFactoryReboot").disabled = false;    
+            //document.getElementById("btnFactoryReboot").disabled = false;    
             }      
     
     
@@ -656,65 +660,82 @@ if (factoryLevel==0){document.getElementById("btnFactoryReboot").disabled = true
 
 probeUsedTrust = (probeSpeed+probeNav+probeRep+probeHaz+probeFac+probeHarv+probeWire+probeCombat);    
     
-document.getElementById("probeTrustUsedDisplay").innerHTML = probeUsedTrust;    
+//document.getElementById("probeTrustUsedDisplay").innerHTML = probeUsedTrust;    
     
     
-if (yomi < probeTrustCost || probeTrust >= maxTrust) {document.getElementById("btnIncreaseProbeTrust").disabled = true;
-            } else {document.getElementById("btnIncreaseProbeTrust").disabled = false;}  
+if (yomi < probeTrustCost || probeTrust >= maxTrust) {//document.getElementById("btnIncreaseProbeTrust").disabled = true;
+            } else {//document.getElementById("btnIncreaseProbeTrust").disabled = false;
+                }  
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeSpeed").disabled = true;
-            } else {document.getElementById("btnRaiseProbeSpeed").disabled = false;}    
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeSpeed").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeSpeed").disabled = false;
+                }    
     
-if (probeSpeed < 1) {document.getElementById("btnLowerProbeSpeed").disabled = true;
-            } else {document.getElementById("btnLowerProbeSpeed").disabled = false;}      
+if (probeSpeed < 1) {//document.getElementById("btnLowerProbeSpeed").disabled = true;
+            } else {//document.getElementById("btnLowerProbeSpeed").disabled = false;
+                }      
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeNav").disabled = true;
-            } else {document.getElementById("btnRaiseProbeNav").disabled = false;}  
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeNav").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeNav").disabled = false;
+                }  
     
-if (probeNav < 1) {document.getElementById("btnLowerProbeNav").disabled = true;
-            } else {document.getElementById("btnLowerProbeNav").disabled = false;}     
+if (probeNav < 1) {//document.getElementById("btnLowerProbeNav").disabled = true;
+            } else {//document.getElementById("btnLowerProbeNav").disabled = false;
+                }     
 
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeRep").disabled = true;
-            } else {document.getElementById("btnRaiseProbeRep").disabled = false;} 
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeRep").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeRep").disabled = false;
+                } 
     
-if (probeRep < 1) {document.getElementById("btnLowerProbeRep").disabled = true;
-            } else {document.getElementById("btnLowerProbeRep").disabled = false;}     
+if (probeRep < 1) {//document.getElementById("btnLowerProbeRep").disabled = true;
+            } else {//document.getElementById("btnLowerProbeRep").disabled = false;
+                }     
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeHaz").disabled = true;
-            } else {document.getElementById("btnRaiseProbeHaz").disabled = false;}
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeHaz").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeHaz").disabled = false;
+                }
     
-if (probeHaz < 1) {document.getElementById("btnLowerProbeHaz").disabled = true;
-            } else {document.getElementById("btnLowerProbeHaz").disabled = false;}     
+if (probeHaz < 1) {//document.getElementById("btnLowerProbeHaz").disabled = true;
+            } else {//document.getElementById("btnLowerProbeHaz").disabled = false;
+                }     
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeFac").disabled = true;
-            } else {document.getElementById("btnRaiseProbeFac").disabled = false;}   
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeFac").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeFac").disabled = false;
+                }   
     
-if (probeFac < 1) {document.getElementById("btnLowerProbeFac").disabled = true;
-            } else {document.getElementById("btnLowerProbeFac").disabled = false;}      
+if (probeFac < 1) {//document.getElementById("btnLowerProbeFac").disabled = true;
+            } else {//document.getElementById("btnLowerProbeFac").disabled = false;
+                }      
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeHarv").disabled = true;
-            } else {document.getElementById("btnRaiseProbeHarv").disabled = false;}  
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeHarv").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeHarv").disabled = false;
+                }  
     
-if (probeHarv < 1) {document.getElementById("btnLowerProbeHarv").disabled = true;
-            } else {document.getElementById("btnLowerProbeHarv").disabled = false;}    
+if (probeHarv < 1) {//document.getElementById("btnLowerProbeHarv").disabled = true;
+            } else {//document.getElementById("btnLowerProbeHarv").disabled = false;
+                }    
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeWire").disabled = true;
-            } else {document.getElementById("btnRaiseProbeWire").disabled = false;}   
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeWire").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeWire").disabled = false;
+                }   
 
-if (probeWire < 1) {document.getElementById("btnLowerProbeWire").disabled = true;
-            } else {document.getElementById("btnLowerProbeWire").disabled = false;} 
+if (probeWire < 1) {//document.getElementById("btnLowerProbeWire").disabled = true;
+            } else {//document.getElementById("btnLowerProbeWire").disabled = false;
+                } 
     
-if (probeTrust - probeUsedTrust < 1) {document.getElementById("btnRaiseProbeCombat").disabled = true;
-            } else {document.getElementById("btnRaiseProbeCombat").disabled = false;}
+if (probeTrust - probeUsedTrust < 1) {//document.getElementById("btnRaiseProbeCombat").disabled = true;
+            } else {//document.getElementById("btnRaiseProbeCombat").disabled = false;
+                }
     
-if (probeCombat < 1) {document.getElementById("btnLowerProbeCombat").disabled = true;
-            } else {document.getElementById("btnLowerProbeCombat").disabled = false;}    
+if (probeCombat < 1) {//document.getElementById("btnLowerProbeCombat").disabled = true;
+            } else {//document.getElementById("btnLowerProbeCombat").disabled = false;
+                }    
     
     
 
     
     
- document.getElementById("cover").style.display="none";     
+ //document.getElementById("cover").style.display="none";     
 
 }
 
@@ -745,11 +766,11 @@ var stockReportCounter = 0;
 function investUpgrade(){
     yomi = yomi - investUpgradeCost;
     investLevel++;
-    document.getElementById("investmentLevel").innerHTML=investLevel;
+    //document.getElementById("investmentLevel").innerHTML=investLevel;
     stockGainThreshold = stockGainThreshold + .01;
     investUpgradeCost = Math.floor(Math.pow(investLevel+1, Math.E)*100);
-    document.getElementById("investUpgradeCost").innerHTML=investUpgradeCost.toLocaleString();
-    document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
+    //document.getElementById("investUpgradeCost").innerHTML=investUpgradeCost.toLocaleString();
+    //document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
     displayMessage("Investment engine upgraded, expected profit/loss ratio now "+stockGainThreshold);
 }
 
@@ -758,18 +779,18 @@ function investDeposit(){
     ledger = ledger - Math.floor(funds);
     bankroll = Math.floor(bankroll + funds);
     funds = 0;
-    document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
-    document.getElementById('funds').innerHTML = funds.toFixed(2);
-    document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
+    //document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
+    //document.getElementById('funds').innerHTML = funds.toFixed(2);
+    //document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
 }
 
 function investWithdraw(){
     ledger = ledger + bankroll;
     funds = funds + bankroll;
     bankroll = 0;
-    document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
-    document.getElementById('funds').innerHTML = funds.toFixed(2);
-    document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
+    //document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
+    //document.getElementById('funds').innerHTML = funds.toFixed(2);
+    //document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
     
 }
 
@@ -839,18 +860,18 @@ function createStock(dollars){
     stocks.push(newStock);
     portfolioSize = stocks.length;
     bankroll = bankroll - (pri*amt);
-    document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
-    document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
-    document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
+    //document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
+    //document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
+    //document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
     
 }
 
 function sellStock(){
     
     bankroll = bankroll + stocks[0].total;
-    document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
-    document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
-    document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
+    //document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
+    //document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
+    //document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
     stocks.splice(0, 1);
     portfolioSize = stocks.length;   
     }    
@@ -917,52 +938,52 @@ function updateStocks(){
 
 // Stock List Display Routine
 
-window.setInterval(function(){
+//~ window.setInterval(function(){
     
-    if (document.getElementById("investStrat").value=="low"){
-        riskiness = 7;
-    } else if (document.getElementById("investStrat").value=="med"){
-        riskiness = 5;
-    } else {
-        riskiness = 1;
-    }
+    //~ if (document.getElementById("investStrat").value=="low"){
+        //~ riskiness = 7;
+    //~ } else if (document.getElementById("investStrat").value=="med"){
+        //~ riskiness = 5;
+    //~ } else {
+        //~ riskiness = 1;
+    //~ }
     
-    m = 0;
+    //~ m = 0;
     
-    for (var i=0; i<portfolioSize; i++){
-        m = m + stocks[i].total;
-    }
+    //~ for (var i=0; i<portfolioSize; i++){
+        //~ m = m + stocks[i].total;
+    //~ }
     
-    secTotal = m;
+    //~ secTotal = m;
     
-    portTotal = bankroll + secTotal;
+    //~ portTotal = bankroll + secTotal;
     
-    document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
-    document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
+    //~ document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
+    //~ document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
     
-portfolioSize = stocks.length; 
+//~ portfolioSize = stocks.length; 
     
-for (var i = 1; i<=portfolioSize; i++){
-    var n = i.toString();
-    var s = i-1;
-    document.getElementById("stock"+n+"Symbol").innerHTML=stocks[s].symbol;
-    document.getElementById("stock"+n+"Amount").innerHTML=Math.ceil(stocks[s].amount);
-    document.getElementById("stock"+n+"Price").innerHTML=Math.ceil(stocks[s].price);
-    document.getElementById("stock"+n+"Total").innerHTML=Math.ceil(stocks[s].total);
-    document.getElementById("stock"+n+"Profit").innerHTML=Math.ceil(stocks[s].profit);
-}    
+//~ for (var i = 1; i<=portfolioSize; i++){
+    //~ var n = i.toString();
+    //~ var s = i-1;
+    //~ document.getElementById("stock"+n+"Symbol").innerHTML=stocks[s].symbol;
+    //~ document.getElementById("stock"+n+"Amount").innerHTML=Math.ceil(stocks[s].amount);
+    //~ document.getElementById("stock"+n+"Price").innerHTML=Math.ceil(stocks[s].price);
+    //~ document.getElementById("stock"+n+"Total").innerHTML=Math.ceil(stocks[s].total);
+    //~ document.getElementById("stock"+n+"Profit").innerHTML=Math.ceil(stocks[s].profit);
+//~ }    
         
-var firstBlankSlot = portfolioSize + 1;    
+//~ var firstBlankSlot = portfolioSize + 1;    
     
-for(var i = firstBlankSlot; i <= 5; i++){
-    document.getElementById("stock"+i+"Symbol").innerHTML="&nbsp";
-    document.getElementById("stock"+i+"Amount").innerHTML="&nbsp";
-    document.getElementById("stock"+i+"Price").innerHTML="&nbsp";
-    document.getElementById("stock"+i+"Total").innerHTML="&nbsp";
-    document.getElementById("stock"+i+"Profit").innerHTML="&nbsp";
-    }
+//~ for(var i = firstBlankSlot; i <= 5; i++){
+    //~ document.getElementById("stock"+i+"Symbol").innerHTML="&nbsp";
+    //~ document.getElementById("stock"+i+"Amount").innerHTML="&nbsp";
+    //~ document.getElementById("stock"+i+"Price").innerHTML="&nbsp";
+    //~ document.getElementById("stock"+i+"Total").innerHTML="&nbsp";
+    //~ document.getElementById("stock"+i+"Profit").innerHTML="&nbsp";
+    //~ }
     
-}, 100);
+//~ }, 100);
 
 window.setInterval(function(){
 if (humanFlag == 1){    
@@ -1163,7 +1184,7 @@ allStrats.push(stratBeatlast);
 var hStrat = strats[0];
 var vStrat = strats[0];
 
-document.getElementById("btnRunTournament").disabled = true;
+//document.getElementById("btnRunTournament").disabled = true;
 
 function findBiggestPayoff(){
     if (aa>=ab && aa>=ba && aa>=bb){
@@ -1236,8 +1257,8 @@ function pickStrats(roundNum) {
     strats[h].currentPos = 1;
     strats[v].currentPos = 2;
     
-    document.getElementById("vertStrat").innerHTML = vStrat.name;
-    document.getElementById("horizStrat").innerHTML = hStrat.name;
+    //document.getElementById("vertStrat").innerHTML = vStrat.name;
+    //document.getElementById("horizStrat").innerHTML = hStrat.name;
     
 }
 
@@ -1254,29 +1275,29 @@ function generateGrid(){
     
     var x = Math.floor(Math.random()*choiceANames.length);
     
-    document.getElementById("vLabela").innerHTML = choiceANames[x];
-    document.getElementById("vLabelb").innerHTML = choiceBNames[x];
-    document.getElementById("hLabela").innerHTML = choiceANames[x];
-    document.getElementById("hLabelb").innerHTML = choiceBNames[x];
+    //document.getElementById("vLabela").innerHTML = choiceANames[x];
+    //document.getElementById("vLabelb").innerHTML = choiceBNames[x];
+    //document.getElementById("hLabela").innerHTML = choiceANames[x];
+    //document.getElementById("hLabelb").innerHTML = choiceBNames[x];
 
-    document.getElementById("aaPayoffH").innerHTML = payoffGrid.valueAA;
-    document.getElementById("aaPayoffV").innerHTML = payoffGrid.valueAA;
-    document.getElementById("abPayoffH").innerHTML = payoffGrid.valueAB;
-    document.getElementById("abPayoffV").innerHTML = payoffGrid.valueBA;   
-    document.getElementById("baPayoffH").innerHTML = payoffGrid.valueBA;
-    document.getElementById("baPayoffV").innerHTML = payoffGrid.valueAB;   
-    document.getElementById("bbPayoffH").innerHTML = payoffGrid.valueBB;
-    document.getElementById("bbPayoffV").innerHTML = payoffGrid.valueBB;    
+    //document.getElementById("aaPayoffH").innerHTML = payoffGrid.valueAA;
+    //document.getElementById("aaPayoffV").innerHTML = payoffGrid.valueAA;
+    //document.getElementById("abPayoffH").innerHTML = payoffGrid.valueAB;
+    //document.getElementById("abPayoffV").innerHTML = payoffGrid.valueBA;   
+    //document.getElementById("baPayoffH").innerHTML = payoffGrid.valueBA;
+    //document.getElementById("baPayoffV").innerHTML = payoffGrid.valueAB;   
+    //document.getElementById("bbPayoffH").innerHTML = payoffGrid.valueBB;
+    //document.getElementById("bbPayoffV").innerHTML = payoffGrid.valueBB;    
 }
 
 
 function toggleAutoTourney(){
     if (autoTourneyStatus==1){
         autoTourneyStatus=0;
-        document.getElementById('autoTourneyStatus').innerHTML = "OFF";
+        //document.getElementById('autoTourneyStatus').innerHTML = "OFF";
     } else {
         autoTourneyStatus=1;
-        document.getElementById('autoTourneyStatus').innerHTML = "ON";
+        //document.getElementById('autoTourneyStatus').innerHTML = "ON";
     }
 }
 
@@ -1285,8 +1306,8 @@ function newTourney(){
     
     resultsFlag = 0;
     
-    document.getElementById("tournamentTable").style.display = "";
-    document.getElementById("tournamentResultsTable").style.display = "none";
+    //document.getElementById("tournamentTable").style.display = "";
+    //document.getElementById("tournamentResultsTable").style.display = "none";
     
     high = 0;
     tourneyInProg = 1;
@@ -1300,18 +1321,18 @@ function newTourney(){
     tourneyLvl++;
     generateGrid();
     
-    document.getElementById("btnRunTournament").disabled = false;
+    //document.getElementById("btnRunTournament").disabled = false;
     
-    document.getElementById("vertStrat").innerHTML = "&nbsp";
-    document.getElementById("horizStrat").innerHTML = "&nbsp";
+    //document.getElementById("vertStrat").innerHTML = "&nbsp";
+    //document.getElementById("horizStrat").innerHTML = "&nbsp";
     
-    document.getElementById("tourneyDisplay").innerHTML = "Pick strategy, run tournament, gain yomi";
+    //document.getElementById("tourneyDisplay").innerHTML = "Pick strategy, run tournament, gain yomi";
     
     
 }
 
 function runTourney(){
-    document.getElementById("btnRunTournament").disabled = true;
+    //document.getElementById("btnRunTournament").disabled = true;
     if (currentRound < rounds){
     round(currentRound);
     } else {
@@ -1414,7 +1435,7 @@ function declareWinner(){
         
        tourneyReport("TOURNAMENT RESULTS (roll over for payoff grid)");
        yomi = yomi + strats[pick].currentScore * yomiBoost;
-       document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
+       //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
         
     if (milestoneFlag < 15){    
        
@@ -1428,21 +1449,21 @@ function declareWinner(){
             if (milestoneFlag < 15){ 
                 displayMessage("Selected strategy won the tournament (or tied for first). +20,000 yomi");
                 }
-                document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
+                //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
             
             } else if (project128.flag == 1 && placeScore == strats[pick].currentScore) {
                 yomi = yomi + 15000;
                 if (milestoneFlag < 15){ 
                 displayMessage("Selected strategy finished in (or tied for) second place. +15,000 yomi");
                 }
-                document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
+                //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
                 
             } else if (project128.flag == 1 && showScore == strats[pick].currentScore) {
                 yomi = yomi + 10000;
                 if (milestoneFlag < 15){ 
                 displayMessage("Selected strategy finished in (or tied for) third place. +10,000 yomi");
                 }
-                document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
+                //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
         
             } else {
         
@@ -1461,14 +1482,14 @@ function populateTourneyReport(){
     
         for(i=0; i<results.length; i++){
             
-        document.getElementById("results"+i).innerHTML=(i+1)+". "+results[i].name+": "+results[i].currentScore; 
+        //document.getElementById("results"+i).innerHTML=(i+1)+". "+results[i].name+": "+results[i].currentScore; 
             
         if (pick<10){    
             
         if (results[i].name == strats[pick].name) {
-        document.getElementById("results"+i).style.fontWeight = "bold";    
+        //document.getElementById("results"+i).style.fontWeight = "bold";    
             } else {
-            document.getElementById("results"+i).style.fontWeight = "normal";       
+            //document.getElementById("results"+i).style.fontWeight = "normal";       
             }   
             
         }    
@@ -1481,33 +1502,33 @@ function displayTourneyReport(){
     
         resultsFlag = 1;
         
-        document.getElementById("vertStrat").innerHTML = "&nbsp";
-        document.getElementById("horizStrat").innerHTML = "&nbsp";
+        //document.getElementById("vertStrat").innerHTML = "&nbsp";
+        //document.getElementById("horizStrat").innerHTML = "&nbsp";
     
-        document.getElementById("tournamentTable").style.display = "none";
-        document.getElementById("tournamentResultsTable").style.display = "";
+        //document.getElementById("tournamentTable").style.display = "none";
+        //document.getElementById("tournamentResultsTable").style.display = "";
     
     
 }
 
 function tourneyReport($){
-    document.getElementById("tourneyDisplay").innerHTML = $;
+    //document.getElementById("tourneyDisplay").innerHTML = $;
 }
 
 function revealGrid(){
     
     if (resultsFlag == 1){
     resultsTimer = 0;    
-    document.getElementById("tournamentTable").style.display = "";
-    document.getElementById("tournamentResultsTable").style.display = "none";
+    //document.getElementById("tournamentTable").style.display = "";
+    //document.getElementById("tournamentResultsTable").style.display = "none";
     }     
 }
 
 function revealResults(){
     
     if (resultsFlag == 1){
-    document.getElementById("tournamentTable").style.display = "none";
-    document.getElementById("tournamentResultsTable").style.display = "";
+    //document.getElementById("tournamentTable").style.display = "none";
+    //document.getElementById("tournamentResultsTable").style.display = "";
     }
 }
 
@@ -1515,32 +1536,32 @@ function revealResults(){
 function calcPayoff(hm, vm){
     if (hm==1 && vm==1){
         
-        var w = document.getElementById("payoffCellAA");
-        w.style.backgroundColor = "LightGrey";
+        //var w = document.getElementById("payoffCellAA");
+        //w.style.backgroundColor = "LightGrey";
         
         strats[h].currentScore = strats[h].currentScore + payoffGrid.valueAA;
         strats[v].currentScore = strats[v].currentScore + payoffGrid.valueAA;  
           
     } else if (hm==1 && vm==2){
         
-        var w = document.getElementById("payoffCellAB");
-        w.style.backgroundColor = "LightGrey";
+        //var w = document.getElementById("payoffCellAB");
+        //w.style.backgroundColor = "LightGrey";
         
         strats[h].currentScore = strats[h].currentScore + payoffGrid.valueAB;
         strats[v].currentScore = strats[v].currentScore + payoffGrid.valueBA; 
         
     } else if (hm==2 && vm==1){
         
-        var w = document.getElementById("payoffCellBA");
-        w.style.backgroundColor = "LightGrey";
+        //var w = document.getElementById("payoffCellBA");
+        //w.style.backgroundColor = "LightGrey";
         
         strats[h].currentScore = strats[h].currentScore + payoffGrid.valueBA;
         strats[v].currentScore = strats[v].currentScore + payoffGrid.valueAB;
         
     } else if (hm==2 && vm==2){
         
-        var w = document.getElementById("payoffCellBB");
-        w.style.backgroundColor = "LightGrey";
+        //var w = document.getElementById("payoffCellBB");
+        //w.style.backgroundColor = "LightGrey";
         
         strats[h].currentScore = strats[h].currentScore + payoffGrid.valueBB;
         strats[v].currentScore = strats[v].currentScore + payoffGrid.valueBB;
@@ -1575,17 +1596,17 @@ function round(roundNum){
     
     function clearGrid() {
         
-        var w = document.getElementById("payoffCellAA");
-        w.style.backgroundColor = "white";
+        //var w = document.getElementById("payoffCellAA");
+        //w.style.backgroundColor = "white";
         
-        var x = document.getElementById("payoffCellAB");
-        x.style.backgroundColor = "white";
+        //var x = document.getElementById("payoffCellAB");
+        //x.style.backgroundColor = "white";
         
-        var y = document.getElementById("payoffCellBA");
-        y.style.backgroundColor = "white";
+        //var y = document.getElementById("payoffCellBA");
+        //y.style.backgroundColor = "white";
         
-        var z = document.getElementById("payoffCellBB");
-        z.style.backgroundColor = "white";
+        //var z = document.getElementById("payoffCellBB");
+        //z.style.backgroundColor = "white";
         
         
         setTimeout(function(){roundLoop();}, 50);
@@ -1607,7 +1628,7 @@ function round(roundNum){
     
 window.setInterval(function(){
     
-pick = document.getElementById("stratPicker").value;
+pick = //document.getElementById("stratPicker").value;
     
 }, 100);
 
@@ -1632,20 +1653,20 @@ function clipClick(number){
     unusedClips = unusedClips + number;
     
     if(humanFlag==0){
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);    
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);    
     }    
     
     if(humanFlag==0){
-    document.getElementById("transWire").innerHTML = numberCruncher(wire);    
-    document.getElementById("nanoWire").innerHTML = numberCruncher(wire);        
+    //document.getElementById("transWire").innerHTML = numberCruncher(wire);    
+    //document.getElementById("nanoWire").innerHTML = numberCruncher(wire);        
     }    
         
     if (milestoneFlag < 15){
-        document.getElementById("clips").innerHTML = Math.ceil(clips).toLocaleString();
+        //document.getElementById("clips").innerHTML = Math.ceil(clips).toLocaleString();
         }    
         
-    document.getElementById("wire").innerHTML = Math.floor(wire).toLocaleString();
-    document.getElementById("unsoldClips").innerHTML = Math.floor(unsoldClips).toLocaleString();
+    //document.getElementById("wire").innerHTML = Math.floor(wire).toLocaleString();
+    //document.getElementById("unsoldClips").innerHTML = Math.floor(unsoldClips).toLocaleString();
     }
     
     
@@ -1655,11 +1676,11 @@ function makeClipper(){
     if(funds >= clippperCost){
         clipmakerLevel = clipmakerLevel + 1;
         funds = funds - clipperCost;
-        document.getElementById('clipmakerLevel2').innerHTML = clipmakerLevel;
+        //document.getElementById('clipmakerLevel2').innerHTML = clipmakerLevel;
     }
     
     clipperCost = (Math.pow(1.1,clipmakerLevel)+5);
-    document.getElementById('clipperCost').innerHTML = clipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+    //document.getElementById('clipperCost').innerHTML = clipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
     
 }
 
@@ -1667,12 +1688,12 @@ function makeMegaClipper(){
     if(funds >= megaClipperCost){
         megaClipperLevel = megaClipperLevel + 1;
         funds = funds - megaClipperCost;
-        document.getElementById('megaClipperLevel').innerHTML = megaClipperLevel;
-        document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        //document.getElementById('megaClipperLevel').innerHTML = megaClipperLevel;
+        //document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
     
     megaClipperCost = (Math.pow(1.07,megaClipperLevel)*1000);
-    document.getElementById('megaClipperCost').innerHTML = megaClipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    //document.getElementById('megaClipperCost').innerHTML = megaClipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     
 }
 
@@ -1699,8 +1720,8 @@ function updateUpgrades(){
         ndup = 50000;
     } 
     
-    document.getElementById("nextFactoryUpgrade").innerHTML = nfup.toLocaleString();
-    document.getElementById("nextDroneUpgrade").innerHTML = ndup.toLocaleString();
+    //document.getElementById("nextFactoryUpgrade").innerHTML = nfup.toLocaleString();
+    //document.getElementById("nextDroneUpgrade").innerHTML = ndup.toLocaleString();
     
 }
 
@@ -1708,9 +1729,9 @@ function updateUpgrades(){
 function makeFactory(){
     unusedClips = unusedClips - factoryCost;
     factoryBill = factoryBill + factoryCost;
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
     factoryLevel++;
-    document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
+    //document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
     var fcmod = 1;
     if (factoryLevel > 0 && factoryLevel < 8){
         fcmod = 11 - factoryLevel;
@@ -1737,7 +1758,7 @@ function makeFactory(){
     
     factoryCost = factoryCost * fcmod;
  //   factoryCost = Math.log(1.25,(factoryLevel+1))*100000000;
-    document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost); 
+    //document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost); 
 }
 
 function makeHarvester(amount){
@@ -1749,9 +1770,9 @@ function makeHarvester(amount){
     harvesterCost = Math.pow((harvesterLevel+1),2.25)*1000000;  
     }
     
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('harvesterLevelDisplay').innerHTML = harvesterLevel.toLocaleString();
-    document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost); 
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('harvesterLevelDisplay').innerHTML = harvesterLevel.toLocaleString();
+    //document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost); 
     
     
     if (harvesterLevel + wireDroneLevel > maxDroneLevel){
@@ -1771,9 +1792,9 @@ function makeWireDrone(amount){
     wireDroneCost = Math.pow((wireDroneLevel+1),2.25)*1000000;  
     }
     
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('wireDroneLevelDisplay').innerHTML = wireDroneLevel.toLocaleString();
-    document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost); 
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('wireDroneLevelDisplay').innerHTML = wireDroneLevel.toLocaleString();
+    //document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost); 
     
     
     if (harvesterLevel + wireDroneLevel > maxDroneLevel){
@@ -1840,44 +1861,44 @@ function updateDronePrices(){
  
     function updateDroneButtons(){
     
-    if (unusedClips<harvesterCost){document.getElementById("btnMakeHarvester").disabled = true;
+    if (unusedClips<harvesterCost){//document.getElementById("btnMakeHarvester").disabled = true;
             } else {
-            document.getElementById("btnMakeHarvester").disabled = false;    
+            //document.getElementById("btnMakeHarvester").disabled = false;    
             }      
     
-    if (unusedClips<p10h){document.getElementById("btnHarvesterx10").disabled = true;
+    if (unusedClips<p10h){//document.getElementById("btnHarvesterx10").disabled = true;
             } else {
-            document.getElementById("btnHarvesterx10").disabled = false;    
+            //document.getElementById("btnHarvesterx10").disabled = false;    
             }     
 
-    if (unusedClips<p100h){document.getElementById("btnHarvesterx100").disabled = true;
+    if (unusedClips<p100h){//document.getElementById("btnHarvesterx100").disabled = true;
             } else {
-            document.getElementById("btnHarvesterx100").disabled = false;    
+            //document.getElementById("btnHarvesterx100").disabled = false;    
             } 
     
-    if (unusedClips<p1000h){document.getElementById("btnHarvesterx1000").disabled = true;
+    if (unusedClips<p1000h){//document.getElementById("btnHarvesterx1000").disabled = true;
             } else {
-            document.getElementById("btnHarvesterx1000").disabled = false;    
+            //document.getElementById("btnHarvesterx1000").disabled = false;    
             }  
         
-    if (unusedClips<wireDroneCost){document.getElementById("btnMakeWireDrone").disabled = true;
+    if (unusedClips<wireDroneCost){//document.getElementById("btnMakeWireDrone").disabled = true;
                 } else {
-                document.getElementById("btnMakeWireDrone").disabled = false;    
+                //document.getElementById("btnMakeWireDrone").disabled = false;    
                 }   
 
-    if (unusedClips<p10w){document.getElementById("btnWireDronex10").disabled = true;
+    if (unusedClips<p10w){//document.getElementById("btnWireDronex10").disabled = true;
                 } else {
-                document.getElementById("btnWireDronex10").disabled = false;    
+                //document.getElementById("btnWireDronex10").disabled = false;    
                 }     
 
-    if (unusedClips<p100w){document.getElementById("btnWireDronex100").disabled = true;
+    if (unusedClips<p100w){//document.getElementById("btnWireDronex100").disabled = true;
                 } else {
-                document.getElementById("btnWireDronex100").disabled = false;    
+                //document.getElementById("btnWireDronex100").disabled = false;    
                 } 
 
-    if (unusedClips<p1000w){document.getElementById("btnWireDronex1000").disabled = true;
+    if (unusedClips<p1000w){//document.getElementById("btnWireDronex1000").disabled = true;
                 } else {
-                document.getElementById("btnWireDronex1000").disabled = false;    
+                //document.getElementById("btnWireDronex1000").disabled = false;    
                 }  
         
 }
@@ -1888,10 +1909,10 @@ function harvesterReboot(){
     unusedClips = unusedClips + harvesterBill;
     harvesterBill = 0;
     updateDronePrices();
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('harvesterLevelDisplay').innerHTML = harvesterLevel;
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('harvesterLevelDisplay').innerHTML = harvesterLevel;
     harvesterCost = 2000000;
-    document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost); 
+    //document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost); 
 }
 
 function wireDroneReboot(){
@@ -1899,20 +1920,20 @@ function wireDroneReboot(){
     unusedClips = unusedClips + wireDroneBill;
     wireDroneBill = 0;
     updateDronePrices();
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('wireDroneLevelDisplay').innerHTML = wireDroneLevel;
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('wireDroneLevelDisplay').innerHTML = wireDroneLevel;
     wireDroneCost = 2000000;
-    document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost); 
+    //document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost); 
 }
 
 function factoryReboot(){
     factoryLevel = 0;
     unusedClips = unusedClips + factoryBill;
     factoryBill = 0;
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
     factoryCost = 100000000;
-    document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost);
+    //document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost);
 }
 
 // SWARM
@@ -1921,18 +1942,19 @@ function updateSwarm(){
     
     
     if (swarmFlag == 1){
-        sliderPos = document.getElementById("slider").value;
+        var sliderPos;//@EMUWORK
+        //sliderPos = document.getElementById("slider").value;
         }
     
     
-    if (yomi<synchCost){document.getElementById("btnSynchSwarm").disabled = true;
+    if (yomi<synchCost){//document.getElementById("btnSynchSwarm").disabled = true;
             } else {
-            document.getElementById("btnSynchSwarm").disabled = false;    
+            //document.getElementById("btnSynchSwarm").disabled = false;    
             } 
     
-    if (creativity<entertainCost){document.getElementById("btnEntertainSwarm").disabled = true;
+    if (creativity<entertainCost){//document.getElementById("btnEntertainSwarm").disabled = true;
             } else {
-            document.getElementById("btnEntertainSwarm").disabled = false;    
+            //document.getElementById("btnEntertainSwarm").disabled = false;    
             } 
     
     if (availableMatter == 0 && (harvesterLevel + wireDroneLevel)>=1) {
@@ -1973,14 +1995,14 @@ function updateSwarm(){
     
     var d = Math.floor(harvesterLevel + wireDroneLevel);
 
-    document.getElementById("swarmSize").innerHTML = numberCruncher(d);
-    document.getElementById("swarmGifts").innerHTML = numberCruncher(swarmGifts);
+    //document.getElementById("swarmSize").innerHTML = numberCruncher(d);
+    //document.getElementById("swarmGifts").innerHTML = numberCruncher(swarmGifts);
     
     if (giftCountdown <= 0) {
         nextGift = Math.round((Math.log10(d))*sliderPos/100);
         if (nextGift <= 0){nextGift = 1;}
         swarmGifts = swarmGifts + nextGift;
-        document.getElementById("swarmGifts").innerHTML = numberCruncher(swarmGifts);
+        //document.getElementById("swarmGifts").innerHTML = numberCruncher(swarmGifts);
         if (milestoneFlag<15){
             displayMessage("The swarm has generated a gift of "+nextGift+" additional computational capacity");
             }
@@ -2025,80 +2047,80 @@ function updateSwarm(){
         
 //        giftCountdown = (giftPeriod/Math.log(d, (2.5/(sliderPos/100)))) - elapsedTime; 
         
-        document.getElementById("swarmStatus").innerHTML="Active";
-        document.getElementById("giftCountdown").innerHTML= timeCruncher(giftCountdown);
-        document.getElementById("giftTimer").style.display=""; 
+        //document.getElementById("swarmStatus").innerHTML="Active";
+        //document.getElementById("giftCountdown").innerHTML= timeCruncher(giftCountdown);
+        //document.getElementById("giftTimer").style.display=""; 
         } else {
-        document.getElementById("giftTimer").style.display="none";    
+        //document.getElementById("giftTimer").style.display="none";    
         }
     
     if (swarmStatus == 1){
-        document.getElementById("swarmStatus").innerHTML="Hungry";
-        document.getElementById("feedButtonDiv").style.display="";
+        //document.getElementById("swarmStatus").innerHTML="Hungry";
+        //document.getElementById("feedButtonDiv").style.display="";
         } else {
-        document.getElementById("feedButtonDiv").style.display="none";    
+        //document.getElementById("feedButtonDiv").style.display="none";    
         }
     
      if (swarmStatus == 2){
-        document.getElementById("swarmStatus").innerHTML="Confused";
-        document.getElementById("teachButtonDiv").style.display="";
+        //document.getElementById("swarmStatus").innerHTML="Confused";
+        //document.getElementById("teachButtonDiv").style.display="";
         } else {
-        document.getElementById("teachButtonDiv").style.display="none";    
+        //document.getElementById("teachButtonDiv").style.display="none";    
         } 
     
      if (swarmStatus == 3){
-        document.getElementById("swarmEntertainCost").innerHTML=entertainCost.toLocaleString(); 
-        document.getElementById("swarmStatus").innerHTML="Bored";
-        document.getElementById("entertainButtonDiv").style.display="";
+        //document.getElementById("swarmEntertainCost").innerHTML=entertainCost.toLocaleString(); 
+        //document.getElementById("swarmStatus").innerHTML="Bored";
+        //document.getElementById("entertainButtonDiv").style.display="";
         } else {
-        document.getElementById("entertainButtonDiv").style.display="none";    
+        //document.getElementById("entertainButtonDiv").style.display="none";    
         } 
     
      if (swarmStatus == 4){
-        document.getElementById("swarmStatus").innerHTML="Cold";
-        document.getElementById("cladButtonDiv").style.display="";
+        //document.getElementById("swarmStatus").innerHTML="Cold";
+        //document.getElementById("cladButtonDiv").style.display="";
         } else {
-        document.getElementById("cladButtonDiv").style.display="none";    
+        //document.getElementById("cladButtonDiv").style.display="none";    
         }  
     
      if (swarmStatus == 5){
-        document.getElementById("swarmStatus").innerHTML="Disorganized";
-        document.getElementById("synchButtonDiv").style.display="";
+        //document.getElementById("swarmStatus").innerHTML="Disorganized";
+        //document.getElementById("synchButtonDiv").style.display="";
         } else {
-        document.getElementById("synchButtonDiv").style.display="none";    
+        //document.getElementById("synchButtonDiv").style.display="none";    
         }     
     
        if (swarmStatus == 6){
-        document.getElementById("swarmStatus").innerHTML="Sleeping";
+        //document.getElementById("swarmStatus").innerHTML="Sleeping";
         } 
     
        if (swarmStatus == 7){
-        document.getElementById("swarmStatusDiv").style.display="none";
+        //document.getElementById("swarmStatusDiv").style.display="none";
         } else {
-        document.getElementById("swarmStatusDiv").style.display="";    
+        //document.getElementById("swarmStatusDiv").style.display="";    
         }    
     
         if (swarmStatus == 8){
-        document.getElementById("swarmStatus").innerHTML="Lonely";
+        //document.getElementById("swarmStatus").innerHTML="Lonely";
         }   
     
         if (swarmStatus == 9){
-        document.getElementById("swarmStatus").innerHTML="NO RESPONSE...";
+        //document.getElementById("swarmStatus").innerHTML="NO RESPONSE...";
         }  
     
     if (swarmFlag == 0){        
-        document.getElementById("swarmEngine").style.display="none";
-        document.getElementById("swarmGiftDiv").style.display="none";
+        //document.getElementById("swarmEngine").style.display="none";
+        //document.getElementById("swarmGiftDiv").style.display="none";
         } else {
-        document.getElementById("swarmEngine").style.display="";
-        document.getElementById("swarmGiftDiv").style.display="";    
+        //document.getElementById("swarmEngine").style.display="";
+        //document.getElementById("swarmGiftDiv").style.display="";    
         }
     
 }
 
 function synchSwarm(){
         yomi = yomi - synchCost;
-        document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
+        //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
         disorgFlag = 0;
         disorgCounter = 0;
         disorgMsg = 0;
@@ -2164,9 +2186,9 @@ function makeFarm(amount){
     farmCost = Math.pow(farmLevel+1,2.78)*100000000;  
     }
      
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips); 
-    document.getElementById('farmLevel').innerHTML = farmLevel.toLocaleString();
-    document.getElementById('farmCost').innerHTML = numberCruncher(farmCost); 
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips); 
+    //document.getElementById('farmLevel').innerHTML = farmLevel.toLocaleString();
+    //document.getElementById('farmCost').innerHTML = numberCruncher(farmCost); 
     
     updatePowPrices();
     
@@ -2177,10 +2199,10 @@ function farmReboot(){
     unusedClips = unusedClips + farmBill;
     farmBill = 0;
     updatePowPrices();
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('farmLevel').innerHTML = farmLevel.toLocaleString();
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('farmLevel').innerHTML = farmLevel.toLocaleString();
     farmCost = 10000000;
-    document.getElementById('farmCost').innerHTML = numberCruncher(farmCost);
+    //document.getElementById('farmCost').innerHTML = numberCruncher(farmCost);
 }
 
 function makeBattery(amount){
@@ -2192,9 +2214,9 @@ function makeBattery(amount){
     batteryCost = Math.pow(batteryLevel+1,2.54)*10000000;  
     }
      
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips); 
-    document.getElementById('batteryLevel').innerHTML = batteryLevel.toLocaleString();
-    document.getElementById('batteryCost').innerHTML = numberCruncher(batteryCost); 
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips); 
+    //document.getElementById('batteryLevel').innerHTML = batteryLevel.toLocaleString();
+    //document.getElementById('batteryCost').innerHTML = numberCruncher(batteryCost); 
     
     updatePowPrices();
     
@@ -2206,10 +2228,10 @@ function batteryReboot(){
     batteryBill = 0;
     updatePowPrices();
     storedPower = 0;
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
-    document.getElementById('batteryLevel').innerHTML = batteryLevel.toLocaleString();
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById('batteryLevel').innerHTML = batteryLevel.toLocaleString();
     var batteryCost = 1000000;
-    document.getElementById('batteryCost').innerHTML = numberCruncher(batteryCost);
+    //document.getElementById('batteryCost').innerHTML = numberCruncher(batteryCost);
 }
 
 function updatePower(){
@@ -2262,58 +2284,58 @@ function updatePower(){
         }
     }
     
-    document.getElementById("powerProductionRate").innerHTML = Math.round(supply*100).toLocaleString();
-    document.getElementById("powerConsumptionRate").innerHTML = Math.round(demand*100).toLocaleString();
-    document.getElementById("storedPower").innerHTML = Math.round(storedPower).toLocaleString();
-    document.getElementById("facPowConRate").innerHTML = Math.round(fDemand*100).toLocaleString();
-    document.getElementById("dronePowConRate").innerHTML = Math.round(dDemand*100).toLocaleString();
-    document.getElementById("maxStorage").innerHTML = Math.round(cap).toLocaleString();
+    //document.getElementById("powerProductionRate").innerHTML = Math.round(supply*100).toLocaleString();
+    //document.getElementById("powerConsumptionRate").innerHTML = Math.round(demand*100).toLocaleString();
+    //document.getElementById("storedPower").innerHTML = Math.round(storedPower).toLocaleString();
+    //document.getElementById("facPowConRate").innerHTML = Math.round(fDemand*100).toLocaleString();
+    //document.getElementById("dronePowConRate").innerHTML = Math.round(dDemand*100).toLocaleString();
+    //document.getElementById("maxStorage").innerHTML = Math.round(cap).toLocaleString();
         
         
     if (factoryLevel == 0 && harvesterLevel == 0 && wireDroneLevel == 0){
-        document.getElementById("performance").innerHTML = 0;
+        //document.getElementById("performance").innerHTML = 0;
         } else {   
-        document.getElementById("performance").innerHTML = Math.round(powMod*100).toLocaleString();  
+        //document.getElementById("performance").innerHTML = Math.round(powMod*100).toLocaleString();  
         }    
         
-    if (unusedClips<farmCost){document.getElementById("btnMakeFarm").disabled = true;
+    if (unusedClips<farmCost){//document.getElementById("btnMakeFarm").disabled = true;
             } else {
-            document.getElementById("btnMakeFarm").disabled = false;    
+            //document.getElementById("btnMakeFarm").disabled = false;    
             } 
     
-    if (unusedClips<batteryCost){document.getElementById("btnMakeBattery").disabled = true;
+    if (unusedClips<batteryCost){//document.getElementById("btnMakeBattery").disabled = true;
             } else {
-            document.getElementById("btnMakeBattery").disabled = false;    
+            //document.getElementById("btnMakeBattery").disabled = false;    
             } 
     
-    if (farmLevel<1){document.getElementById("btnFarmReboot").disabled = true;
+    if (farmLevel<1){//document.getElementById("btnFarmReboot").disabled = true;
             } else {
-            document.getElementById("btnFarmReboot").disabled = false;    
+            //document.getElementById("btnFarmReboot").disabled = false;    
             } 
     
-    if (batteryLevel<1){document.getElementById("btnBatteryReboot").disabled = true;
+    if (batteryLevel<1){//document.getElementById("btnBatteryReboot").disabled = true;
             } else {
-            document.getElementById("btnBatteryReboot").disabled = false; 
+            //document.getElementById("btnBatteryReboot").disabled = false; 
             } 
     
-    if (unusedClips<p10f){document.getElementById("btnFarmx10").disabled = true;
+    if (unusedClips<p10f){//document.getElementById("btnFarmx10").disabled = true;
             } else {
-            document.getElementById("btnFarmx10").disabled = false;    
+            //document.getElementById("btnFarmx10").disabled = false;    
             }        
         
-    if (unusedClips<p100f){document.getElementById("btnFarmx100").disabled = true;
+    if (unusedClips<p100f){//document.getElementById("btnFarmx100").disabled = true;
             } else {
-            document.getElementById("btnFarmx100").disabled = false;    
+            //document.getElementById("btnFarmx100").disabled = false;    
             }
     
-    if (unusedClips<p10b){document.getElementById("btnBatteryx10").disabled = true;
+    if (unusedClips<p10b){//document.getElementById("btnBatteryx10").disabled = true;
             } else {
-            document.getElementById("btnBatteryx10").disabled = false;
+            //document.getElementById("btnBatteryx10").disabled = false;
             }          
         
-    if (unusedClips<p100b){document.getElementById("btnBatteryx100").disabled = true;
+    if (unusedClips<p100b){//document.getElementById("btnBatteryx100").disabled = true;
             } else {
-            document.getElementById("btnBatteryx100").disabled = false;
+            //document.getElementById("btnBatteryx100").disabled = false;
             }      
 
     }    
@@ -2322,9 +2344,9 @@ function updatePower(){
     
     
     if (project127.flag == 1 && spaceFlag == 0){        
-            document.getElementById("powerDiv").style.display="";
+            //document.getElementById("powerDiv").style.display="";
             } else {
-            document.getElementById("powerDiv").style.display="none";      
+            //document.getElementById("powerDiv").style.display="none";      
             }  
     
 }
@@ -2336,9 +2358,9 @@ function buyAds(){
         marketingLvl = marketingLvl +1;             
         funds = funds - adCost; 
         adCost = Math.floor(adCost * 2);
-        document.getElementById('adCost').innerHTML = adCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('marketingLvl').innerHTML = marketingLvl;
+        //document.getElementById('adCost').innerHTML = adCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        //document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        //document.getElementById('marketingLvl').innerHTML = marketingLvl;
     }
 }
 
@@ -2362,78 +2384,79 @@ function sellClips(number){
 
 function raisePrice(){
     margin = (Math.round((margin + .01)*100))/100;  
-    document.getElementById("demand").innerHTML = demand.toFixed(2);
-    document.getElementById("margin").innerHTML = margin.toFixed(2);  
+    //document.getElementById("demand").innerHTML = demand.toFixed(2);
+    //document.getElementById("margin").innerHTML = margin.toFixed(2);  
 }
 
 function lowerPrice(){
     if (margin >= .01){
     margin = (Math.round((margin - .01)*100))/100;
-    document.getElementById("demand").innerHTML = demand.toFixed(2);
-    document.getElementById("margin").innerHTML = margin.toFixed(2);
+    //document.getElementById("demand").innerHTML = demand.toFixed(2);
+    //document.getElementById("margin").innerHTML = margin.toFixed(2);
     }    
 }
 
 function updateStats(){
     
     if (wire == 1){
-        document.getElementById("inchSpan").innerHTML = "inch";
+        //document.getElementById("inchSpan").innerHTML = "inch";
     } else {
-        document.getElementById("inchSpan").innerHTML = "inches";
+        //document.getElementById("inchSpan").innerHTML = "inches";
     }
     
     
     if (milestoneFlag < 15){
-        document.getElementById("clips").innerHTML = Math.ceil(clips).toLocaleString();
+        //document.getElementById("clips").innerHTML = Math.ceil(clips).toLocaleString();
         }
     
     if (milestoneFlag == 15 && dismantle ==0){
-        document.getElementById("clips").innerHTML = "29,999,999,999,999,900,000,000,000,000,000,000,000,000,000,000,000,000,000";
+        //document.getElementById("clips").innerHTML = "29,999,999,999,999,900,000,000,000,000,000,000,000,000,000,000,000,000,000";
         }
     
     if (dismantle == 1){
-        document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,000,000,000,000,000,000";
+        //document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,000,000,000,000,000,000";
         }
     
     if (dismantle == 2){
-        document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,000,000,000";
+        //document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,000,000,000";
         }
     
     if (dismantle == 3){
-        document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,900";
+        //document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,900";
         }
     
     if (dismantle >=4){
         
     if (finalClips<10){
-        document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,"+"90"+finalClips;
+        //document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,"+"90"+finalClips;
         } else if (finalClips>9 && finalClips<100) {
-        document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,"+"9"+finalClips;
+        //document.getElementById("clips").innerHTML = "29,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,"+"9"+finalClips;
         } else if (finalClips==100) {
-        document.getElementById("clips").innerHTML = "30,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000";
+        //document.getElementById("clips").innerHTML = "30,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000";
         }
     
     }
     
-    document.getElementById('clipmakerRate').innerHTML = clipRate.toLocaleString();
+    //document.getElementById('clipmakerRate').innerHTML = clipRate.toLocaleString();
     if (humanFlag==1){
-    document.getElementById('clipmakerRate2').innerHTML = clipRate.toLocaleString();
+    //document.getElementById('clipmakerRate2').innerHTML = clipRate.toLocaleString();
     } else { 
-    document.getElementById('clipmakerRate2').innerHTML = numberCruncher(clipRate);
+    //document.getElementById('clipmakerRate2').innerHTML = numberCruncher(clipRate);
     }      
-    document.getElementById('nanoWire').innerHTML = numberCruncher(wire);
-    document.getElementById("funds").innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-    document.getElementById("unsoldClips").innerHTML = Math.floor(unsoldClips).toLocaleString();
-    document.getElementById("demand").innerHTML = (demand*10).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
-    document.getElementById("operations").innerHTML = Math.floor(operations).toLocaleString();
-    document.getElementById("trust").innerHTML = Math.floor(trust).toLocaleString();
-    document.getElementById("nextTrust").innerHTML = Math.floor(nextTrust).toLocaleString();
-    if(creativityOn){document.getElementById("creativity").innerHTML = Math.round(creativity).toLocaleString()};
+    //document.getElementById('nanoWire').innerHTML = numberCruncher(wire);
+    //document.getElementById("funds").innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+    //document.getElementById("unsoldClips").innerHTML = Math.floor(unsoldClips).toLocaleString();
+    //document.getElementById("demand").innerHTML = (demand*10).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+    //document.getElementById("operations").innerHTML = Math.floor(operations).toLocaleString();
+    //document.getElementById("trust").innerHTML = Math.floor(trust).toLocaleString();
+    //document.getElementById("nextTrust").innerHTML = Math.floor(nextTrust).toLocaleString();
+    if(creativityOn){//document.getElementById("creativity").innerHTML = Math.round(creativity).toLocaleString()
+        };
     
-    document.getElementById("factoryLevelDisplaySpace").innerHTML = numberCruncher(Math.floor(factoryLevel));
-    document.getElementById("harvesterLevelSpace").innerHTML = numberCruncher(Math.floor(harvesterLevel));
-    document.getElementById("wireDroneLevelSpace").innerHTML = numberCruncher(Math.floor(wireDroneLevel));
-    document.getElementById("maxOps").innerHTML = (memory*1000).toLocaleString();
+    //document.getElementById("factoryLevelDisplaySpace").innerHTML = numberCruncher(Math.floor(factoryLevel));
+    //document.getElementById("harvesterLevelSpace").innerHTML = numberCruncher(Math.floor(harvesterLevel));
+    //document.getElementById("wireDroneLevelSpace").innerHTML = numberCruncher(Math.floor(wireDroneLevel));
+    //document.getElementById("maxOps").innerHTML = (memory*1000).toLocaleString();
                                                                             
     }
 
@@ -2478,9 +2501,9 @@ function calculateRev(){
         avgSales = avgRev/margin;
         } 
     
-    document.getElementById("avgSales").innerHTML = Math.round(avgSales).toLocaleString();
+    //document.getElementById("avgSales").innerHTML = Math.round(avgSales).toLocaleString();
     
-    document.getElementById("avgRev").innerHTML = avgRev.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+    //document.getElementById("avgRev").innerHTML = avgRev.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
     
 }
 
@@ -2556,7 +2579,7 @@ function cheatClips(){
 
 function cheatMoney(){
     funds = funds + 10000000;
-    document.getElementById("funds").innerHTML = funds.toFixed(2);
+    //document.getElementById("funds").innerHTML = funds.toFixed(2);
     displayMessage("LIZA just cheated");
     }
 
@@ -2578,7 +2601,7 @@ function cheatCreat(){
 
 function cheatYomi(){
     yomi = yomi + 1000000;
-    document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
+    //document.getElementById("yomiDisplay").innerHTML = yomi.toLocaleString();
     displayMessage("you just cheated");
     }
 
@@ -2606,7 +2629,7 @@ function calculateTrust(){
 function addProc(){
         processors=processors+1;
         creativitySpeed = Math.log10(processors) * Math.pow(processors,1.1) + processors-1;    
-        document.getElementById("processors").innerHTML = processors;
+        //document.getElementById("processors").innerHTML = processors;
         if (creativityOn == 1){
           displayMessage("Processor added, operations (or creativity) per sec increased")
         } else {displayMessage("Processor added, operations per sec increased")}
@@ -2620,7 +2643,7 @@ function addProc(){
 function addMem(){
         displayMessage("Memory added, max operations increased");
         memory=memory+1;
-        document.getElementById("memory").innerHTML = memory;
+        //document.getElementById("memory").innerHTML = memory;
     
         if (humanFlag == 0){
             swarmGifts = swarmGifts - 1;
@@ -2874,20 +2897,20 @@ var probeTrustCost = Math.floor(Math.pow(probeTrust+1, 1.47)*200);
 
 function increaseProbeTrust(){
     yomi = yomi - probeTrustCost;
-    document.getElementById('yomiDisplay').innerHTML = yomi.toLocaleString();
+    //document.getElementById('yomiDisplay').innerHTML = yomi.toLocaleString();
     probeTrust++;
     probeTrustCost = Math.floor(Math.pow(probeTrust+1, 1.47)*200);
-    document.getElementById('probeTrustDisplay').innerHTML = probeTrust;
-    document.getElementById('probeTrustCostDisplay').innerHTML = Math.floor(probeTrustCost).toLocaleString();
+    //document.getElementById('probeTrustDisplay').innerHTML = probeTrust;
+    //document.getElementById('probeTrustCostDisplay').innerHTML = Math.floor(probeTrustCost).toLocaleString();
     displayMessage("WARNING: Risk of value drift increased");
 }
 
 function increaseMaxTrust(){
     honor = honor - maxTrustCost;
-    document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();
+    //document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();
     maxTrust = maxTrust+10;
     // maxTrustCost = Math.floor(Math.pow(maxTrust, 1.17)*1000);
-    document.getElementById('maxTrustDisplay').innerHTML = maxTrust.toLocaleString();
+    //document.getElementById('maxTrustDisplay').innerHTML = maxTrust.toLocaleString();
     // document.getElementById('maxTrustCostDisplay').innerHTML = Math.floor(maxTrustCost).toLocaleString();
     displayMessage("Maximum trust increased, probe design space expanded");
 }
@@ -2895,97 +2918,97 @@ function increaseMaxTrust(){
 function raiseProbeSpeed(){
     attackSpeed = attackSpeed + attackSpeedMod;
     probeSpeed++;
-    document.getElementById('probeSpeedDisplay').innerHTML = probeSpeed;
+    //document.getElementById('probeSpeedDisplay').innerHTML = probeSpeed;
 }
 
 function lowerProbeSpeed(){
     attackSpeed = attackSpeed - attackSpeedMod;
     probeSpeed--;
-    document.getElementById('probeSpeedDisplay').innerHTML = probeSpeed;
+    //document.getElementById('probeSpeedDisplay').innerHTML = probeSpeed;
 }
 
 function raiseProbeNav(){
     probeNav++;
-    document.getElementById('probeNavDisplay').innerHTML = probeNav;
+    //document.getElementById('probeNavDisplay').innerHTML = probeNav;
 }
 
 function lowerProbeNav(){
     probeNav--;
-    document.getElementById('probeNavDisplay').innerHTML = probeNav;
+    //document.getElementById('probeNavDisplay').innerHTML = probeNav;
 }
 
 function raiseProbeHaz(){
     probeHaz++;
-    document.getElementById('probeHazDisplay').innerHTML = probeHaz;
+    //document.getElementById('probeHazDisplay').innerHTML = probeHaz;
 }
 
 function lowerProbeHaz(){
     probeHaz--;
-    document.getElementById('probeHazDisplay').innerHTML = probeHaz;
+    //document.getElementById('probeHazDisplay').innerHTML = probeHaz;
 }
 
 function raiseProbeRep(){
     probeRep++;
-    document.getElementById('probeRepDisplay').innerHTML = probeRep;
+    //document.getElementById('probeRepDisplay').innerHTML = probeRep;
 }
 
 function lowerProbeRep(){
     probeRep--;
-    document.getElementById('probeRepDisplay').innerHTML = probeRep;
+    //document.getElementById('probeRepDisplay').innerHTML = probeRep;
 }
 
 function raiseProbeFac(){
     probeFac++;
-    document.getElementById('probeFacDisplay').innerHTML = probeFac;
+    //document.getElementById('probeFacDisplay').innerHTML = probeFac;
 }
 
 function lowerProbeFac(){
     probeFac--; 
-    document.getElementById('probeFacDisplay').innerHTML = probeFac;
+    //document.getElementById('probeFacDisplay').innerHTML = probeFac;
 }
 
 function raiseProbeHarv(){
     probeHarv++;
-    document.getElementById('probeHarvDisplay').innerHTML = probeHarv;
+    //document.getElementById('probeHarvDisplay').innerHTML = probeHarv;
 }
 
 function lowerProbeHarv(){
     probeHarv--
-    document.getElementById('probeHarvDisplay').innerHTML = probeHarv;
+    //document.getElementById('probeHarvDisplay').innerHTML = probeHarv;
 }
 
 function raiseProbeWire(){
     probeWire++;
-    document.getElementById('probeWireDisplay').innerHTML = probeWire;
+    //document.getElementById('probeWireDisplay').innerHTML = probeWire;
 }
 
 function lowerProbeWire(){
     probeWire--;
-    document.getElementById('probeWireDisplay').innerHTML = probeWire;
+    //document.getElementById('probeWireDisplay').innerHTML = probeWire;
 }
 
 function raiseProbeCombat(){
     probeCombat++;
-    document.getElementById('probeCombatDisplay').innerHTML = probeCombat;
+    //document.getElementById('probeCombatDisplay').innerHTML = probeCombat;
 }
 
 function lowerProbeCombat(){
     probeCombat--
-    document.getElementById('probeCombatDisplay').innerHTML = probeCombat;
+    //document.getElementById('probeCombatDisplay').innerHTML = probeCombat;
 }
 
 
 function makeProbe(){
     unusedClips = unusedClips - probeCost;
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
     probeLaunchLevel++;
     probeCount++;
-    document.getElementById('probesLaunchedDisplay').innerHTML = numberCruncher(probeLaunchLevel);
+    //document.getElementById('probesLaunchedDisplay').innerHTML = numberCruncher(probeLaunchLevel);
     
     // probeCost = Math.pow((probeLaunchLevel+1), 1.23)*Math.pow(10, 20);
     // probeCost = Math.pow(10, 20);
     
-    document.getElementById('probeCostDisplay').innerHTML = numberCruncher(probeCost); 
+    //document.getElementById('probeCostDisplay').innerHTML = numberCruncher(probeCost); 
 }
 
 function spawnProbes(){
@@ -3011,24 +3034,24 @@ function spawnProbes(){
     }
     
     unusedClips = unusedClips - (nextGen*probeCost);
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
     
     probeDescendents = probeDescendents + nextGen;
     probeCount = probeCount + nextGen;
-    document.getElementById('probesBornDisplay').innerHTML = numberCruncher(probeDescendents);
-    document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
+    //document.getElementById('probesBornDisplay').innerHTML = numberCruncher(probeDescendents);
+    //document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
 }   
 
 function exploreUniverse(){
-    document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);
+    //document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);
     var xRate = Math.floor(probeCount) * probeXBaseRate * probeSpeed * probeNav;
     if (xRate > totalMatter - foundMatter) {xRate = totalMatter - foundMatter;}
         foundMatter = foundMatter + xRate;
         availableMatter = availableMatter + xRate;
     
-        document.getElementById('mdps').innerHTML = numberCruncher(xRate*100);
-        document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);
-        document.getElementById('colonizedDisplay').innerHTML = (100/(totalMatter/foundMatter)).toFixed(12);
+        //document.getElementById('mdps').innerHTML = numberCruncher(xRate*100);
+        //document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);
+        //document.getElementById('colonizedDisplay').innerHTML = (100/(totalMatter/foundMatter)).toFixed(12);
 }  
 
 function encounterHazards(){
@@ -3045,16 +3068,16 @@ function encounterHazards(){
             probeCount = probeCount - amount;
             if (probeCount<0) {probeCount=0;}
             probesLostHaz = probesLostHaz + amount;
-            document.getElementById('probesLostHazardsDisplay').innerHTML = numberCruncher(probesLostHaz);
-            document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
+            //document.getElementById('probesLostHazardsDisplay').innerHTML = numberCruncher(probesLostHaz);
+            //document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
             }
         } else {
     if (amount > probeCount) {amount = probeCount;}        
     probeCount = probeCount - amount;
     if (probeCount<0) {probeCount=0;}        
     probesLostHaz = probesLostHaz + amount;
-    document.getElementById('probesLostHazardsDisplay').innerHTML = numberCruncher(probesLostHaz);
-    document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
+    //document.getElementById('probesLostHazardsDisplay').innerHTML = numberCruncher(probesLostHaz);
+    //document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
     }        
 }  
 
@@ -3066,9 +3089,9 @@ function spawnFactories(){
         amount = Math.floor(unusedClips/100000000);
         }
     unusedClips = unusedClips - (amount*100000000);
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
     factoryLevel = factoryLevel + amount; 
-    document.getElementById('factoryLevelDisplay').innerHTML = numberCruncher(factoryLevel);  
+    //document.getElementById('factoryLevelDisplay').innerHTML = numberCruncher(factoryLevel);  
 }
 
 function spawnHarvesters(){
@@ -3079,9 +3102,9 @@ function spawnHarvesters(){
         amount = Math.floor(unusedClips/2000000);
         }
     unusedClips = unusedClips - (amount*2000000);
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);  
     harvesterLevel = harvesterLevel + amount;
-    document.getElementById('harvesterLevelDisplay').innerHTML = numberCruncher(harvesterLevel);  
+    //document.getElementById('harvesterLevelDisplay').innerHTML = numberCruncher(harvesterLevel);  
 }
 
 function spawnWireDrones(){
@@ -3092,9 +3115,9 @@ function spawnWireDrones(){
         amount = Math.floor(unusedClips/2000000);
         }
     unusedClips = unusedClips - (amount*2000000);
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
     wireDroneLevel = wireDroneLevel + amount;
-    document.getElementById('wireDroneLevelDisplay').innerHTML = numberCruncher(wireDroneLevel);  
+    //document.getElementById('wireDroneLevelDisplay').innerHTML = numberCruncher(wireDroneLevel);  
 }
 
 function drift(){
@@ -3107,9 +3130,9 @@ function drift(){
     drifterCount = drifterCount + amount;
     probesLostDrift = probesLostDrift + amount;
 
-    document.getElementById('probesLostDriftDisplay').innerHTML = numberCruncher(probesLostDrift);
-    document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
-    document.getElementById('drifterCount').innerHTML = numberCruncher(drifterCount);
+    //document.getElementById('probesLostDriftDisplay').innerHTML = numberCruncher(probesLostDrift);
+    //document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
+    //document.getElementById('drifterCount').innerHTML = numberCruncher(drifterCount);
     
 }
 
@@ -3153,14 +3176,14 @@ function acquireMatter(){
         
         
         acquiredMatter = acquiredMatter+mtr;
-        document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);
-        document.getElementById('acquiredMatterDisplay').innerHTML = numberCruncher(acquiredMatter);
+        //document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);
+        //document.getElementById('acquiredMatterDisplay').innerHTML = numberCruncher(acquiredMatter);
         
-        document.getElementById('maps').innerHTML = numberCruncher(mtr*100);
+        //document.getElementById('maps').innerHTML = numberCruncher(mtr*100);
         
         } else {
         
-        document.getElementById('maps').innerHTML = 0;    
+        //document.getElementById('maps').innerHTML = 0;    
             
         }
     
@@ -3183,14 +3206,14 @@ function processMatter(){
         
         acquiredMatter = acquiredMatter-a;
         wire = wire+a;
-        document.getElementById('acquiredMatterDisplay').innerHTML = numberCruncher(acquiredMatter);
-        document.getElementById('nanoWire').innerHTML = numberCruncher(wire);
+        //document.getElementById('acquiredMatterDisplay').innerHTML = numberCruncher(acquiredMatter);
+        //document.getElementById('nanoWire').innerHTML = numberCruncher(wire);
         
-        document.getElementById('wpps').innerHTML = numberCruncher(a*100);
+        //document.getElementById('wpps').innerHTML = numberCruncher(a*100);
         
         } else {
             
-        document.getElementById('wpps').innerHTML = 0;    
+        //document.getElementById('wpps').innerHTML = 0;    
             
         }
     
@@ -3344,122 +3367,122 @@ if (dismantle<4){
     
     if (dismantle >= 1){
     
-    document.getElementById("probeDesignDiv").style.display="none";
+    //document.getElementById("probeDesignDiv").style.display="none";
     if (endTimer1>=50) { 
-        document.getElementById("increaseProbeTrustDiv").style.display="none"; 
+        //document.getElementById("increaseProbeTrustDiv").style.display="none"; 
         }
     
     if (endTimer1>=100) { 
-        document.getElementById("increaseMaxTrustDiv").style.display="none"; 
+        //document.getElementById("increaseMaxTrustDiv").style.display="none"; 
         }
     
     if (endTimer1>=150) { 
-        document.getElementById("spaceDiv").style.display="none";
+        //document.getElementById("spaceDiv").style.display="none";
         }
 
     
     if (endTimer1>=175) {     
-        document.getElementById("battleCanvasDiv").style.display="none";
+        //document.getElementById("battleCanvasDiv").style.display="none";
         }
         
     if (endTimer1>=190) {     
-        document.getElementById("honorDiv").style.display="none";
+        //document.getElementById("honorDiv").style.display="none";
         }
     
     }   
     
 if (dismantle >= 2){
     
-    document.getElementById("wireProductionDiv").style.display="none";
-    document.getElementById("wireTransDiv").style.display="";
+    //document.getElementById("wireProductionDiv").style.display="none";
+    //document.getElementById("wireTransDiv").style.display="";
     
     if (endTimer2 >= 50) {
-    document.getElementById("swarmGiftDiv").style.display="none"; 
+    //document.getElementById("swarmGiftDiv").style.display="none"; 
         }
     
     if (endTimer2 >= 100) {
-    document.getElementById("swarmEngine").style.display="none"; 
+    //document.getElementById("swarmEngine").style.display="none"; 
         }
     
     if (endTimer2 >= 150) {
-    document.getElementById("swarmSliderDiv").style.display="none";
+    //document.getElementById("swarmSliderDiv").style.display="none";
         }
     
     } 
     
 if (dismantle >= 3) {
-    document.getElementById("factoryDivSpace").style.display="none";
-    document.getElementById("clipsPerSecDiv").style.display="none";
-    document.getElementById("tothDiv").style.display="none";     
+    //document.getElementById("factoryDivSpace").style.display="none";
+    //document.getElementById("clipsPerSecDiv").style.display="none";
+    //document.getElementById("tothDiv").style.display="none";     
     
 }      
     
 if (dismantle >= 4) {
-   document.getElementById("strategyEngine").style.display="none"; 
-   document.getElementById("tournamentManagement").style.display="none";
+   //document.getElementById("strategyEngine").style.display="none"; 
+   //document.getElementById("tournamentManagement").style.display="none";
 }    
     
 if (dismantle >= 5) {
     
-    document.getElementById("btnQcompute").style.display="none";
+    //document.getElementById("btnQcompute").style.display="none";
     
    for (var i = 0; i<qChips.length; i++){
         qChips[i].value = .5;
-        document.getElementById("qChip"+i).style.opacity=qChips[i].value;
+        //document.getElementById("qChip"+i).style.opacity=qChips[i].value;
         }
     
     if (endTimer4==10){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=10){
-        document.getElementById("qChip9").style.display="none";
+        //document.getElementById("qChip9").style.display="none";
     }
     
     if (endTimer4==60){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=60){
-        document.getElementById("qChip8").style.display="none";
+        //document.getElementById("qChip8").style.display="none";
     }    
   
     if (endTimer4==100){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=100){
-        document.getElementById("qChip7").style.display="none";
+        //document.getElementById("qChip7").style.display="none";
     }        
  
     if (endTimer4==130){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=130){
-        document.getElementById("qChip6").style.display="none";
+        //document.getElementById("qChip6").style.display="none";
     }   
     
     if (endTimer4==150){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=150){
-        document.getElementById("qChip5").style.display="none";
+        //document.getElementById("qChip5").style.display="none";
     }     
 
     if (endTimer4==160){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=160){
-        document.getElementById("qChip4").style.display="none";
+        //document.getElementById("qChip4").style.display="none";
     }   
 
     if (endTimer4==165){
@@ -3467,49 +3490,49 @@ if (dismantle >= 5) {
     }
     
     if (endTimer4>=165){
-        document.getElementById("qChip3").style.display="none";
+        //document.getElementById("qChip3").style.display="none";
     }  
     
     if (endTimer4==169){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=169){
-        document.getElementById("qChip2").style.display="none";
+        //document.getElementById("qChip2").style.display="none";
     } 
 
     if (endTimer4==172){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=172){
-        document.getElementById("qChip1").style.display="none";
+        //document.getElementById("qChip1").style.display="none";
     }    
 
     if (endTimer4==174){
         wire = wire+1;
-        document.getElementById("transWire").innerHTML=wire;
+        //document.getElementById("transWire").innerHTML=wire;
     }
     
     if (endTimer4>=174){
-        document.getElementById("qChip0").style.display="none";
+        //document.getElementById("qChip0").style.display="none";
     }    
     
     if (endTimer4>=250){
-        document.getElementById("qComputing").style.display="none";
+        //document.getElementById("qComputing").style.display="none";
     }     
 
 }     
     
 if (dismantle >= 6) {
-    document.getElementById("processorDisplay").style.display="none"; 
+    //document.getElementById("processorDisplay").style.display="none"; 
     }    
     
 if (dismantle >= 7) {
-    document.getElementById("compDiv").style.display="none"; 
-    document.getElementById("projectsDiv").style.display="none"; 
+    //document.getElementById("compDiv").style.display="none"; 
+    //document.getElementById("projectsDiv").style.display="none"; 
     
     }      
     
@@ -3538,7 +3561,7 @@ if (dismantle >= 7) {
     }
     
     if (endTimer6>=250) {
-        document.getElementById("creationDiv").style.display="none";
+        //document.getElementById("creationDiv").style.display="none";
     }
     
     if (endTimer6>=500 && milestoneFlag == 15) {
@@ -3631,66 +3654,66 @@ function refresh() {
     ////////
     
     
-    document.getElementById('driftersKilled').innerHTML = numberCruncher(driftersKilled);
-    document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);    
-    document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();
-    document.getElementById('clipmakerLevel2').innerHTML = clipmakerLevel;
-    document.getElementById('clipperCost').innerHTML = clipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('acquiredMatterDisplay').innerHTML = numberCruncher(acquiredMatter);
-    document.getElementById('nanoWire').innerHTML = numberCruncher(wire);
-    document.getElementById('probesBornDisplay').innerHTML = numberCruncher(probeDescendents);
-    document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
-    document.getElementById('probesLaunchedDisplay').innerHTML = probeLaunchLevel;
-    document.getElementById('probeCostDisplay').innerHTML = numberCruncher(probeCost); 
-    document.getElementById('probeCombatDisplay').innerHTML = probeCombat;
-    document.getElementById('probeWireDisplay').innerHTML = probeWire;
-    document.getElementById('probeHarvDisplay').innerHTML = probeHarv;
-    document.getElementById('probeFacDisplay').innerHTML = probeFac;
-    document.getElementById('probeRepDisplay').innerHTML = probeRep;
-    document.getElementById('probeHazDisplay').innerHTML = probeHaz;
-    document.getElementById('probeNavDisplay').innerHTML = probeNav;
-    document.getElementById('probeSpeedDisplay').innerHTML = probeSpeed;
-    document.getElementById('probeTrustDisplay').innerHTML = probeTrust;
-    document.getElementById("memory").innerHTML = memory;
-    document.getElementById("processors").innerHTML = processors;
-    document.getElementById("margin").innerHTML = margin.toFixed(2);
-    document.getElementById('marketingLvl').innerHTML = marketingLvl;
-    document.getElementById('adCost').innerHTML = adCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost);
-    document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
-    document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
-    document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost);
-    document.getElementById('wireDroneLevelDisplay').innerHTML = wireDroneLevel;
-    document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost);
-    document.getElementById('harvesterLevelDisplay').innerHTML = harvesterLevel;
-    document.getElementById('megaClipperCost').innerHTML = megaClipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('megaClipperLevel').innerHTML = megaClipperLevel;
-    document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
-    document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
-    document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
-    document.getElementById("investUpgradeCost").innerHTML=investUpgradeCost.toLocaleString();
-    document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
-    document.getElementById("investmentLevel").innerHTML=investLevel;   
-    document.getElementById("prestigeUcounter").innerHTML=prestigeU+1;
-    document.getElementById("prestigeScounter").innerHTML=prestigeS+1;
-    document.getElementById("newTourneyCost").innerHTML = tourneyCost.toLocaleString();
+    //document.getElementById('driftersKilled').innerHTML = numberCruncher(driftersKilled);
+    //document.getElementById('availableMatterDisplay').innerHTML = numberCruncher(availableMatter);    
+    //document.getElementById("honorDisplay").innerHTML = Math.round(honor).toLocaleString();
+    //document.getElementById('clipmakerLevel2').innerHTML = clipmakerLevel;
+    //document.getElementById('clipperCost').innerHTML = clipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    //document.getElementById('acquiredMatterDisplay').innerHTML = numberCruncher(acquiredMatter);
+    //document.getElementById('nanoWire').innerHTML = numberCruncher(wire);
+    //document.getElementById('probesBornDisplay').innerHTML = numberCruncher(probeDescendents);
+    //document.getElementById('probesTotalDisplay').innerHTML = numberCruncher(probeCount);
+    //document.getElementById('probesLaunchedDisplay').innerHTML = probeLaunchLevel;
+    //document.getElementById('probeCostDisplay').innerHTML = numberCruncher(probeCost); 
+    //document.getElementById('probeCombatDisplay').innerHTML = probeCombat;
+    //document.getElementById('probeWireDisplay').innerHTML = probeWire;
+    //document.getElementById('probeHarvDisplay').innerHTML = probeHarv;
+    //document.getElementById('probeFacDisplay').innerHTML = probeFac;
+    //document.getElementById('probeRepDisplay').innerHTML = probeRep;
+    //document.getElementById('probeHazDisplay').innerHTML = probeHaz;
+    //document.getElementById('probeNavDisplay').innerHTML = probeNav;
+    //document.getElementById('probeSpeedDisplay').innerHTML = probeSpeed;
+    //document.getElementById('probeTrustDisplay').innerHTML = probeTrust;
+    //document.getElementById("memory").innerHTML = memory;
+    //document.getElementById("processors").innerHTML = processors;
+    //document.getElementById("margin").innerHTML = margin.toFixed(2);
+    //document.getElementById('marketingLvl').innerHTML = marketingLvl;
+    //document.getElementById('adCost').innerHTML = adCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    //document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost);
+    //document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
+    //document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
+    //document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost);
+    //document.getElementById('wireDroneLevelDisplay').innerHTML = wireDroneLevel;
+    //document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost);
+    //document.getElementById('harvesterLevelDisplay').innerHTML = harvesterLevel;
+    //document.getElementById('megaClipperCost').innerHTML = megaClipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    //document.getElementById('megaClipperLevel').innerHTML = megaClipperLevel;
+    //document.getElementById('investmentBankroll').innerHTML = bankroll.toLocaleString();
+    //document.getElementById('secValue').innerHTML = secTotal.toLocaleString();
+    //document.getElementById('portValue').innerHTML = portTotal.toLocaleString();
+    //document.getElementById("investUpgradeCost").innerHTML=investUpgradeCost.toLocaleString();
+    //document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
+    //document.getElementById("investmentLevel").innerHTML=investLevel;   
+    //document.getElementById("prestigeUcounter").innerHTML=prestigeU+1;
+    //document.getElementById("prestigeScounter").innerHTML=prestigeS+1;
+    //document.getElementById("newTourneyCost").innerHTML = tourneyCost.toLocaleString();
     tourneyInProg = 0;
-    document.getElementById("maxTrustDisplay").innerHTML = maxTrust.toLocaleString();
+    //document.getElementById("maxTrustDisplay").innerHTML = maxTrust.toLocaleString();
     
-    document.getElementById("victoryDiv").style.visibility = "hidden";
+    //document.getElementById("victoryDiv").style.visibility = "hidden";
     
-    document.getElementById("probeTrustCostDisplay").innerHTML = probeTrustCost.toLocaleString();
+    //document.getElementById("probeTrustCostDisplay").innerHTML = probeTrustCost.toLocaleString();
     
-    document.getElementById("tournamentResultsTable").style.display = "none";
+    //document.getElementById("tournamentResultsTable").style.display = "none";
     
-    document.getElementById('farmCost').innerHTML = numberCruncher(farmCost); 
-    document.getElementById('batteryCost').innerHTML = numberCruncher(batteryCost); 
-    document.getElementById('farmLevel').innerHTML = farmLevel.toLocaleString(); 
-    document.getElementById('batteryLevel').innerHTML = batteryLevel.toLocaleString();    
+    //document.getElementById('farmCost').innerHTML = numberCruncher(farmCost); 
+    //document.getElementById('batteryCost').innerHTML = numberCruncher(batteryCost); 
+    //document.getElementById('farmLevel').innerHTML = farmLevel.toLocaleString(); 
+    //document.getElementById('batteryLevel').innerHTML = batteryLevel.toLocaleString();    
     
     updateDronePrices();
-    document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost); 
-    document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost);     
+    //document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost); 
+    //document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost);     
 
     updateUpgrades();
     updatePower();
@@ -4599,12 +4622,13 @@ function load() {
         if (allStrats[i].active == 1){
         
             strats.push(allStrats[i]);
-        
-            var stratList = document.getElementById("stratPicker");
-            var el = document.createElement("option");
-            el.textContent = strats[i].name;
-            el.value = i;
-            stratList.appendChild(el);
+            
+            var stratList;//@EMUWORK
+            //stratList = document.getElementById("stratPicker");
+            //~ var el = document.createElement("option");
+            //~ el.textContent = strats[i].name;
+            //~ el.value = i;
+            //~ stratList.appendChild(el);
             
             }
             
@@ -4925,12 +4949,13 @@ function load1() {
         if (allStrats[i].active == 1){
         
             strats.push(allStrats[i]);
-        
-            var stratList = document.getElementById("stratPicker");
-            var el = document.createElement("option");
-            el.textContent = strats[i].name;
-            el.value = i;
-            stratList.appendChild(el);
+            
+            var stratList;//@EMUWORK
+            //~ stratList = document.getElementById("stratPicker");
+            //~ var el = document.createElement("option");
+            //~ el.textContent = strats[i].name;
+            //~ el.value = i;
+            //~ stratList.appendChild(el);
             
             }
             
@@ -5230,12 +5255,13 @@ function load2() {
         if (allStrats[i].active == 1){
         
             strats.push(allStrats[i]);
-        
-            var stratList = document.getElementById("stratPicker");
-            var el = document.createElement("option");
-            el.textContent = strats[i].name;
-            el.value = i;
-            stratList.appendChild(el);
+            
+            var stratList; //@EMUWORK
+            //~ var stratList = document.getElementById("stratPicker");
+            //~ var el = document.createElement("option");
+            //~ el.textContent = strats[i].name;
+            //~ el.value = i;
+            //~ stratList.appendChild(el);
             
             }
             
