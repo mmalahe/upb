@@ -285,6 +285,7 @@ function Battle(){
 		//canvas.width = battleWIDTH;
 		//canvas.height = battleHEIGHT;
         
+        //@EMUWORK
 		//var interval = setInterval(Update, 16/gameSpeedupFactor);
         
 		battleRestart();
