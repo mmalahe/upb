@@ -1,13 +1,13 @@
 import dukpy
 from os.path import abspath, dirname, join
 
-class UPEmulator:
+class UPEmulator(object):
     # Names and millisecond intervals of interval loops
-    _interval_loops = {
-        'intervalLoop1': 1000,
-        'intervalLoop2': 2500,
-        'intervalLoop3': 10,
-        'intervalLoop4': 100
+    _interval_loops_cs = {
+        'intervalLoop1()': 100,
+        'intervalLoop2()': 250,
+        'intervalLoop3()': 1,
+        'intervalLoop4()': 10
     } 
     
     _obs_to_js = {
@@ -26,12 +26,12 @@ class UPEmulator:
     }
     
     _action_to_js = {
-        'Make Paperclip': 'clipClick(1)',
-        'Lower Price': 'lowerPrice()',
-        'Raise Price': 'raisePrice()',
-        'Expand Marketing': 'buyAds()',
-        'Buy Wire': 'buyWire()',
-        'Buy Autoclipper': 'makeClipper()'
+        'Make Paperclip': 'if (wire>0) {clipClick(1);}',
+        'Lower Price': 'if (margin>.01) {lowerPrice();}',
+        'Raise Price': 'raisePrice();',
+        'Expand Marketing': 'if (funds>=adCost) {buyAds();}',
+        'Buy Wire': 'if (funds>=wireCost) {buyWire();}',
+        'Buy Autoclipper': 'if (funds>=clipperCost) {makeClipper();}'
     }
     
     def __init__(self, 
@@ -47,6 +47,7 @@ class UPEmulator:
     def _init(self):
         # Set up interpreter
         self._intp = dukpy.JSInterpreter()
+        self._time_cs = 0
         
         # Make initial source read
         for fname in self._js_filenames:            
@@ -70,3 +71,11 @@ class UPEmulator:
     def takeAction(self, action_name):
         # @todo Check if action should actually be available
         self._intp.evaljs(self._action_to_js[action_name])
+        
+    def advanceTime(self, dt_s):
+        dt_cs = int(100.0*dt_s)
+        for i in range(dt_cs):
+            self._time_cs += 1
+            for loop_name, loop_interval in self._interval_loops_cs.items():
+                if self._time_cs % loop_interval == 0:
+                    self._intp.evaljs(loop_name)
