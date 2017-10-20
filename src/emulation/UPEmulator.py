@@ -24,6 +24,23 @@ class UPEmulator:
             'intervalLoop4': 100
         }
         
+    # "Public" members
+    def reset(self):
+        pass
+    
+    def quit(self):
+        pass
+    
+    def makeObservation(self, fields):
+        pass
+        
+    def takeAction(self, action_name):
+        pass
+    
+    def save_screenshot(self, filename):
+        self._driver.save_screenshot(filename)
+    
+    # "Private" members
     def _getVal(self, name):
         return self.intp.evaljs(name)
         
