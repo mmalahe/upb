@@ -73,7 +73,7 @@ class UPEmulator(object):
         self._intp.eval(self._action_to_js[action_name])
         
     def advanceTime(self, dt_s):
-        dt_cs = int(100.0*dt_s)
+        dt_cs = max(int(100.0*dt_s),1)
         for i in range(dt_cs):
             self._time_cs += 1
             for loop_name, loop_interval in self._interval_loops_cs.items():

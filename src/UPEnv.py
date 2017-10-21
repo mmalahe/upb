@@ -207,6 +207,10 @@ class UPEnv(Env):
         action_for_handler = self.action_space.actionAsString(action)        
         self._handler.takeAction(action_for_handler)
         
+        # Advance time half way to resolve purchases, etc.
+        if self._use_emulator:
+            self._handler.advanceTime(self._desired_action_interval/2.0)
+        
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
         observation = self.observation_space.observationAsArray(observation_from_handler)
@@ -214,9 +218,11 @@ class UPEnv(Env):
         # Get reward
         reward = self.reward(observation_from_handler)
         
-        # Update any additional state
+        # Advance time the rest of the way
         if self._use_emulator:
-            self._handler.advanceTime(self._desired_action_interval)
+            self._handler.advanceTime(self._desired_action_interval/2.0)
+        
+        # Update any additional state
         self._prev_observation_from_handler = observation_from_handler    
         self._n_steps_taken += 1
         
