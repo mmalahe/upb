@@ -20,6 +20,8 @@ from UPUtil import *
 from policies import *
 import os
 
+import matplotlib.pyplot as plt
+
 # Resume learning from file
 do_resume_learning = False
 
@@ -34,13 +36,15 @@ desired_action_interval_training = 0.2
 # Training parameters
 stage = 1
 episode_length = 2000
-timesteps_per_batch = episode_length
-max_iters = 2000
+timesteps_per_batch = 2*episode_length
+max_iters = 10000
 iters_per_render = 100
 iters_per_save = 100
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
 learning_state_filename_latest = os.path.join(data_dir,"learning_stage{}_latest.tf".format(stage))
+
+reward_history = []
 
 # Set up data directory
 if not os.path.exists(data_dir):
@@ -95,19 +99,34 @@ def train():
             rollout(env, policy)
             env.save_screenshot("data/iter_{:05d}.png".format(iters_so_far))
             
+            # Plot reward history
+            fig = plt.figure()
+            plt.plot(np.array(reward_history))
+            plt.xlabel("Iterations")
+            plt.ylabel("Reward")
+            plt.savefig(os.path.join(data_dir,"reward_history.png"))
+            plt.close(fig)
+            
     def resume_callback(loc, glob):
         if do_resume_learning:
             print("Resuming...")
             tf_util.load_state(learning_state_filename_latest)
             MPI.COMM_WORLD.Barrier()
+            
+    def logging_callback(loc, glob):
+        iters_so_far = loc['iters_so_far']
+        if iters_so_far > 0:
+            reward_history.append(np.mean(loc['rewbuffer']))
+            print(reward_history)
                 
     def callback(loc, glob):
         iters_so_far = loc['iters_so_far']
         if iters_so_far == 0:
             resume_callback(loc, glob)
-        if rank == 0:            
+        if rank == 0:
             save_callback(loc, glob)
-            observe_callback(loc, glob)
+            logging_callback(loc,glob)
+            observe_callback(loc, glob)           
     
     # Monitoring
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), "%i.monitor.json"%rank))
@@ -125,10 +144,10 @@ def train():
     pposgd_simple.learn(env, policy_fn,
         max_iters=max_iters,
         timesteps_per_batch=timesteps_per_batch,
-        clip_param=0.2, entcoeff=0.01,
-        optim_epochs=16, optim_stepsize=1e-3, optim_batchsize=episode_length,
+        clip_param=0.2, entcoeff=0.0,
+        optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
         gamma=0.99, lam=0.95,
-        schedule='constant',
+        schedule='linear',
         callback=callback,
         resume_callback=resume_callback
     )

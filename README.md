@@ -26,3 +26,7 @@ Intended for learning about reinforcement learning.
 	- Numpy
 	- [OpenAI Gym](https://github.com/openai/gym)
 	- [OpenAI Baselines](https://github.com/openai/baselines)
+
+## Plotting
+- Python modules:
+	- matplotlib
