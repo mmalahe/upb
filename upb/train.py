@@ -29,17 +29,18 @@ do_resume_learning = False
 use_emulator = True
 webdriver_name_training = 'PhantomJS'
 webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
-url_training = "file:///home/mikl/projects/upb/src/game/index2_train.html"
+url_training = os.path.join(dirname(abspath(__file__)),"game","index2_train.html")
 #~ desired_action_interval_training = 0.067
 desired_action_interval_training = 0.2
 
 # Training parameters
 stage = 1
-episode_length = 2000
-timesteps_per_batch = 2*episode_length
-max_iters = 10000
-iters_per_render = 100
-iters_per_save = 100
+episode_length = 500
+timesteps_per_batch = 1*episode_length
+max_iters = 1000
+schedule = 'linear'
+iters_per_render = 10
+iters_per_save = 10
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
 learning_state_filename_latest = os.path.join(data_dir,"learning_stage{}_latest.tf".format(stage))
@@ -83,8 +84,8 @@ def train():
             # Save policy
             policy_filename_iter = os.path.join(data_dir,"policy_stage{}_iter{}.pickle".format(stage, iters_so_far))    
             pi = loc['pi']            
-            pi.save_state(policy_filename_iter)
-            pi.save_state(policy_filename_latest)
+            pi.save_and_check_reload(policy_filename_iter)
+            pi.save_and_check_reload(policy_filename_latest)
             
             # Save full learning state to make resuming easier
             learning_state_filename_iter = os.path.join(data_dir,"learning_stage{}_iter{}.tf".format(stage, iters_so_far))
@@ -117,7 +118,6 @@ def train():
         iters_so_far = loc['iters_so_far']
         if iters_so_far > 0:
             reward_history.append(np.mean(loc['rewbuffer']))
-            print(reward_history)
                 
     def callback(loc, glob):
         iters_so_far = loc['iters_so_far']
@@ -147,9 +147,9 @@ def train():
         clip_param=0.2, entcoeff=0.0,
         optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
         gamma=0.99, lam=0.95,
-        schedule='linear',
+        schedule=schedule,
         callback=callback,
-        resume_callback=resume_callback
+        resume_callback=None
     )
 
 def main():
