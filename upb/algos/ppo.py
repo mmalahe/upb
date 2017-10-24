@@ -7,6 +7,11 @@ class ProximalPolicyOptimization(object):
     as keras models.
     """
     def __init__(self, env, policy_init_old, policy_init):
+        r""" Constructor
+        
+        :param policy_init_old: initial :math:`\pi_{\theta_{\mathrm{old}}}`
+        :param policy_init: initial :math:`\pi_\theta`    
+        """
         self._env = env
         self._policy_old = policy_init_old
         self._policy = policy_init
@@ -16,12 +21,13 @@ class ProximalPolicyOptimization(object):
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
                     gamma=0.99, lam=0.95):
-        """ Learns according to the objective
+        r""" Learns according to the objective
         
-        .. math::        
-            L^{\mathrm{CLIP}}
+        .. math::
+            L^{\mathrm{CLIP}} (\theta) = \hat{\mathbb{E}}_t 
+            \left[ \min(r_t(\theta) \hat{A}_t, \mathrm{clip} \right]
         
-        :param clip_param: the clipping parameter :math:'\epsilon'
+        :param clip_param: the clipping parameter :math:`\epsilon`
         :type clip_param: float
         :returns:  None -- Nothing
         :raises:
