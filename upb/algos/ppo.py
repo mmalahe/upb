@@ -6,9 +6,10 @@ class ProximalPolicyOptimization(object):
         self._policy = policy_init
         
     def learn(self):
-        # Compile policy
-        self._policy.compile()
+        # Sample
         
         # Optimize
+        pass
         
-        
+    def get_policy(self):
+        return self._policy

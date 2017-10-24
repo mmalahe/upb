@@ -19,6 +19,7 @@ from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
 from upb.policies.MLPPolicy import MLPPolicySaveable
 from upb.policies.MLPPolicy import MLPPolicy
+from upb.algos.ppo import ProximalPolicyOptimization
 import os
 
 import matplotlib.pyplot as plt

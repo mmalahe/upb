@@ -4,6 +4,7 @@ import pickle
 import tensorflow as tf
 import numpy as np
 import keras
+import gym
 
 class MLPPolicySaveable(MlpPolicy):
     def __init__(self, name, *args, **kwargs):
@@ -67,23 +68,32 @@ class MLPPolicySaveable(MlpPolicy):
                 raise Exception("Variables not equal!")
 
 class MLPPolicy(object):
-    def __init__(self, ob_space, action_space, hidden_sizes, optimizer='adam', loss='kullback_leibler_divergence'):        
+    def __init__(self, ob_space, ac_space, hidden_sizes, optimizer='adam', loss='kullback_leibler_divergence'):        
         # Initial model
         self._model = keras.models.Sequential()
         
         # Layer sizes
         l_sizes = []
-        l_sizes.append(ob_space.shape)
+        
+        if isinstance(ob_space, gym.spaces.discrete.Discrete):
+            l_sizes.append(ob_space.n)
+        elif isinstance(ob_space, gym.spaces.box.Box):
+            l_sizes.append(ob_space.shape[0])            
+        
         for size in hidden_sizes:
             l_sizes.append(size)
-        l_sizes.append(action_space.shape)
+        
+        if isinstance(ac_space, gym.spaces.discrete.Discrete):
+            l_sizes.append(ac_space.n)
+        elif isinstance(ac_space, gym.spaces.box.Box):
+            l_sizes.append(ac_space.shape[0])     
         
         # Add first hidden layer
-        self._model.add(Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
+        self._model.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
         
         # Add subsequent layers        
         for i in range(2, len(l_sizes)):
-            self._model.add(Dense(l_sizes[i], activation='tanh'))
+            self._model.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
             
         # Compile
         self._model.compile(optimizer=optimizer, loss=loss)
