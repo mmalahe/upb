@@ -21,11 +21,24 @@ class ProximalPolicyOptimization(object):
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
                     gamma=0.99, lam=0.95):
-        r""" Learns according to the objective
+        r""" Learns the policy.
+        
+        Base on the objective
         
         .. math::
             L^{\mathrm{CLIP}} (\theta) = \hat{\mathbb{E}}_t 
-            \left[ \min(r_t(\theta) \hat{A}_t, \mathrm{clip} \right]
+            \left[ 
+            \min\left(r_t(\theta) \hat{A}_t, \mathrm{clip} (r_t(\theta),
+            1-\epsilon,1+\epsilon) \hat{A}_t \right)           
+            \right],
+        
+        where
+        
+        .. math::
+           r_t (\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t|s_t)},
+            
+        and "clip" simply bounds :math:`r_t(\theta)` between
+        :math:`1-\epsilon` and :math:`1+\epsilon`.
         
         :param clip_param: the clipping parameter :math:`\epsilon`
         :type clip_param: float
