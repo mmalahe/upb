@@ -135,11 +135,17 @@ def train():
     gym.logger.setLevel(logging.WARN)    
     
     # Learn
+    policy_init_old = MLPPolicy(env.observation_space, env.action_space, (32,32))
     policy_init = MLPPolicy(env.observation_space, env.action_space, (32,32))
-    opt = ProximalPolicyOptimization(env, 
+    opt = ProximalPolicyOptimization(env,
+                                     policy_init_old,
                                      policy_init
                                      )
-    result = opt.learn()
+    result = opt.learn(max_iters=max_iters,
+                       timesteps_per_batch=timesteps_per_batch,
+                       clip_param=0.2, entcoeff=0.0,
+                       optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
+                       gamma=0.99, lam=0.95)
     policy_final = opt.get_policy()    
     
     # Policy
