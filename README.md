@@ -31,6 +31,10 @@ Intended for learning about reinforcement learning.
 - Python modules:
 	- matplotlib
 
+## Documentation
+- Python modules:
+	- Sphinx
+
 # Installation
 ~~~~
 git clone https://github.com/mmalahe/upb.git
