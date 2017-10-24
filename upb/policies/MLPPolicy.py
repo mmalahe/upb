@@ -28,11 +28,12 @@ class MLPPolicy(object):
         
         # Input layer size
         if self._obtype == 'discrete':
-            l_sizes.append(ob_space.n)
+            self._oblength = ob_space.n
         elif self._obtype == 'box':
-            l_sizes.append(ob_space.shape[0])
+            self._oblength = ob_space.shape[0]
         else:
             raise NotImplementedError("No implementation for this type of space.")
+        l_size.append(self._oblength)
         
         # Hidden layers sizes
         for size in hidden_sizes:
@@ -40,19 +41,23 @@ class MLPPolicy(object):
         
         # Output layer size
         if self._actype == 'discrete':
-            l_sizes.append(ac_space.n)
+            self._aclength = ac_space.n
         elif self._actype == 'box':
-            l_sizes.append(ac_space.shape[0])
+            self._aclength = ac_space.shape[0]
         else:
             raise NotImplementedError("No implementation for this type of space.")
+        l_sizes.append(self._aclength)
         
-        # Add input layer and first hidden layer
+        # Add layers with tanh activation except for softmax in final layer       
         self._model = keras.models.Sequential()
-        self._model.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
-        
-        # Add subsequent layers        
-        for i in range(2, len(l_sizes)):
-            self._model.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
+        n_layers = len(l_sizes)
+        if n_layers == 2:
+            self._model.add(keras.layers.Dense(l_sizes[1], activation='softmax', input_dim=l_sizes[0]))
+        else:
+            self._model.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
+            for i in range(2, n_layers-1):
+                self._model.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
+            self._model.add(keras.layers.Dense(l_sizes[i], activation='softmax'))
     
     def act(self, ob):
         if self._actype == 'discrete':            
