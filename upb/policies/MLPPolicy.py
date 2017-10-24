@@ -4,9 +4,9 @@ import pickle
 import tensorflow as tf
 import numpy as np
 
-class MlpPolicySaveable(MlpPolicy):
+class MLPPolicySaveable(MlpPolicy):
     def __init__(self, name, *args, **kwargs):
-        super(MlpPolicySaveable, self).__init__(name, *args, **kwargs)
+        super(MLPPolicySaveable, self).__init__(name, *args, **kwargs)
         
     def save(self, filename):
         py_vars = {}

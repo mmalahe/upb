@@ -1,9 +1,10 @@
 """Usage example: mpirun -np 4 python3 rollout.py
 """
 
-from UPEnv import *
-from UPUtil import *
-from policies import *
+from upb.envs.UPEnv import *
+from upb.util.UPUtil import *
+from upb.policies.MLPPolicy import MLPPolicySaveable
+from baselines.common import tf_util
 from mpi4py import MPI
 
 # Game handler
@@ -15,7 +16,7 @@ desired_action_interval_observation = 0.2
 
 # Environment parameters
 stage = 1
-episode_length = 50000
+episode_length = 1000
 
 # Policy
 policy_filename = 'data/policy_stage{}_latest.pickle'.format(stage)
@@ -46,7 +47,7 @@ def observe():
                 )
                 
     # The policy
-    policy = MlpPolicySaveable(name='pi', 
+    policy = MLPPolicySaveable(name='pi', 
                                ob_space=env.observation_space, 
                                ac_space=env.action_space, 
                                hid_size=32, 

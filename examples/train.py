@@ -15,9 +15,9 @@ from baselines import bench
 from baselines.ppo1 import pposgd_simple
 from baselines.common import tf_util
 
-from UPEnv import *
-from UPUtil import *
-from policies import *
+from upb.envs.UPEnv import *
+from upb.util.UPUtil import *
+from upb.policies.MLPPolicy import MLPPolicySaveable
 import os
 
 import matplotlib.pyplot as plt
@@ -134,7 +134,7 @@ def train():
     
     # Policy
     def policy_fn(name, ob_space, ac_space):
-        return MlpPolicySaveable(name=name, 
+        return MLPPolicySaveable(name=name, 
                                     ob_space=env.observation_space, 
                                     ac_space=env.action_space, 
                                     hid_size=32,

@@ -30,3 +30,10 @@ Intended for learning about reinforcement learning.
 ## Plotting
 - Python modules:
 	- matplotlib
+
+# Installation
+~~~~
+git clone https://github.com/mmalahe/upb.git
+cd upb
+pip install -e .
+~~~~

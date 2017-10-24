@@ -1,5 +1,5 @@
-from UPGameHandler import *
-from emulation.UPEmulator import *
+from upb.game.UPGameHandler import *
+from upb.emu.UPEmulator import *
 from gym import Env
 from gym.spaces import Discrete, Box
 import numpy as np
