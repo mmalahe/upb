@@ -7,6 +7,8 @@ from upb.policies.MLPPolicy import MLPPolicySaveable
 from baselines.common import tf_util
 from mpi4py import MPI
 
+from baselines.ppo1.pposgd_simple import traj_segment_generator
+
 # Game handler
 use_emulator = True
 webdriver_name_observation = 'Chrome'
@@ -55,8 +57,14 @@ def observe():
     policy.load_and_check(policy_filename)
     
     # Rollout
-    rollout(env, policy)
-    policy.check_is_same_as(policy_filename)
+    gen = traj_segment_generator(policy, env, episode_length, True)
+    result = gen.__next__()
+    rewards = result["rew"]
+    total_reward = sum(rewards)
+    print("Total reward = {}.".format(total_reward))
+    
+    #~ rollout(env, policy)
+    #~ policy.check_is_same_as(policy_filename)
     env.save_screenshot("rollout_final.png")      
     
 def main():

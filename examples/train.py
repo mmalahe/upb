@@ -18,6 +18,7 @@ from baselines.common import tf_util
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
 from upb.policies.MLPPolicy import MLPPolicySaveable
+from upb.policies.MLPPolicy import MLPPolicy
 import os
 
 import matplotlib.pyplot as plt
@@ -36,11 +37,11 @@ desired_action_interval_training = 0.2
 # Training parameters
 stage = 1
 episode_length = 500
-timesteps_per_batch = 1*episode_length
+timesteps_per_batch = 2*episode_length
 max_iters = 1000
 schedule = 'linear'
-iters_per_render = 10
-iters_per_save = 10
+iters_per_render = 100
+iters_per_save = 100
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
 learning_state_filename_latest = os.path.join(data_dir,"learning_stage{}_latest.tf".format(stage))
@@ -132,25 +133,34 @@ def train():
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), "%i.monitor.json"%rank))
     gym.logger.setLevel(logging.WARN)    
     
-    # Policy
-    def policy_fn(name, ob_space, ac_space):
-        return MLPPolicySaveable(name=name, 
-                                    ob_space=env.observation_space, 
-                                    ac_space=env.action_space, 
-                                    hid_size=32,
-                                    num_hid_layers=2)
-                
     # Learn
-    pposgd_simple.learn(env, policy_fn,
-        max_iters=max_iters,
-        timesteps_per_batch=timesteps_per_batch,
-        clip_param=0.2, entcoeff=0.0,
-        optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
-        gamma=0.99, lam=0.95,
-        schedule=schedule,
-        callback=callback,
-        resume_callback=None
-    )
+    policy_init = MLPPolicy(env.observation_space, env.action_space, (32,32))
+    opt = ProximalPolicyOptimization(env, 
+                                     policy_init
+                                     )
+    result = opt.learn()
+    policy_final = opt.get_policy()    
+    
+    # Policy
+    #~ def policy_fn(name, ob_space, ac_space):
+        #~ return MLPPolicySaveable(name=name, 
+                                    #~ ob_space=env.observation_space, 
+                                    #~ ac_space=env.action_space, 
+                                    #~ hid_size=32,
+                                    #~ num_hid_layers=2)                
+    # Learn
+    #~ pposgd_simple.learn(env, policy_fn,
+        #~ max_iters=max_iters,
+        #~ timesteps_per_batch=timesteps_per_batch,
+        #~ clip_param=0.2, entcoeff=0.0,
+        #~ optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
+        #~ gamma=0.99, lam=0.95,
+        #~ schedule=schedule,
+        #~ callback=callback,
+        #~ resume_callback=None
+    #~ )
+    
+    
 
 def main():
     train()
