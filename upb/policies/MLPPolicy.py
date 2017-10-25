@@ -64,15 +64,25 @@ class MLPAgent(object):
             self._policy.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
             self._value_fn.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
             for i in range(2, n_layers-1):
-                self._model.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
-            self._model.add(keras.layers.Dense(l_sizes[i], activation='softmax'))
+                self._policy.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
+                self._value_fn.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
+            self._policy.add(keras.layers.Dense(l_sizes[i], activation='softmax'))
             self._value_fn.add(keras.layers.Dense(1, activation='linear'))
     
-    def act(self, ob):
+    def getActionAndValue(self, ob):
+        """Returns a chosen action and the value of the current state.
+        """
+        # Get action
         if self._actype == 'discrete':            
             action_prob = self._model.predict(ob)
-            return np.random.choice(action_prob, p=action_prob)
+            action = np.random.choice(np.arange(self._aclength), p=action_prob)
         elif self._actype == 'box':
-            return self._model.predict(ob)
+            action = self._model.predict(ob)
         else:
             raise NotImplementedError("No implementation for this type of space.")
+            
+        # Get prediction
+        value_prediction = self._value_fn.predict(ob)
+        
+        # Return
+        return action, value_prediction
