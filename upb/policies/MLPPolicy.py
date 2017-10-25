@@ -5,7 +5,10 @@ import numpy as np
 import keras
 import gym
 
-class MLPPolicy(object):
+class MLPAgent(object):
+    """With separate policy and value networks that have the same number
+    of hidden layers.
+    """
     def __init__(self, ob_space, ac_space, hidden_sizes):
         # Observation space type
         if isinstance(ob_space, gym.spaces.discrete.Discrete):
@@ -48,16 +51,22 @@ class MLPPolicy(object):
             raise NotImplementedError("No implementation for this type of space.")
         l_sizes.append(self._aclength)
         
-        # Add layers with tanh activation except for softmax in final layer       
-        self._model = keras.models.Sequential()
+        # Add layers with tanh activation except for 
+        # - softmax in final layer for policy
+        # - linear in final single-neuron layer for value function
+        self._policy = keras.models.Sequential()
+        self._value_fn = keras.models.Sequential()
         n_layers = len(l_sizes)
         if n_layers == 2:
-            self._model.add(keras.layers.Dense(l_sizes[1], activation='softmax', input_dim=l_sizes[0]))
+            self._policy.add(keras.layers.Dense(l_sizes[1], activation='softmax', input_dim=l_sizes[0]))
+            self._value_fn.add(keras.layers.Dense(1, activation='linear', input_dim=l_sizes[0]))
         else:
-            self._model.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
+            self._policy.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
+            self._value_fn.add(keras.layers.Dense(l_sizes[1], activation='tanh', input_dim=l_sizes[0]))
             for i in range(2, n_layers-1):
                 self._model.add(keras.layers.Dense(l_sizes[i], activation='tanh'))
             self._model.add(keras.layers.Dense(l_sizes[i], activation='softmax'))
+            self._value_fn.add(keras.layers.Dense(1, activation='linear'))
     
     def act(self, ob):
         if self._actype == 'discrete':            
