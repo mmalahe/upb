@@ -6,7 +6,7 @@ import keras
 import gym
 
 class MLPPolicy(object):
-    def __init__(self, ob_space, ac_space, hidden_sizes, optimizer='adam', loss='kullback_leibler_divergence'):
+    def __init__(self, ob_space, ac_space, hidden_sizes):
         # Observation space type
         if isinstance(ob_space, gym.spaces.discrete.Discrete):
             self._obtype = 'discrete'
