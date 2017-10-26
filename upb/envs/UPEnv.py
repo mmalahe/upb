@@ -5,6 +5,7 @@ from gym.spaces import Discrete, Box
 import numpy as np
 from datetime import datetime
 import time
+from collections import OrderedDict
 
 # Stage 1
 up_observation_names_stage1 = [
@@ -52,7 +53,13 @@ class UPObservationSpace(Box):
             'Paperclips': [0, np.inf],
             'Available Funds': [0, np.inf]           
         }
+        # Select the observations we're able to make     
         self._observations = {key: self._all_observations[key] for key in observation_names}
+        
+        # Ensure that the dict has a well-defined deterministic ordering
+        self._observations = OrderedDict(sorted(self._observations.items(), key=lambda t: t[0]))
+        
+        # Order keys
         self._keys = list(self._observations.keys())
         self._nkeys = len(self._keys)
         low = np.zeros(self._nkeys)
@@ -85,6 +92,10 @@ class UPActionSpace(Discrete):
             'Buy Autoclipper': ''
         }
         self._actions = {key: self._all_actions[key] for key in action_names}
+        
+        # Ensure that the dict has a well-defined deterministic ordering
+        self._actions = OrderedDict(sorted(self._actions.items(), key=lambda t: t[0]))
+        
         self._keys = list(self._actions.keys())
         nkeys = len(self._keys)
             

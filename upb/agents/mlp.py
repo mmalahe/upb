@@ -2,6 +2,7 @@ from baselines.common import tf_util
 from baselines.ppo1.mlp_policy import MlpPolicy
 import pickle
 import numpy as np
+import tensorflow as tf
 import keras
 import gym
 
@@ -43,8 +44,6 @@ class MLPAgent(MlpPolicy):
         for tf_var in self.get_variables():
             py_var_out = py_vars_out[tf_var.name]
             py_var_in = tf_var.eval()
-            print("{} out =".format(tf_var.name), py_var_out)
-            print("{} in =".format(tf_var.name), py_var_in)
             if not np.array_equal(py_var_out, py_var_in):
                 raise Exception("Variables not equal!")
                 
@@ -53,7 +52,7 @@ class MLPAgent(MlpPolicy):
             py_vars = pickle.load(f)
         tf_util.initialize()
         for tf_var in self.get_variables():
-            tf_var.load(py_vars[tf_var.name]) 
+            tf_var.load(py_vars[tf_var.name])
             if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
                 raise Exception("Variables not equal!")
                 
@@ -61,8 +60,6 @@ class MLPAgent(MlpPolicy):
         with open(filename, 'rb') as f:
             py_vars = pickle.load(f)
         for tf_var in self.get_variables():
-            print("{} =".format(tf_var.name), tf_var.eval())
-            print("{} from file =".format(tf_var.name), py_vars[tf_var.name])
             if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
                 raise Exception("Variables not equal!")
 

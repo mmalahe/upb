@@ -5,6 +5,7 @@ import selenium.common.exceptions
 import selenium.webdriver.chrome as chrome
 import lxml.html
 import http
+from collections import OrderedDict
 
 class UPGameState(object):
     _scalar_values = {
@@ -135,7 +136,7 @@ class UPGameHandler(object):
     
     def makeObservation(self, fields):
         self._updateGameState()
-        observation = {}
+        observation = OrderedDict()
         for field in fields:
             observation[field] = self._state.get(field)
         return observation

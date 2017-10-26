@@ -36,11 +36,11 @@ desired_action_interval_training = 0.2
 # Training parameters
 stage = 1
 episode_length = 500
-timesteps_per_batch = 2*episode_length
+timesteps_per_batch = 1*episode_length
 max_iters = 1000
 schedule = 'linear'
-iters_per_render = 100
-iters_per_save = 100
+iters_per_render = 10
+iters_per_save = 10
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
 learning_state_filename_latest = os.path.join(data_dir,"learning_stage{}_latest.tf".format(stage))

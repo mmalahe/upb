@@ -1,5 +1,6 @@
 from py_mini_racer import py_mini_racer
 from os.path import abspath, dirname, join
+from collections import OrderedDict
 
 class UPEmulator(object):
     # Names and millisecond intervals of interval loops
@@ -63,7 +64,7 @@ class UPEmulator(object):
         pass
     
     def makeObservation(self, fields):
-        obs = {}
+        obs = OrderedDict()
         for field in fields:
             obs[field] = self._intp.eval(self._obs_to_js[field])
         return obs
