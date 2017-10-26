@@ -17,8 +17,7 @@ from baselines.common import tf_util
 
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
-from upb.policies.MLPPolicy import MLPPolicySaveable
-from upb.policies.MLPPolicy import MLPPolicy
+from upb.agents.mlp import MLPAgent
 from upb.algos.ppo import ProximalPolicyOptimization
 import os
 
@@ -135,11 +134,11 @@ def train():
     gym.logger.setLevel(logging.WARN)    
     
     # Learn
-    policy_init_old = MLPPolicy(env.observation_space, env.action_space, (32,32))
-    policy_init = MLPPolicy(env.observation_space, env.action_space, (32,32))
+    agent_init_old = MLPAgent(env.observation_space, env.action_space, (32,32))
+    agent_init = MLPAgent(env.observation_space, env.action_space, (32,32))
     opt = ProximalPolicyOptimization(env,
-                                     policy_init_old,
-                                     policy_init
+                                     agent_init_old,
+                                     agent_init
                                      )
     result = opt.learn(max_iters=max_iters,
                        timesteps_per_batch=timesteps_per_batch,

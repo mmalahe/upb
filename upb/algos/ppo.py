@@ -7,15 +7,15 @@ class ProximalPolicyOptimization(object):
     This implementation is built around policies that are represented
     as keras models.
     """
-    def __init__(self, env, policy_init_old, policy_init):
+    def __init__(self, env, agent_init_old, agent_init):
         r""" Constructor
         
-        :param policy_init_old: initial :math:`\pi_{\theta_{\mathrm{old}}}`
-        :param policy_init: initial :math:`\pi_\theta`    
+        :param agent_init_old: initial agent with policy :math:`\pi_{\theta_{\mathrm{old}}}`
+        :param agent_init: initial agent with :math:`\pi_\theta`    
         """
         self._env = env
-        self._pi_old = policy_init_old
-        self._pi = policy_init
+        self._ag_old = policy_init_old
+        self._ag = policy_init
         self._oblength = self._policy._oblength
         self._aclength = self._policy._aclength
     
@@ -96,9 +96,10 @@ class ProximalPolicyOptimization(object):
         l_clip_vf_s = l_clip - c_1*l_vf - c_2*pi_entropy        
         
         # Set up optimizer
+        # @todo: make sure signs are correct
         adam = keras.optimizers.Adam()
-        updates = adam.get_updates(params=[self._pi._policy.trainable_weights,
-                                           self._pi._value_fn.trainable_weights
+        updates = adam.get_updates(params=[self._ag._policy.trainable_weights,
+                                           self._ag._value_fn.trainable_weights
                                            ]
                                    constraints=[],
                                    loss=l_clip_vf_s)
