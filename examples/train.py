@@ -18,7 +18,6 @@ from baselines.common import tf_util
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
 from upb.agents.mlp import MLPAgent
-from upb.algos.ppo import ProximalPolicyOptimization
 import os
 
 import matplotlib.pyplot as plt
@@ -131,42 +130,27 @@ def train():
     
     # Monitoring
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), "%i.monitor.json"%rank))
-    gym.logger.setLevel(logging.WARN)    
+    gym.logger.setLevel(logging.WARN)
+    
+    # Policy generating function
+    def policy_fn(name, ob_space, ac_space):
+        return MLPAgent(name=name, 
+                        ob_space=env.observation_space, 
+                        ac_space=env.action_space, 
+                        hid_size=32,
+                        num_hid_layers=2)                
     
     # Learn
-    agent_init_old = MLPAgent(env.observation_space, env.action_space, (32,32))
-    agent_init = MLPAgent(env.observation_space, env.action_space, (32,32))
-    opt = ProximalPolicyOptimization(env,
-                                     agent_init_old,
-                                     agent_init
-                                     )
-    result = opt.learn(max_iters=max_iters,
-                       timesteps_per_batch=timesteps_per_batch,
-                       clip_param=0.2, entcoeff=0.0,
-                       optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
-                       gamma=0.99, lam=0.95)
-    policy_final = opt.get_policy()    
-    
-    # Policy
-    #~ def policy_fn(name, ob_space, ac_space):
-        #~ return MLPPolicySaveable(name=name, 
-                                    #~ ob_space=env.observation_space, 
-                                    #~ ac_space=env.action_space, 
-                                    #~ hid_size=32,
-                                    #~ num_hid_layers=2)                
-    # Learn
-    #~ pposgd_simple.learn(env, policy_fn,
-        #~ max_iters=max_iters,
-        #~ timesteps_per_batch=timesteps_per_batch,
-        #~ clip_param=0.2, entcoeff=0.0,
-        #~ optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
-        #~ gamma=0.99, lam=0.95,
-        #~ schedule=schedule,
-        #~ callback=callback,
-        #~ resume_callback=None
-    #~ )
-    
-    
+    pposgd_simple.learn(env, policy_fn,
+        max_iters=max_iters,
+        timesteps_per_batch=timesteps_per_batch,
+        clip_param=0.2, entcoeff=0.0,
+        optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
+        gamma=0.99, lam=0.95,
+        schedule=schedule,
+        callback=callback,
+        resume_callback=None
+    )
 
 def main():
     train()

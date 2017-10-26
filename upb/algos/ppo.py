@@ -8,18 +8,20 @@ class ProximalPolicyOptimization(object):
     as keras models.
     """
     def __init__(self, env, agent_init_old, agent_init):
+        raise NotImplementedError()
         r""" Constructor
         
         :param agent_init_old: initial agent with policy :math:`\pi_{\theta_{\mathrm{old}}}`
         :param agent_init: initial agent with :math:`\pi_\theta`    
         """
         self._env = env
-        self._ag_old = policy_init_old
-        self._ag = policy_init
-        self._oblength = self._policy._oblength
-        self._aclength = self._policy._aclength
+        self._ag_old = agent_init_old
+        self._ag = agent_init
+        self._oblength = self._ag.oblength
+        self._aclength = self._ag.aclength
     
-    def _create_training_function(self, clip_param):
+    def _create_training_function(self, clip_param, batch_size):
+        raise NotImplementedError()
         r"""Construct the loss function.
         
         Based on the objective
@@ -48,23 +50,31 @@ class ProximalPolicyOptimization(object):
         
         :param clip_param: the clipping parameter :math:`\epsilon`
         :type clip_param: float        
-        """
+        """        
         # Placeholders for batches of actions
         # This will hold a_t for the length of the optimization batch.
-        ac_prob_batch = K.placeholder(shape=(None, self._aclength), name="ac_prob")
-        ac_prob_old_batch = K.placeholder(shape=(None, self._aclength), name="ac_prob_old")
-        ac_onehot_batch = K.placeholder(shape=(None, self._aclength), name="ac_onehot")
+        ob_batch = K.placeholder(shape=(batch_size, self._oblength), name="ob")
+        ac_onehot_batch = K.placeholder(shape=(batch_size, self._aclength), name="ac_onehot")
         
         # Placeholder for a batch of advantages
         # This will hold \hat{A}_t for the length of the optimization batch.
-        adv_batch = K.placeholder(shape=(None,), name="adv")
+        adv_batch = K.placeholder(shape=(batch_size,), name="adv")
         
         # Placeholder for a batch of returns
-        ret_batch = K.placeholder(shape=(None,), name="ret")
+        ret_batch = K.placeholder(shape=(batch_size,), name="ret")
         
         # Placeholders for value predictions and targets
-        vpred_batch = K.placeholder(shape=(None,), name="vpred")
-        vtarg_batch = K.placeholder(shape=(None,), name="vtarg")
+        vpred_batch = K.placeholder(shape=(batch_size,), name="vpred")
+        vtarg_batch = K.placeholder(shape=(batch_size,), name="vtarg")
+        
+        # Action probabilities
+        ac_probs_old = []
+        ac_probs = []        
+        for i in range(batch_size):
+            ac_probs_old.append(self._ag._policy.model.predict_function([ob_batch[i,:]]))
+            ac_probs.append(self._ag._policy.model.predict_function([ob_batch[i,:]]))
+        ac_prob_old_batch = K.concatenate(ac_probs_old, axis=0)
+        ac_prob_batch = K.concatenate(ac_probs, axis=0)
         
         # \pi_\theta(a_t|s_t)
         pi_a_given_s_batch = K.sum(ac_prob_batch*ac_onehot_batch, axis=1)
@@ -93,26 +103,25 @@ class ProximalPolicyOptimization(object):
         # The final loss L^{\mathrm{CLIP+VF+S}}
         c_1 = 1.0
         c_2 = 0.01
-        l_clip_vf_s = l_clip - c_1*l_vf - c_2*pi_entropy        
+        l_clip_vf_s = l_clip - c_1*l_vf - c_2*pi_entropy
+        l_clip_vf_s = l_vf
         
         # Set up optimizer
         # @todo: make sure signs are correct
         adam = keras.optimizers.Adam()
-        updates = adam.get_updates(params=[self._ag._policy.trainable_weights,
-                                           self._ag._value_fn.trainable_weights
-                                           ]
+        updates = adam.get_updates(params=self._ag._policy.trainable_weights+
+                                          self._ag._value_fn.trainable_weights,
                                    constraints=[],
                                    loss=l_clip_vf_s)
         
         # Set up training function
-        self.training_fn = backend.function(inputs=[ac_prob_batch,
-                                                    ac_prob_old_batch,
+        self.training_fn = backend.function(inputs=[ob_batch,
                                                     ac_onehot_batch,
                                                     adv_batch,
                                                     ret_batch,
                                                     vpred_batch,
                                                     vtarg_batch
-                                                    ]
+                                                    ],
                                             outputs=[],
                                             updates=updates)
     
@@ -127,10 +136,11 @@ class ProximalPolicyOptimization(object):
         :type clip_param: float
         :returns:  None -- Nothing
         :raises:
-        """
+        """        
+        raise NotImplementedError()
         
         # Set up the loss function
-        self._create_training_function(clip_param)
+        self._create_training_function(clip_param, optim_batchsize)
         
         # Begin loop
         

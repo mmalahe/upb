@@ -3,7 +3,7 @@
 
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
-from upb.policies.MLPPolicy import MLPPolicySaveable
+from upb.agents.mlp import MLPAgent
 from baselines.common import tf_util
 from mpi4py import MPI
 
@@ -48,23 +48,16 @@ def observe():
                 headless=False                  
                 )
                 
-    # The policy
-    policy = MLPPolicySaveable(name='pi', 
-                               ob_space=env.observation_space, 
-                               ac_space=env.action_space, 
-                               hid_size=32, 
-                               num_hid_layers=2)
-    policy.load_and_check(policy_filename)
+    # The agent
+    agent = MLPAgent(name='pi', 
+                     ob_space=env.observation_space, 
+                     ac_space=env.action_space, 
+                     hid_size=32, 
+                     num_hid_layers=2)
+    agent.load_and_check(policy_filename)
     
     # Rollout
-    gen = traj_segment_generator(policy, env, episode_length, True)
-    result = gen.__next__()
-    rewards = result["rew"]
-    total_reward = sum(rewards)
-    print("Total reward = {}.".format(total_reward))
-    
-    #~ rollout(env, policy)
-    #~ policy.check_is_same_as(policy_filename)
+    rollout(env, agent)
     env.save_screenshot("rollout_final.png")      
     
 def main():
