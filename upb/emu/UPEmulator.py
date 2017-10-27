@@ -66,7 +66,12 @@ class UPEmulator(object):
     def makeObservation(self, fields):
         obs = OrderedDict()
         for field in fields:
-            obs[field] = self._intp.eval(self._obs_to_js[field])
+            val = self._intp.eval(self._obs_to_js[field])
+            # Any additional scaling that's made before being displayed to webpage
+            if field == 'Public Demand':
+                val *= 10.0
+                
+            obs[field] = val
         return obs
         
     def takeAction(self, action_name):
