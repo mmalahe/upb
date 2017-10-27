@@ -79,6 +79,12 @@ class UPObservationSpace(Box):
         for i in range(self._nkeys):
             obs_array[i] = observation[self._keys[i]]
         return obs_array
+        
+    def observationAsString(self, obs_array):
+        obs = ""
+        for i in range(self._nkeys):
+            obs += "{}={:1.2g},".format(self._keys[i], obs_array[i])
+        return obs
 
 class UPActionSpace(Discrete):
     def __init__(self, action_names):
