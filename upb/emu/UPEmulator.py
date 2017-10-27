@@ -58,6 +58,8 @@ class UPEmulator(object):
     # "Public" members
     def reset(self):
         self._init()
+        # Allow all main loops to resolve at least once
+        self.advanceTime(0.5)
     
     def quit(self):
         # Nothing needs to be done here
