@@ -23,8 +23,8 @@ import os
 
 import matplotlib.pyplot as plt
 
-# Resume learning from file
-do_resume_learning = False
+# Load latest agent from file
+do_load_latest_agent = False
 
 # Game handler
 use_emulator = True
@@ -44,7 +44,7 @@ iters_per_render = 10
 iters_per_save = 10
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
-learning_state_filename_latest = os.path.join(data_dir,"learning_stage{}_latest.tf".format(stage))
+policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(stage))
 
 reward_history = []
 
@@ -82,16 +82,16 @@ def train():
     def save_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
         if iters_so_far % iters_per_save == 0 and iters_so_far > 0:
-            # Save policy
+            # Save policies
             policy_filename_iter = os.path.join(data_dir,"policy_stage{}_iter{}.pickle".format(stage, iters_so_far))    
             pi = loc['pi']            
             pi.save_and_check_reload(policy_filename_iter)
             pi.save_and_check_reload(policy_filename_latest)
             
-            # Save full learning state to make resuming easier
-            learning_state_filename_iter = os.path.join(data_dir,"learning_stage{}_iter{}.tf".format(stage, iters_so_far))
-            tf_util.save_state(learning_state_filename_iter)
-            tf_util.save_state(learning_state_filename_latest)
+            policy_filename_iter_old = os.path.join(data_dir,"policy_stage{}_iter{}_old.pickle".format(stage, iters_so_far))    
+            oldpi = loc['oldpi']            
+            oldpi.save_and_check_reload(policy_filename_iter_old)
+            oldpi.save_and_check_reload(policy_filename_latest_old)
     
     def observe_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
@@ -109,21 +109,12 @@ def train():
             plt.savefig(os.path.join(data_dir,"reward_history.png"))
             plt.close(fig)
             
-    def resume_callback(loc, glob):
-        if do_resume_learning:
-            print("Resuming...")
-            tf_util.load_state(learning_state_filename_latest)
-            MPI.COMM_WORLD.Barrier()
-            
     def logging_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
         if iters_so_far > 0:
             reward_history.append(np.mean(loc['rewbuffer']))
                 
     def callback(loc, glob):
-        iters_so_far = loc['iters_so_far']
-        if iters_so_far == 0:
-            resume_callback(loc, glob)
         if rank == 0:
             save_callback(loc, glob)
             logging_callback(loc,glob)
@@ -135,11 +126,21 @@ def train():
     
     # Policy generating function
     def policy_fn(name, ob_space, ac_space):
-        return MLPAgent(name=name, 
+        agent = MLPAgent(name=name, 
                         ob_space=env.observation_space, 
                         ac_space=env.action_space, 
                         hid_size=32,
-                        num_hid_layers=2)                
+                        num_hid_layers=2)
+        
+        if do_load_latest_agent:
+            if name == "pi":
+                agent.load_and_check(policy_filename_latest)
+            elif name == "oldpi":
+                agent.load_and_check(policy_filename_latest_old)
+            else:
+                print("WARNING: Don't know how to load {}.".format(name))
+                
+        return agent
     
     # Learn
     pposgd_simple.learn(env, policy_fn,
@@ -149,8 +150,7 @@ def train():
         optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
         gamma=0.99, lam=0.95,
         schedule=schedule,
-        callback=callback,
-        resume_callback=None
+        callback=callback
     )
 
 def main():
