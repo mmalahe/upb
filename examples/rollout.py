@@ -18,11 +18,10 @@ desired_action_interval_observation = 0.2
 
 # Environment parameters
 stage = 1
-episode_length = 500
+episode_length = 2000
 
 # Policy
 policy_filename = 'data/policy_stage{}_latest.pickle'.format(stage)
-#~ policy_filename = 'data/policy_stage{}_iter130.pickle'.format(stage)
 
 # Pick stage
 if stage == 1:

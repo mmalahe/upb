@@ -26,18 +26,20 @@ import matplotlib.pyplot as plt
 # Load latest agent from file
 do_load_latest_agent = False
 
-# Game handler
+# Game emulator
 use_emulator = True
+desired_action_interval_training = 0.2
+
+# Game handler
 webdriver_name_training = 'PhantomJS'
 webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
+#~ desired_action_interval_training = 0.067 # "Training" version of game for a sufficiently fast webdriver ticks three times faster
 url_training = LOCAL_GAME_URL_TRAIN
-#~ desired_action_interval_training = 0.067
-desired_action_interval_training = 0.2
 
 # Training parameters
 stage = 1
-episode_length = 500
-timesteps_per_batch = 1*episode_length
+episode_length = 2000
+timesteps_per_batch = 4*episode_length
 max_iters = 1000
 schedule = 'linear'
 iters_per_render = 10
