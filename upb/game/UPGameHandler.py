@@ -6,6 +6,10 @@ import selenium.webdriver.chrome as chrome
 import lxml.html
 import http
 from collections import OrderedDict
+import os
+
+LOCAL_GAME_URL_TRAIN = "file://"+os.path.join(os.path.dirname(os.path.abspath(__file__)),"index2_train.html")
+LOCAL_GAME_URL_STANDARD = "file://"+os.path.join(os.path.dirname(os.path.abspath(__file__)),"index2.html") 
 
 class UPGameState(object):
     _scalar_values = {

@@ -15,6 +15,7 @@ from baselines import bench
 from baselines.ppo1 import pposgd_simple
 from baselines.common import tf_util
 
+from upb.game.UPGameHandler import LOCAL_GAME_URL_TRAIN
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
 from upb.agents.mlp import MLPAgent
@@ -29,7 +30,7 @@ do_resume_learning = False
 use_emulator = True
 webdriver_name_training = 'PhantomJS'
 webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
-url_training = os.path.join(dirname(abspath(__file__)),"game","index2_train.html")
+url_training = LOCAL_GAME_URL_TRAIN
 #~ desired_action_interval_training = 0.067
 desired_action_interval_training = 0.2
 

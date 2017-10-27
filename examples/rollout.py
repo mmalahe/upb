@@ -6,14 +6,14 @@ from upb.util.UPUtil import *
 from upb.agents.mlp import MLPAgent
 from baselines.common import tf_util
 from mpi4py import MPI
-
-from baselines.ppo1.pposgd_simple import traj_segment_generator
+import os
+from upb.game.UPGameHandler import LOCAL_GAME_URL_STANDARD
 
 # Game handler
-use_emulator = True
+use_emulator = False
 webdriver_name_observation = 'Chrome'
 webdriver_path_observation = None
-url_observation = "file:///home/mikl/projects/upb/src/game/index2.html"
+url_observation = LOCAL_GAME_URL_STANDARD
 desired_action_interval_observation = 0.2
 
 # Environment parameters
