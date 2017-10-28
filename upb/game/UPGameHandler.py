@@ -12,21 +12,7 @@ LOCAL_GAME_URL_TRAIN = "file://"+os.path.join(os.path.dirname(os.path.abspath(__
 LOCAL_GAME_URL_STANDARD = "file://"+os.path.join(os.path.dirname(os.path.abspath(__file__)),"index2.html") 
 
 class UPGameState(object):
-    _scalar_values = {
-        'Paperclips': None,
-        'Available Funds': None,
-        'Unsold Inventory': None,
-        'Price per Clip': None,
-        'Public Demand': None,
-        'Marketing Level': None,
-        'Marketing Cost': None,
-        'Manufacturing Clips per Second': None,
-        'Wire Inches': None,
-        'Wire Cost': None,
-        'Autoclipper Cost': None,
-        'Number of Autoclippers': None
-        
-    }
+    _scalar_values = {}
     _scalar_values_finders = {
         'Paperclips': ['id','clips'],
         'Available Funds': ['id','funds'],
@@ -39,10 +25,11 @@ class UPGameState(object):
         'Wire Inches': ['id','wire'],
         'Wire Cost': ['id','wireCost'],
         'Autoclipper Cost': ['id','clipperCost'],
-        'Number of Autoclippers': ['id','clipmakerLevel2']
-    }
-    _derived_scalar_values = {
-        'Autoclipper Purchasable': None
+        'Number of Autoclippers': ['id','clipmakerLevel2'],
+        'Processors': ['id','processors'],
+        'Memory': ['id','memory'],
+        'Trust': ['id','trust'],
+        'Next Trust': ['id','nextTrust'],
     }
     
     def __init__(self, driver):        
@@ -79,13 +66,9 @@ class UPGameState(object):
                     if field == 'Autoclipper Cost':
                         self._scalar_values[field] /= 100.0
         
-        # Derived values
-        self._derived_scalar_values['Autoclipper Purchasable'] = 1.0*(self._scalar_values['Available Funds'] >= self._scalar_values['Autoclipper Cost'])
-        
         # All kinds of values combined
         self._all_values = {}
         self._all_values.update(self._scalar_values)
-        self._all_values.update(self._derived_scalar_values)
         
     def get(self, field):
         return self._all_values[field]
@@ -108,7 +91,9 @@ class UPGameHandler(object):
             'Raise Price': 'btnRaisePrice',
             'Expand Marketing': 'btnExpandMarketing',
             'Buy Wire': 'btnBuyWire',
-            'Buy Autoclipper': 'btnMakeClipper'
+            'Buy Autoclipper': 'btnMakeClipper',
+            'Add Processor': 'btnAddProc',
+            'Add Memory': 'btnAddMemory'
         }
         self._all_actions = list(self._all_buttons.keys())
         

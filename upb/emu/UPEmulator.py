@@ -23,7 +23,11 @@ class UPEmulator(object):
         'Wire Inches': 'wire',
         'Wire Cost': 'wireCost',
         'Autoclipper Cost': 'clipperCost',
-        'Number of Autoclippers': 'clipmakerLevel'
+        'Number of Autoclippers': 'clipmakerLevel',
+        'Trust': 'trust',
+        'Next Trust': 'nextTrust',
+        'Processors': 'processors',
+        'Memory': 'memory'        
     }
     
     _action_to_js = {
@@ -32,7 +36,9 @@ class UPEmulator(object):
         'Raise Price': 'raisePrice();',
         'Expand Marketing': 'if (funds>=adCost) {buyAds();}',
         'Buy Wire': 'if (funds>=wireCost) {buyWire();}',
-        'Buy Autoclipper': 'if (funds>=clipperCost) {makeClipper();}'
+        'Buy Autoclipper': 'if (funds>=clipperCost) {makeClipper();}',
+        'Add Processor': 'if (trust>processors+memory || swarmGifts > 0) {addProc();}',
+        'Add Memory': 'if (trust>processors+memory || swarmGifts > 0) {addMem();}'
     }
     
     def __init__(self, 
