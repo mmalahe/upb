@@ -7,24 +7,6 @@ from datetime import datetime
 import time
 from collections import OrderedDict
 
-# Stage 1
-up_observation_names_stage1 = [
-    'Unsold Inventory', 
-    'Price per Clip', 
-    'Public Demand', 
-    'Available Funds', 
-    'Autoclipper Cost', 
-    'Number of Autoclippers',
-    'Wire Inches',
-    'Wire Cost'
-]
-up_action_names_stage1 = [
-    'Make Paperclip', 
-    'Lower Price', 
-    'Raise Price', 
-    'Buy Autoclipper',
-    'Buy Wire']
-
 # To microsecond precision
 # @fixme Resets at the month boundary
 def timeSeconds():
@@ -112,11 +94,9 @@ class UPActionSpace(Discrete):
     def actionAsString(self, action):
         return self._keys[action]
 
-class UPEnv(Env):
+class UPEnv(Env):    
     def __init__(self,
-                 url, 
-                 observation_names,                  
-                 action_names,
+                 url,
                  use_emulator=False,
                  episode_length=None,
                  desired_action_interval=0.2,
@@ -140,8 +120,7 @@ class UPEnv(Env):
                                           verbose=verbose)
         
         # Spaces
-        self._observation_names = observation_names
-        self._action_names = action_names
+        self._set_up_spaces()
         
         # Other
         self._episode_length = episode_length
@@ -150,6 +129,71 @@ class UPEnv(Env):
         
         # Reset
         self.reset()
+    
+    def _set_up_spaces(self):
+        self._observation_names_stages = []
+        self._action_names_stages = []
+        
+        # Stage 0
+        self._observation_names_stages.append(
+        [
+            'Unsold Inventory', 
+            'Price per Clip', 
+            'Public Demand', 
+            'Available Funds', 
+            'Autoclipper Cost', 
+            'Number of Autoclippers',
+            'Wire Inches',
+            'Wire Cost'
+        ])
+        self._action_names_stages.append(
+        [
+            'Make Paperclip', 
+            'Lower Price', 
+            'Raise Price', 
+            'Buy Autoclipper',
+            'Buy Wire'
+        ])
+        
+        # Stage 1
+        self._observation_names_stages.append(
+        self._observation_names_stages[-1]+
+        [
+            'Paperclips',
+            'Marketing Level',
+            'Marketing Cost',
+            'Processors',
+            'Memory',
+            'Trust',
+            'Next Trust'
+        ])
+        self._action_names_stages.append(
+        self._actions_names_stages[-1]+
+        [
+            'Expand Marketing',
+            'Add Processor',
+            'Add Memory'
+        ])        
+    
+    def _update_stage(self):
+        # Update rule for stage 0 -> 1: onset of trust
+        if self._stage == 0:
+            observation_from_handler = self._handler.makeObservation(['Paperclips'])
+            clips = observation_from_handler['Paperclips']
+            if clips >= 2000:
+                self._stage = 1
+                print("Advancing from stage 0 to stage 1.")
+                
+        # Update rule for stage 1 -> 2   
+        if self._stage == 1
+            # No definition for stage 2 yet
+            pass            
+        
+        if stage_changed:
+            self._observation_names = self._observation_names_stages[self._stage]
+            self._action_names = self._action_names_stages[self._stage]
+        
+        return stage_changed
     
     def _reset(self):
         """
@@ -161,6 +205,10 @@ class UPEnv(Env):
         
         # Reset page
         self._handler.reset()
+        
+        # Set correct stage
+        self._stage = 0
+        self._update_stage()
         
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
@@ -175,6 +223,14 @@ class UPEnv(Env):
         return observation
     
     def reward(self, observation_from_handler):
+        if self._stage == 0:
+            return self.assetsAndCashReward(observation_from_handler)
+        elif self._stage == 1:
+            return self.assetsAndCashReward(observation_from_handler)
+        else:
+            raise NotImplementedError("No definition for stage 2+.")
+            
+    def assetsAndCashReward(self, observation_from_handler):
         return self.cashReward(observation_from_handler) + self.assetsReward(observation_from_handler)
     
     def assetsReward(self, observation_from_handler):
@@ -228,6 +284,9 @@ class UPEnv(Env):
         if self._use_emulator:
             self._handler.advanceTime(self._desired_action_interval/2.0)
         
+        # Update stage
+        stage_changed = self._update_stage()
+        
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
         observation = self.observation_space.observationAsArray(observation_from_handler)
@@ -250,7 +309,7 @@ class UPEnv(Env):
             done = self._n_steps_taken >= self._episode_length
         
         # Additional info
-        info = {}
+        info = {'stage': self._stage}
         
         # Return
         return (observation, reward, done, info)
