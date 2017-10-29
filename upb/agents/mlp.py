@@ -78,6 +78,26 @@ class MLPAgent(MlpPolicy):
             if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
                 raise Exception("Variables not equal!")
 
+class MultiStageAgent:
+    def __init__(self, agents, initial_stage=0):
+        self._agents = agents
+        self._nstages = len(self._agents)
+        self.stage = initial_stage
+    
+    @property
+    def stage(self):
+        return self._stage    
+    
+    @stage.setter
+    def stage(self, value):
+        if value < self._nstages:
+            self._stage = value
+        else:
+            raise Exception("No stage {} for a {}-stage agent (zero indexed).".format(value, self._nstages))
+    
+    def act(self, ob):
+        return self._agents[self._stage].act(ob)
+
 class MLPAgentWIP(object):
     """With separate policy and value networks that have the same number
     of hidden layers.
