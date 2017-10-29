@@ -97,6 +97,8 @@ class UPActionSpace(Discrete):
 class UPEnv(Env):    
     def __init__(self,
                  url,
+                 initial_stage=0,
+                 resetter_agents=[],
                  use_emulator=False,
                  episode_length=None,
                  desired_action_interval=0.2,
@@ -126,6 +128,12 @@ class UPEnv(Env):
         self._episode_length = episode_length
         self._desired_action_interval = desired_action_interval
         self._verbose = verbose
+        
+        # Parameters for working up to a given stage
+        if intitial_stage != len(resetter_agents):
+            raise Exception("Incorrect number of resetter agents ({}) for desired initial stage ({}). Should be equal.".format(len(resetter_agents), initial_stage))
+        self._initial_stage = initial_stage
+        self._resetter_agents = resetter_agents
         
         # Reset
         self.reset()
@@ -195,6 +203,30 @@ class UPEnv(Env):
         
         return stage_changed
     
+    def _advance_to_stage(self, target_stage, agents):
+        # Check number of supplied agents
+        if target_stage != len(agents):
+            raise Exception("Incorrect number of resetter agents ({}) for target stage ({}). Should be equal.".format(len(agents), target_stage))
+        
+        # Initial values
+        self._prev_act_time = None
+        self._n_steps_taken = 0
+        
+        # Initial observation
+        observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
+        ob = self.observation_space.observationAsArray(observation_from_handler)
+        
+        # Advance
+        stochastic = True
+        prev_stage = self._stage
+        while self._stage < target_stage:
+            agent = agents[self._stage]    
+            ac, vpred = agent.act(stochastic, ob)  
+            ob, rew, done, info = self.step(ac)
+            if self._stage > prev_stage:
+                print("Advanced to stage {} after {} steps.".format(self._stage, self._n_steps_taken))
+        print("Completed initial stage advancement.")
+    
     def _reset(self):
         """
         Resets the state of the environment, returning an initial observation.
@@ -206,9 +238,13 @@ class UPEnv(Env):
         # Reset page
         self._handler.reset()
         
-        # Set correct stage
+        # Set correct initial stage
         self._stage = 0
         self._update_stage()
+        
+        # Advance to initial stage
+        if self._initial_stage != 0:
+            self._advance_to_stage(self._initial_stage)
         
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
