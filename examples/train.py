@@ -47,17 +47,15 @@ iters_per_save = 10
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
 policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(stage))
-
 reward_history = []
+
+# Resetting environment to an initial stage
+initial_stage=1
+resetter_agent_filenames = [os.path.join("agents","stage0.pickle")]
 
 # Set up data directory
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
-
-# Pick stage
-if stage == 1:
-    observation_names = up_observation_names_stage1
-    action_names = up_action_names_stage1
 
 def train():
     # MPI setup
@@ -67,11 +65,23 @@ def train():
     sess.__enter__()
     if rank != 0:
         logger.set_level(logger.DISABLED)
-            
+    
+    # For resetting to a fixed stage
+    resetter_agents = []
+    for i in range(initial_stage):
+        resetter_agent_filename = resetter_agent_filenames[i]
+        ob_space = UPObservationSpace(UPEnv._observation_names_stages[i])
+        ac_space = UPActionSpace(UPEnv._action_names_stages[i])
+        agent_name = "resetter_agent_stage{}".format(i)
+        agent = MLPAgent(name=agent_name, ob_space=ob_space, ac_space=ac_space, 
+                         hid_size=32, num_hid_layers=2)
+        agent.load_and_check(resetter_agent_filename)
+        resetter_agents.append(agent)
+    
     # The training environment
     env = UPEnv(url_training, 
-                observation_names, 
-                action_names,
+                initial_stage=initial_stage,
+                resetter_agents=resetter_agents,
                 episode_length=episode_length,
                 desired_action_interval=desired_action_interval_training,
                 use_emulator=use_emulator,
@@ -128,11 +138,10 @@ def train():
     
     # Policy generating function
     def policy_fn(name, ob_space, ac_space):
-        agent = MLPAgent(name=name, 
-                        ob_space=env.observation_space, 
-                        ac_space=env.action_space, 
-                        hid_size=32,
-                        num_hid_layers=2)
+        ob_space = UPObservationSpace(UPEnv._observation_names_stages[initial_stage])
+        ac_space = UPActionSpace(UPEnv._action_names_stages[initial_stage])
+        agent = MLPAgent(name=agent_name, ob_space=ob_space, 
+                         ac_space=ac_space, hid_size=32, num_hid_layers=2)
         
         if do_load_latest_agent:
             if name == "pi":

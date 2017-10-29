@@ -94,7 +94,51 @@ class UPActionSpace(Discrete):
     def actionAsString(self, action):
         return self._keys[action]
 
-class UPEnv(Env):    
+class UPEnv(Env):
+    _observation_names_stages = []
+    _action_names_stages = []
+    
+    # Stage 0
+    _observation_names_stages.append(
+    [
+        'Unsold Inventory', 
+        'Price per Clip', 
+        'Public Demand', 
+        'Available Funds', 
+        'Autoclipper Cost', 
+        'Number of Autoclippers',
+        'Wire Inches',
+        'Wire Cost'
+    ])
+    _action_names_stages.append(
+    [
+        'Make Paperclip', 
+        'Lower Price', 
+        'Raise Price', 
+        'Buy Autoclipper',
+        'Buy Wire'
+    ])
+    
+    # Stage 1
+    _observation_names_stages.append(
+    _observation_names_stages[-1]+
+    [
+        'Paperclips',
+        'Marketing Level',
+        'Marketing Cost',
+        'Processors',
+        'Memory',
+        'Trust',
+        'Next Trust'
+    ])
+    _action_names_stages.append(
+    _actions_names_stages[-1]+
+    [
+        'Expand Marketing',
+        'Add Processor',
+        'Add Memory'
+    ])    
+       
     def __init__(self,
                  url,
                  initial_stage=0,
@@ -121,9 +165,6 @@ class UPEnv(Env):
                                           headless=headless, 
                                           verbose=verbose)
         
-        # Spaces
-        self._set_up_spaces()
-        
         # Other
         self._episode_length = episode_length
         self._desired_action_interval = desired_action_interval
@@ -137,51 +178,6 @@ class UPEnv(Env):
         
         # Reset
         self.reset()
-    
-    def _set_up_spaces(self):
-        self._observation_names_stages = []
-        self._action_names_stages = []
-        
-        # Stage 0
-        self._observation_names_stages.append(
-        [
-            'Unsold Inventory', 
-            'Price per Clip', 
-            'Public Demand', 
-            'Available Funds', 
-            'Autoclipper Cost', 
-            'Number of Autoclippers',
-            'Wire Inches',
-            'Wire Cost'
-        ])
-        self._action_names_stages.append(
-        [
-            'Make Paperclip', 
-            'Lower Price', 
-            'Raise Price', 
-            'Buy Autoclipper',
-            'Buy Wire'
-        ])
-        
-        # Stage 1
-        self._observation_names_stages.append(
-        self._observation_names_stages[-1]+
-        [
-            'Paperclips',
-            'Marketing Level',
-            'Marketing Cost',
-            'Processors',
-            'Memory',
-            'Trust',
-            'Next Trust'
-        ])
-        self._action_names_stages.append(
-        self._actions_names_stages[-1]+
-        [
-            'Expand Marketing',
-            'Add Processor',
-            'Add Memory'
-        ])        
     
     def _update_stage(self):
         # Update rule for stage 0 -> 1: onset of trust
