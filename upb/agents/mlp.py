@@ -52,7 +52,22 @@ class MLPAgent(MlpPolicy):
             py_vars = pickle.load(f)
         tf_util.initialize()
         for tf_var in self.get_variables():
-            tf_var.load(py_vars[tf_var.name])
+            # Strip the variable name of its scope
+            var_name = tf_var.name
+            end_scopename_idx = var_name.find("/")
+            var_name_scopeless = var_name[end_scopename_idx+1:]
+            
+            # Find the name in the py dict, ignoring scope
+            found_name = None
+            for name in py_vars.keys():
+                if name.endswith(var_name_scopeless):
+                    found_name = name
+                    break
+            if found_name == None:
+                raise Exception("Could not find {}.".format(var_name_scopless))
+            
+            # Load the variable                   
+            tf_var.load(py_vars[found_name])
             if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
                 raise Exception("Variables not equal!")
                 
