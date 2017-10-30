@@ -38,7 +38,7 @@ url_training = LOCAL_GAME_URL_TRAIN
 
 # Training parameters
 stage = 1
-episode_length = 2000
+episode_length = 10000
 timesteps_per_batch = 4*episode_length
 max_iters = 1000
 schedule = 'linear'
@@ -50,7 +50,8 @@ policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pi
 reward_history = []
 
 # Resetting environment to an initial stage
-initial_stage=1
+initial_stage = 1
+final_stage = 1 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage0.pickle")]
 
 # Set up data directory
@@ -81,6 +82,7 @@ def train():
     # The training environment
     env = UPEnv(url_training, 
                 initial_stage=initial_stage,
+                final_stage=final_stage,
                 resetter_agents=resetter_agents,
                 episode_length=episode_length,
                 desired_action_interval=desired_action_interval_training,
@@ -140,7 +142,7 @@ def train():
     def policy_fn(name, ob_space, ac_space):
         ob_space = UPObservationSpace(UPEnv._observation_names_stages[initial_stage])
         ac_space = UPActionSpace(UPEnv._action_names_stages[initial_stage])
-        agent = MLPAgent(name=agent_name, ob_space=ob_space, 
+        agent = MLPAgent(name=name, ob_space=ob_space, 
                          ac_space=ac_space, hid_size=32, num_hid_layers=2)
         
         if do_load_latest_agent:

@@ -68,7 +68,7 @@ class MLPAgent(MlpPolicy):
             
             # Load the variable                   
             tf_var.load(py_vars[found_name])
-            if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
+            if not np.array_equal(py_vars[found_name], tf_var.eval()):
                 raise Exception("Variables not equal!")
                 
     def check_is_same_as(self, filename):

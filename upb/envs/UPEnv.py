@@ -33,7 +33,11 @@ class UPObservationSpace(Box):
             'Number of Autoclippers': [0, np.inf],
             'Autoclipper Cost': [0, np.inf],
             'Paperclips': [0, np.inf],
-            'Available Funds': [0, np.inf]           
+            'Available Funds': [0, np.inf],
+            'Processors': [0, np.inf],
+            'Memory': [0, np.inf],
+            'Trust': [0, np.inf],
+            'Next Trust': [0, np.inf]        
         }
         # Select the observations we're able to make     
         self._observations = {key: self._all_observations[key] for key in observation_names}
@@ -77,7 +81,9 @@ class UPActionSpace(Discrete):
             'Raise Price': '',
             'Expand Marketing': '',
             'Buy Wire': '',
-            'Buy Autoclipper': ''
+            'Buy Autoclipper': '',
+            'Add Processor': '',
+            'Add Memory': ''
         }
         self._actions = {key: self._all_actions[key] for key in action_names}
         
@@ -132,7 +138,7 @@ class UPEnv(Env):
         'Next Trust'
     ])
     _action_names_stages.append(
-    _actions_names_stages[-1]+
+    _action_names_stages[-1]+
     [
         'Expand Marketing',
         'Add Processor',
@@ -142,6 +148,7 @@ class UPEnv(Env):
     def __init__(self,
                  url,
                  initial_stage=0,
+                 final_stage=None,
                  resetter_agents=[],
                  use_emulator=False,
                  episode_length=None,
@@ -171,25 +178,33 @@ class UPEnv(Env):
         self._verbose = verbose
         
         # Parameters for working up to a given stage
-        if intitial_stage != len(resetter_agents):
+        if initial_stage != len(resetter_agents):
             raise Exception("Incorrect number of resetter agents ({}) for desired initial stage ({}). Should be equal.".format(len(resetter_agents), initial_stage))
         self._initial_stage = initial_stage
+        self._final_stage = final_stage
         self._resetter_agents = resetter_agents
         
         # Reset
         self.reset()
     
     def _update_stage(self):
+        stage_changed = False
+        
+        if self._stage == self._final_stage:
+            return stage_changed
+        
         # Update rule for stage 0 -> 1: onset of trust
         if self._stage == 0:
             observation_from_handler = self._handler.makeObservation(['Paperclips'])
             clips = observation_from_handler['Paperclips']
             if clips >= 2000:
                 self._stage = 1
-                print("Advancing from stage 0 to stage 1.")
+                if self._verbose:
+                    print("Advancing from stage 0 to stage 1.")
+                stage_changed = True
                 
         # Update rule for stage 1 -> 2   
-        if self._stage == 1
+        if self._stage == 1:
             # No definition for stage 2 yet
             pass            
         
@@ -201,27 +216,46 @@ class UPEnv(Env):
     
     def _advance_to_stage(self, target_stage, agents):
         # Check number of supplied agents
-        if target_stage != len(agents):
-            raise Exception("Incorrect number of resetter agents ({}) for target stage ({}). Should be equal.".format(len(agents), target_stage))
+        if target_stage > len(agents):
+            raise Exception("Insufficient number of resetter agents ({}) for target stage ({}).".format(len(agents), target_stage))
         
         # Initial values
         self._prev_act_time = None
         self._n_steps_taken = 0
         
         # Initial observation
-        observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
-        ob = self.observation_space.observationAsArray(observation_from_handler)
+        ob_space = UPObservationSpace(self._observation_names_stages[self._stage])
+        observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
+        self._prev_observation_from_handler = observation_from_handler        
+        ob = ob_space.observationAsArray(observation_from_handler)
         
         # Advance
         stochastic = True
         prev_stage = self._stage
+        max_n_steps = 10000
         while self._stage < target_stage:
+            # Act
             agent = agents[self._stage]    
             ac, vpred = agent.act(stochastic, ob)  
-            ob, rew, done, info = self.step(ac)
-            if self._stage > prev_stage:
+            ob, rew, done, info = self._step(ac, self._stage)
+            
+            # Restart if failed to get to next stage
+            if self._n_steps_taken > max_n_steps:
+                print("WARNING: Timed out attempting to reach next stage. Resetting and trying fresh.")
+                self._n_steps_taken = 0
+                self._prev_act_time = None
+                self._handler.reset()
+                self._stage = 0
+                ob_space = UPObservationSpace(self._observation_names_stages[self._stage])
+                observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
+                self._prev_observation_from_handler = observation_from_handler        
+                ob = ob_space.observationAsArray(observation_from_handler)
+            
+            # Report
+            if self._verbose and self._stage > prev_stage:
                 print("Advanced to stage {} after {} steps.".format(self._stage, self._n_steps_taken))
-        print("Completed initial stage advancement.")
+        if self._verbose:
+            print("Completed initial stage advancement.")
     
     def _reset(self):
         """
@@ -240,7 +274,7 @@ class UPEnv(Env):
         
         # Advance to initial stage
         if self._initial_stage != 0:
-            self._advance_to_stage(self._initial_stage)
+            self._advance_to_stage(self._initial_stage, self._resetter_agents)
         
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
@@ -265,13 +299,25 @@ class UPEnv(Env):
     def assetsAndCashReward(self, observation_from_handler):
         return self.cashReward(observation_from_handler) + self.assetsReward(observation_from_handler)
     
-    def assetsReward(self, observation_from_handler):
+    def assetsReward(self, observation_from_handler):        
+        dassets = 0.0
+        
         wire_per_spool = 1000.0
         dwire = observation_from_handler['Wire Inches'] - self._prev_observation_from_handler['Wire Inches']
-        dautoclippers = observation_from_handler['Number of Autoclippers'] - self._prev_observation_from_handler['Number of Autoclippers']
         wire_cost = self._prev_observation_from_handler['Wire Cost']/wire_per_spool
-        autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']
-        dassets = dwire*wire_cost + dautoclippers*autoclipper_cost
+        dassets += dwire*wire_cost
+        
+        dautoclippers = observation_from_handler['Number of Autoclippers'] - self._prev_observation_from_handler['Number of Autoclippers']
+        autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']        
+        dassets += dautoclippers*autoclipper_cost 
+        
+        if self._stage > 0:
+            try:
+                dmarketing = observation_from_handler['Marketing Level'] - self._prev_observation_from_handler['Marketing Level']
+                marketing_cost = self._prev_observation_from_handler['Marketing Cost']
+                dassets += dmarketing*marketing_cost
+            except:
+                pass
         return dassets
     
     def cashReward(self, observation_from_handler):
@@ -282,7 +328,7 @@ class UPEnv(Env):
         dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
         return dclips
     
-    def _step(self, action):
+    def _step(self, action, stage=None):
         """
         Run one timestep of the environment's dynamics. When end of episode
         is reached, reset() should be called to reset the environment's internal state.
@@ -309,8 +355,13 @@ class UPEnv(Env):
         
         # Act
         self._prev_act_time = timeSeconds();
-        action_for_handler = self.action_space.actionAsString(action)        
+        if stage == None:            
+            action_for_handler = self.action_space.actionAsString(action)
+        else:
+            action_for_handler = UPActionSpace(self._action_names_stages[stage]).actionAsString(action) 
         self._handler.takeAction(action_for_handler)
+        if self._verbose:
+            print("Took action {}.".format(action_for_handler))
         
         # Advance time half way to resolve purchases, etc.
         if self._use_emulator:
@@ -320,8 +371,15 @@ class UPEnv(Env):
         stage_changed = self._update_stage()
         
         # Observe
-        observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
-        observation = self.observation_space.observationAsArray(observation_from_handler)
+        if stage == None:
+            observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
+            observation = self.observation_space.observationAsArray(observation_from_handler)
+        else:
+            ob_space = UPObservationSpace(self._observation_names_stages[stage])
+            observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
+            observation = ob_space.observationAsArray(observation_from_handler)
+        if self._verbose:
+            print(observation_from_handler)
         
         # Get reward
         reward = self.reward(observation_from_handler)
@@ -349,7 +407,7 @@ class UPEnv(Env):
     def save_screenshot(self, filename):
         if self._use_emulator:
             print("WARNING: Attempted to take screenshot, which emulator can't do. Printing state instead.")
-            print(self._handler.makeObservation(up_observation_names_stage1))
+            print(self._handler.makeObservation(self.observation_space.getPossibleObservations()))
         else:
             self._handler.save_screenshot(filename)
     
@@ -364,8 +422,8 @@ class UPEnv(Env):
     
     @property
     def action_space(self):
-        return UPActionSpace(self._action_names)
+        return UPActionSpace(self._action_names_stages[self._initial_stage])
 
     @property
     def observation_space(self):
-        return UPObservationSpace(self._observation_names)
+        return UPObservationSpace(self._observation_names_stages[self._initial_stage])
