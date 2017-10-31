@@ -24,7 +24,7 @@ import os
 import matplotlib.pyplot as plt
 
 # Load latest agent from file
-do_load_latest_agent = False
+do_load_latest_agent = True
 
 # Game emulator
 use_emulator = True
@@ -36,23 +36,22 @@ webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phant
 #~ desired_action_interval_training = 0.067 # "Training" version of game for a sufficiently fast webdriver ticks three times faster
 url_training = LOCAL_GAME_URL_TRAIN
 
+# Resetting environment to an initial stage
+initial_stage = 0
+final_stage = 0 # Stage past which not to actually advance
+resetter_agent_filenames = [os.path.join("agents","stage0.pickle")]
+
 # Training parameters
-stage = 1
-episode_length = 10000
+episode_length = 2000
 timesteps_per_batch = 4*episode_length
 max_iters = 1000
 schedule = 'linear'
 iters_per_render = 10
 iters_per_save = 10
 data_dir = "data"
-policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(stage))
-policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(stage))
+policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(initial_stage))
+policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(initial_stage))
 reward_history = []
-
-# Resetting environment to an initial stage
-initial_stage = 1
-final_stage = 1 # Stage past which not to actually advance
-resetter_agent_filenames = [os.path.join("agents","stage0.pickle")]
 
 # Set up data directory
 if not os.path.exists(data_dir):
@@ -97,12 +96,12 @@ def train():
         iters_so_far = loc['iters_so_far']
         if iters_so_far % iters_per_save == 0 and iters_so_far > 0:
             # Save policies
-            policy_filename_iter = os.path.join(data_dir,"policy_stage{}_iter{}.pickle".format(stage, iters_so_far))    
+            policy_filename_iter = os.path.join(data_dir,"policy_stage{}_iter{}.pickle".format(initial_stage, iters_so_far))    
             pi = loc['pi']            
             pi.save_and_check_reload(policy_filename_iter)
             pi.save_and_check_reload(policy_filename_latest)
             
-            policy_filename_iter_old = os.path.join(data_dir,"policy_stage{}_iter{}_old.pickle".format(stage, iters_so_far))    
+            policy_filename_iter_old = os.path.join(data_dir,"policy_stage{}_iter{}_old.pickle".format(initial_stage, iters_so_far))    
             oldpi = loc['oldpi']            
             oldpi.save_and_check_reload(policy_filename_iter_old)
             oldpi.save_and_check_reload(policy_filename_latest_old)

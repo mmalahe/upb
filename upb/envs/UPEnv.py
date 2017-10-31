@@ -20,8 +20,8 @@ def timeSeconds():
 
 class UPObservationSpace(Box):
     def __init__(self, observation_names):
-        # Set up possible observations and their bounds
-        self._all_observations = {
+        # Set up bounds of possible observation ranges
+        self._observation_ranges = {
             'Unsold Inventory': [0, np.inf],
             'Price per Clip': [0, np.inf],
             'Public Demand': [0, np.inf],
@@ -39,20 +39,15 @@ class UPObservationSpace(Box):
             'Trust': [0, np.inf],
             'Next Trust': [0, np.inf]        
         }
-        # Select the observations we're able to make     
-        self._observations = {key: self._all_observations[key] for key in observation_names}
-        
-        # Ensure that the dict has a well-defined deterministic ordering
-        self._observations = OrderedDict(sorted(self._observations.items(), key=lambda t: t[0]))
-        
+
         # Order keys
-        self._keys = list(self._observations.keys())
+        self._keys = observation_names
         self._nkeys = len(self._keys)
         low = np.zeros(self._nkeys)
         high = np.zeros(self._nkeys)
         for i in range(self._nkeys):
-            low[i] = self._observations[self._keys[i]][0]
-            high[i] = self._observations[self._keys[i]][1]
+            low[i] = self._observation_ranges[self._keys[i]][0]
+            high[i] = self._observation_ranges[self._keys[i]][1]
             
         # Construct
         super(UPObservationSpace, self).__init__(low, high)
@@ -74,26 +69,9 @@ class UPObservationSpace(Box):
 
 class UPActionSpace(Discrete):
     def __init__(self, action_names):
-        # Set up possible actions
-        self._all_actions = {
-            'Make Paperclip': '',
-            'Lower Price': '',
-            'Raise Price': '',
-            'Expand Marketing': '',
-            'Buy Wire': '',
-            'Buy Autoclipper': '',
-            'Add Processor': '',
-            'Add Memory': ''
-        }
-        self._actions = {key: self._all_actions[key] for key in action_names}
-        
-        # Ensure that the dict has a well-defined deterministic ordering
-        self._actions = OrderedDict(sorted(self._actions.items(), key=lambda t: t[0]))
-        
-        self._keys = list(self._actions.keys())
-        nkeys = len(self._keys)
-            
         # Construct
+        self._keys = action_names
+        nkeys = len(self._keys)
         super(UPActionSpace, self).__init__(nkeys)
     
     # Converts action into a form that can be read by the game handler
