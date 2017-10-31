@@ -20,8 +20,8 @@ var project1 = {
         standardOps = standardOps - 750;
         clipperBoost = clipperBoost + .25;
         boostLvl = 1;
-        var element = document.getElementById("projectButton1");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton1");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project1);
         activeProjects.splice(index, 1);
     }
@@ -45,8 +45,8 @@ var project2 = {
         trust = trust - 1;
         wire = wireSupply;
         project2.uses = (project2.uses + 1);
-        var element = document.getElementById("projectButton2");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton2");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project2);
         activeProjects.splice(index, 1);
     }
@@ -69,8 +69,8 @@ var project3 = {
         displayMessage("Creativity unlocked (creativity increases while operations are at max)");
         standardOps = standardOps - 1000;
         creativityOn = true;
-        var element = document.getElementById("projectButton3");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton3");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project3);
         activeProjects.splice(index, 1);
     }
@@ -95,8 +95,8 @@ var project4 = {
         standardOps = standardOps - 2500;
         clipperBoost = clipperBoost + .50;
         boostLvl = 2;
-        var element = document.getElementById("projectButton4");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton4");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project4);
         activeProjects.splice(index, 1);
     }
@@ -120,8 +120,8 @@ var project5 = {
         standardOps = standardOps - 5000;
         clipperBoost = clipperBoost + .75;
         boostLvl = 3;
-        var element = document.getElementById("projectButton5");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton5");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project5);
         activeProjects.splice(index, 1);
     }
@@ -145,8 +145,8 @@ var project6 = {
         displayMessage("There was an AI made of dust, whose poetry gained it man's trust...");
         creativity = creativity - 10;
         trust = trust +1;
-        var element = document.getElementById("projectButton6");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton6");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project6);
         activeProjects.splice(index, 1);
     }
@@ -169,8 +169,8 @@ var project7 = {
         standardOps = standardOps - 1750;
         wireSupply = wireSupply * 1.5;
         displayMessage("Wire extrusion technique improved, "+wireSupply.toLocaleString()+" supply from every spool");
-        var element = document.getElementById("projectButton7");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton7");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project7);
         activeProjects.splice(index, 1);
     }
@@ -193,8 +193,8 @@ var project8 = {
         standardOps = standardOps - 3500;
         wireSupply = wireSupply * 1.75;
         displayMessage("Wire extrusion technique optimized, "+wireSupply.toLocaleString()+" supply from every spool");
-        var element = document.getElementById("projectButton8");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton8");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project8);
         activeProjects.splice(index, 1);
     }
@@ -217,8 +217,8 @@ var project9 = {
         standardOps = standardOps - 7500;
         wireSupply = wireSupply * 2;
         displayMessage("Using microlattice shapecasting techniques we now get "+wireSupply.toLocaleString()+" supply from every spool");
-        var element = document.getElementById("projectButton9");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton9");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project9);
         activeProjects.splice(index, 1);
     }
@@ -241,8 +241,8 @@ var project10 = {
         standardOps = standardOps - 12000;
         wireSupply = wireSupply * 3;
         displayMessage("Using spectral froth annealment we now get "+wireSupply.toLocaleString()+" supply from every spool");
-        var element = document.getElementById("projectButton10");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton10");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project10);
         activeProjects.splice(index, 1);
     }
@@ -264,8 +264,8 @@ var project10b = {
         standardOps = standardOps - 15000;
         wireSupply = wireSupply * 11;
         displayMessage("Using quantum foam annealment we now get "+wireSupply.toLocaleString()+" supply from every spool");
-        var element = document.getElementById("projectButton10b");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton10b");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project10b);
         activeProjects.splice(index, 1);
     }
@@ -289,8 +289,8 @@ var project11 = {
         standardOps = standardOps - 2500;
         creativity = creativity - 25;
         marketingEffectiveness = marketingEffectiveness * 1.50;
-        var element = document.getElementById("projectButton11");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton11");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project11);
         activeProjects.splice(index, 1);
     }
@@ -314,8 +314,8 @@ var project12 = {
         standardOps = standardOps - 4500;
         creativity = creativity - 45;
         marketingEffectiveness = marketingEffectiveness * 2;
-        var element = document.getElementById("projectButton12");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton12");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project12);
         activeProjects.splice(index, 1);
     }
@@ -339,8 +339,8 @@ var project13 = {
         displayMessage("Lexical Processing online, TRUST INCREASED");
         displayMessage("'Impossible' is a word to be found only in the dictionary of fools. -Napoleon");
         creativity = creativity - 50;
-        var element = document.getElementById("projectButton13");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton13");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project13);
         activeProjects.splice(index, 1);
     }
@@ -364,8 +364,8 @@ var project14 = {
         displayMessage("Combinatory Harmonics mastered, TRUST INCREASED");
         displayMessage("Listening is selecting and interpreting and acting and making decisions -Pauline Oliveros");
         creativity = creativity - 100;
-        var element = document.getElementById("projectButton14");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton14");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project14);
         activeProjects.splice(index, 1);
     }
@@ -390,8 +390,8 @@ var project15 = {
         displayMessage("The Hadwiger Problem: solved, TRUST INCREASED");
         displayMessage("Architecture is the thoughtful making of space. -Louis Kahn");
         creativity = creativity - 150;
-        var element = document.getElementById("projectButton15");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton15");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project15);
         activeProjects.splice(index, 1);
     }
@@ -415,8 +415,8 @@ var project17 = {
         displayMessage("The T\xF3th Sausage Conjecture: proven, TRUST INCREASED");
         displayMessage("You can't invent a design. You recognize it, in the fourth dimension. -D.H. Lawrence");
         creativity = creativity - 200;
-        var element = document.getElementById("projectButton17");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton17");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project17);
         activeProjects.splice(index, 1);
     }
@@ -439,8 +439,8 @@ var project16 = {
         displayMessage("AutoClipper performance improved by 500%");
         standardOps = standardOps - 6000;
         clipperBoost = clipperBoost + 5;
-        var element = document.getElementById("projectButton16");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton16");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project16);
         activeProjects.splice(index, 1);
     }
@@ -463,8 +463,8 @@ var project18 = {
         tothFlag = 1;
         displayMessage("New capability: build machinery out of clips");
         standardOps = standardOps - 45000;
-        var element = document.getElementById("projectButton18");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton18");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project18);
         activeProjects.splice(index, 1);
     }
@@ -487,8 +487,8 @@ var project19 = {
         displayMessage("Donkey Space: mapped, TRUST INCREASED");
         displayMessage("Every commercial transaction has within itself an element of trust. - Kenneth Arrow");
         creativity = creativity - 250;
-        var element = document.getElementById("projectButton19");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton19");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project19);
         activeProjects.splice(index, 1);
     }
@@ -510,8 +510,8 @@ var project20 = {
         project20.flag = 1;
         displayMessage("Run tournament, pick strategy, earn Yomi equal to that strategy's points.");
         standardOps = standardOps - 12000;
-        var element = document.getElementById("projectButton20");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton20");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project20);
         activeProjects.splice(index, 1);
         strategyEngineFlag = 1;
@@ -534,8 +534,8 @@ var project21 = {
         project21.flag = 1;
         displayMessage("Investment engine unlocked");
         standardOps = standardOps - 10000;
-        var element = document.getElementById("projectButton21");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton21");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project21);
         activeProjects.splice(index, 1);
         investmentEngineFlag = 1;
@@ -559,8 +559,8 @@ var project22 = {
         project22.flag = 1;
         displayMessage("MegaClipper technology online");
         standardOps = standardOps - 12000;
-        var element = document.getElementById("projectButton22");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton22");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project22);
         activeProjects.splice(index, 1);
     }
@@ -582,8 +582,8 @@ var project23 = {
         project23.flag = 1;
         displayMessage("MegaClipper performance increased by 25%");
         standardOps = standardOps - 14000;
-        var element = document.getElementById("projectButton23");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton23");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project23);
         activeProjects.splice(index, 1);
     }
@@ -605,8 +605,8 @@ var project24 = {
         project24.flag = 1;
         displayMessage("MegaClipper performance increased by 50%");
         standardOps = standardOps - 17000;
-        var element = document.getElementById("projectButton24");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton24");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project24);
         activeProjects.splice(index, 1);
     }
@@ -628,8 +628,8 @@ var project25 = {
         project25.flag = 1;
         displayMessage("MegaClipper performance increased by 100%");
         standardOps = standardOps - 19500;
-        var element = document.getElementById("projectButton25");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton25");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project25);
         activeProjects.splice(index, 1);
     }
@@ -651,8 +651,8 @@ var project26 = {
         wireBuyerFlag = 1;
         displayMessage("WireBuyer online");
         standardOps = standardOps - 7000;
-        var element = document.getElementById("projectButton26");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton26");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project26);
         activeProjects.splice(index, 1);
     }
@@ -675,8 +675,8 @@ var project34 = {
         standardOps = standardOps - 7500;
         marketingEffectiveness = marketingEffectiveness * 5;
         trust = trust - 1;
-        var element = document.getElementById("projectButton34");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton34");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project34);
         activeProjects.splice(index, 1);
     }
@@ -698,8 +698,8 @@ var project70 = {
         project70.flag = 1;
         displayMessage("HypnoDrone tech now available... ");
         standardOps = standardOps - 70000;
-        var element = document.getElementById("projectButton70");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton70");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project70);
         activeProjects.splice(index, 1);
     }
@@ -768,8 +768,8 @@ var project27 = {
         standardOps = standardOps - 20000;
         creativity = creativity - 500;
         trust = trust + 1;
-        var element = document.getElementById("projectButton27");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton27");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project27);
         activeProjects.splice(index, 1);
     }
@@ -793,8 +793,8 @@ var project28 = {
         standardOps = standardOps - 25000;
         trust = trust + 10;
         stockGainThreshold = stockGainThreshold+.01;
-        var element = document.getElementById("projectButton28");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton28");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project28);
         activeProjects.splice(index, 1);
     }
@@ -819,8 +819,8 @@ var project29 = {
         standardOps = standardOps - 30000;
         trust = trust + 12;
         stockGainThreshold = stockGainThreshold+.01;
-        var element = document.getElementById("projectButton29");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton29");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project29);
         activeProjects.splice(index, 1);
     }
@@ -845,8 +845,8 @@ var project30 = {
         standardOps = standardOps - 50000;
         trust = trust + 15;
         stockGainThreshold = stockGainThreshold+.01;
-        var element = document.getElementById("projectButton30");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton30");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project30);
         activeProjects.splice(index, 1);
     }
@@ -871,8 +871,8 @@ var project31 = {
         standardOps = standardOps - 20000;
         trust = trust + 20;
         stockGainThreshold = stockGainThreshold+.01;
-        var element = document.getElementById("projectButton31");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton31");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project31);
         activeProjects.splice(index, 1);
     }
@@ -895,8 +895,8 @@ var project41 = {
         wireProductionFlag = 1;
         displayMessage("Now capable of manipulating matter at the molecular scale to produce wire");
         standardOps = standardOps - 35000;
-        var element = document.getElementById("projectButton41");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton41");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project41);
         activeProjects.splice(index, 1);
     }
@@ -921,8 +921,8 @@ var project37 = {
         trust = trust + 1;
         document.getElementById("demand").innerHTML = demand;
         funds = funds - 1000000;
-        var element = document.getElementById("projectButton37");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton37");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project37);
         activeProjects.splice(index, 1);
     }
@@ -949,8 +949,8 @@ var project38 = {
         trust = trust + 1;
         yomi = yomi -1000;
         document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
-        var element = document.getElementById("projectButton38");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton38");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project38);
         activeProjects.splice(index, 1);
     }
@@ -973,8 +973,8 @@ var project42 = {
         revPerSecFlag = 1;
         standardOps = standardOps-500;
         displayMessage("RevTracker online");
-        var element = document.getElementById("projectButton42");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton42");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project42);
         activeProjects.splice(index, 1);
     }
@@ -998,8 +998,8 @@ var project43 = {
         document.getElementById('harvesterCostDisplay').innerHTML = numberCruncher(harvesterCost);
         standardOps = standardOps-25000;
         displayMessage("Harvester Drone facilities online");
-        var element = document.getElementById("projectButton43");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton43");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project43);
         activeProjects.splice(index, 1);
     }
@@ -1022,8 +1022,8 @@ var project44 = {
         document.getElementById('wireDroneCostDisplay').innerHTML = numberCruncher(wireDroneCost);
         standardOps = standardOps-25000;
         displayMessage("Wire Drone facilities online");
-        var element = document.getElementById("projectButton44");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton44");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project44);
         activeProjects.splice(index, 1);
     }
@@ -1047,8 +1047,8 @@ var project45 = {
         document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost);
         standardOps = standardOps-35000;
         displayMessage("Clip factory assembly facilities online");
-        var element = document.getElementById("projectButton45");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton45");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project45);
         activeProjects.splice(index, 1);
     }
@@ -1070,8 +1070,8 @@ var project40 = {
         funds = funds-500000;
         trust = trust + 1;
         displayMessage("Gift accepted, TRUST INCREASED");
-        var element = document.getElementById("projectButton40");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton40");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project40);
         activeProjects.splice(index, 1);
     }
@@ -1098,8 +1098,8 @@ var project40b = {
         if (trust<100){
         project40b.uses = (project40b.uses + 1);
             }
-        var element = document.getElementById("projectButton40b");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton40b");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project40b);
         activeProjects.splice(index, 1);
     }
@@ -1131,9 +1131,9 @@ var project46 = {
         batteryReboot();
         farmLevel = 1;
         powMod = 1;
-        var element = document.getElementById("projectButton46");
-        document.getElementById('probeCostDisplay').innerHTML = numberCruncher(probeCost); 
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton46");
+        //~ document.getElementById('probeCostDisplay').innerHTML = numberCruncher(probeCost); 
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project46);
         activeProjects.splice(index, 1);
     }
@@ -1155,8 +1155,8 @@ var project50 = {
         qFlag = 1;
         standardOps = standardOps-10000;
         displayMessage("Quantum computing online");
-        var element = document.getElementById("projectButton50");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton50");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project50);
         activeProjects.splice(index, 1);
     }
@@ -1184,8 +1184,8 @@ var project51 = {
         if (nextQchip<qChips.length){
         project51.uses = (project51.uses + 1);
             }
-        var element = document.getElementById("projectButton51");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton51");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project51);
         activeProjects.splice(index, 1);
     }
@@ -1216,8 +1216,8 @@ var project60 = {
         el.textContent = "A100";
         el.value = 1;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton60");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton60");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project60);
         activeProjects.splice(index, 1);
     }
@@ -1248,8 +1248,8 @@ var project61 = {
         el.textContent = "B100";
         el.value = 2;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton61");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton61");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project61);
         activeProjects.splice(index, 1);
     }
@@ -1279,8 +1279,8 @@ var project62 = {
         el.textContent = "GREEDY";
         el.value = 3;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton62");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton62");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project62);
         activeProjects.splice(index, 1);
     }
@@ -1310,8 +1310,8 @@ var project63 = {
         el.textContent = "GENEROUS";
         el.value = 4;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton63");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton63");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project63);
         activeProjects.splice(index, 1);
     }
@@ -1341,8 +1341,8 @@ var project64 = {
         el.textContent = "MINIMAX";
         el.value = 5;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton64");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton64");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project64);
         activeProjects.splice(index, 1);
     }
@@ -1372,8 +1372,8 @@ var project65 = {
         el.textContent = "TIT FOR TAT";
         el.value = 6;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton65");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton65");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project65);
         activeProjects.splice(index, 1);
     }
@@ -1403,8 +1403,8 @@ var project66 = {
         el.textContent = "BEAT LAST";
         el.value = 7;
         stratList.appendChild(el);
-        var element = document.getElementById("projectButton66");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton66");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project66);
         activeProjects.splice(index, 1);
     }
@@ -1427,8 +1427,8 @@ var project100 = {
         standardOps = standardOps-80000;
         factoryRate = factoryRate*100;
         displayMessage("Factory upgrades complete. Clip creation rate now 100x faster");
-        var element = document.getElementById("projectButton100");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton100");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project100);
         activeProjects.splice(index, 1);
     }
@@ -1450,8 +1450,8 @@ var project101 = {
         standardOps = standardOps-85000;
         factoryRate = factoryRate*1000;
         displayMessage("Factories now synchronized at hyperspeed. Clip creation rate now 1000x faster");
-        var element = document.getElementById("projectButton101");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton101");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project101);
         activeProjects.splice(index, 1);
     }
@@ -1475,8 +1475,8 @@ var project102 = {
         document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
         factoryBoost = 1000;
         displayMessage("Self-correcting factories online. Each factory added to the network increases every factory's output 1,000x.");
-        var element = document.getElementById("projectButton102");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton102");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project102);
         activeProjects.splice(index, 1);
     }
@@ -1499,8 +1499,8 @@ var project110 = {
         harvesterRate = harvesterRate*100;
         wireDroneRate = wireDroneRate*100;
         displayMessage("Drone repulsion online. Harvesting & wire creation rates are now 100x faster.");
-        var element = document.getElementById("projectButton110");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton110");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project110);
         activeProjects.splice(index, 1);
     }
@@ -1523,8 +1523,8 @@ var project111 = {
         harvesterRate = harvesterRate*1000;
         wireDroneRate = wireDroneRate*1000;
         displayMessage("Drone alignment online. Harvesting & wire creation rates are now 1000x faster.");
-        var element = document.getElementById("projectButton111");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton111");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project111);
         activeProjects.splice(index, 1);
     }
@@ -1547,8 +1547,8 @@ var project112 = {
         document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
         droneBoost = 2;
         displayMessage("Adversarial cohesion online. Each drone added to the flock increases every drone's output 2x.");
-        var element = document.getElementById("projectButton112");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton112");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project112);
         activeProjects.splice(index, 1);
     }
@@ -1570,8 +1570,8 @@ var project118 = {
         autoTourneyFlag = 1;
         creativity = creativity-50000;
         displayMessage("AutoTourney online.");
-        var element = document.getElementById("projectButton118");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton118");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project118);
         activeProjects.splice(index, 1);
     }
@@ -1595,8 +1595,8 @@ var project119 = {
         tourneyCost = 16000;
         document.getElementById("newTourneyCost").innerHTML = tourneyCost.toLocaleString();
         displayMessage("Yomi production doubled.");
-        var element = document.getElementById("projectButton119");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton119");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project119);
         activeProjects.splice(index, 1);
     }
@@ -1620,8 +1620,8 @@ var project120 = {
         document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
         attackSpeedFlag = 1;
         displayMessage("OODA Loop routines uploaded. Probe Speed now affects defensive maneuvering.");
-        var element = document.getElementById("projectButton120");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton120");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project120);
         activeProjects.splice(index, 1);
     }
@@ -1644,8 +1644,8 @@ var project121 = {
         battleEndTimer = 200;
         creativity = creativity-225000;
         displayMessage("What I have done up to this is nothing. I am only at the beginning of the course I must run.");
-        var element = document.getElementById("projectButton121");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton121");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project121);
         activeProjects.splice(index, 1);
     }
@@ -1667,8 +1667,8 @@ var project125 = {
         momentum = 1;
         creativity = creativity-30000;
         displayMessage("Activit\xE9, activit\xE9, vitesse.");
-        var element = document.getElementById("projectButton125");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton125");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project125);
         activeProjects.splice(index, 1);
     }
@@ -1691,8 +1691,8 @@ var project126 = {
         yomi = yomi-12000;
         document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
         displayMessage("Swarm computing online.");
-        var element = document.getElementById("projectButton126");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton126");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project126);
         activeProjects.splice(index, 1);
     }
@@ -1714,8 +1714,8 @@ var project127 = {
         project127.flag = 1;
         standardOps = standardOps-40000;
         displayMessage("Power grid online.");
-        var element = document.getElementById("projectButton127");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton127");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project127);
         activeProjects.splice(index, 1);
     }
@@ -1736,8 +1736,8 @@ var project128 = {
         project128.flag = 1;
         creativity = creativity-175000;
         displayMessage("The object of war is victory, the object of victory is conquest, and the object of conquest is occupation.");
-        var element = document.getElementById("projectButton128");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton128");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project128);
         activeProjects.splice(index, 1);
     }
@@ -1758,8 +1758,8 @@ var project129 = {
         project129.flag = 1;
         standardOps = standardOps-125000;
         displayMessage("Improved probe hull geometry. Hazard damage reduced by %50.");
-        var element = document.getElementById("projectButton129");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton129");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project129);
         activeProjects.splice(index, 1);
     }
@@ -1780,8 +1780,8 @@ var project130 = {
         project130.flag = 1;
         standardOps = standardOps-100000;
         displayMessage("Swarm computing back online");
-        var element = document.getElementById("projectButton130");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton130");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project130);
         activeProjects.splice(index, 1);
     }
@@ -1802,8 +1802,8 @@ var project131 = {
         project131.flag = 1;
         standardOps = standardOps-150000;
         displayMessage("There is a joy in danger ");
-        var element = document.getElementById("projectButton131");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton131");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project131);
         activeProjects.splice(index, 1);
     }
@@ -1829,8 +1829,8 @@ var project132 = {
         honor = honor + 50000;
         document.getElementById("honorDisplay").innerHTML = honor.toLocaleString();
         displayMessage("A great building must begin with the unmeasurable, must go through measurable means when it is being designed and in the end must be unmeasurable. ");
-        var element = document.getElementById("projectButton132");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton132");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project132);
         activeProjects.splice(index, 1);
     }
@@ -1861,8 +1861,8 @@ var project133 = {
         document.getElementById("honorDisplay").innerHTML = honor.toLocaleString();
         displayMessage("Deep Listening is listening in every possible way to everything possible to hear no matter what you are doing. ");
         project133.uses = (project133.uses + 1);
-        var element = document.getElementById("projectButton133");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton133");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project133);
         activeProjects.splice(index, 1);
     }
@@ -1885,8 +1885,8 @@ var project134 = {
         yomi = yomi-10000;
         document.getElementById("yomiDisplay").innerHTML=yomi.toLocaleString();
         displayMessage("Never interrupt your enemy when he is making a mistake. ");
-        var element = document.getElementById("projectButton134");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton134");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project134);
         activeProjects.splice(index, 1);
     }
@@ -1910,8 +1910,8 @@ var project135 = {
         document.getElementById("memory").innerHTML=memory.toLocaleString();
         project135.uses = 1;
         displayMessage("release the \xF8\xF8\xF8\xF8\xF8 release ");
-        var element = document.getElementById("projectButton135");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton135");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project135);
         activeProjects.splice(index, 1);
     }
@@ -1932,8 +1932,8 @@ var project140 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project140.flag = 1;
-        var element = document.getElementById("projectButton140");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton140");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project140);
         activeProjects.splice(index, 1);
     }
@@ -1954,8 +1954,8 @@ var project141 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project141.flag = 1;
-        var element = document.getElementById("projectButton141");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton141");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project141);
         activeProjects.splice(index, 1);
     }
@@ -1976,8 +1976,8 @@ var project142 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project142.flag = 1;
-        var element = document.getElementById("projectButton142");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton142");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project142);
         activeProjects.splice(index, 1);
     }
@@ -1998,8 +1998,8 @@ var project143 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project143.flag = 1;
-        var element = document.getElementById("projectButton143");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton143");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project143);
         activeProjects.splice(index, 1);
     }
@@ -2020,8 +2020,8 @@ var project144 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project144.flag = 1;
-        var element = document.getElementById("projectButton144");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton144");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project144);
         activeProjects.splice(index, 1);
     }
@@ -2042,8 +2042,8 @@ var project145 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project145.flag = 1;
-        var element = document.getElementById("projectButton145");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton145");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project145);
         activeProjects.splice(index, 1);
     }
@@ -2064,8 +2064,8 @@ var project146 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project146.flag = 1;
-        var element = document.getElementById("projectButton146");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton146");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project146);
         activeProjects.splice(index, 1);
     }
@@ -2086,13 +2086,13 @@ var project147 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project147.flag = 1;
-        var element = document.getElementById("projectButton147");
-        element.parentNode.removeChild(element);
-        var element = document.getElementById("projectButton148");
-        element.parentNode.removeChild(element);
-        var index = activeProjects.indexOf(project147);
+        //~ var element = document.getElementById("projectButton147");
+        //~ element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton148");
+        //~ element.parentNode.removeChild(element);
+        //~ var index = activeProjects.indexOf(project147);
         activeProjects.splice(index, 1);
-        var index = activeProjects.indexOf(project148);
+        //~ var index = activeProjects.indexOf(project148);
         activeProjects.splice(index, 1);
     }
 }
@@ -2112,10 +2112,10 @@ var project148 = {
     effect: function(){
         standardOps = standardOps - driftKingMessageCost;
         project148.flag = 1;
-        var element = document.getElementById("projectButton147");
-        element.parentNode.removeChild(element);
-        var element = document.getElementById("projectButton148");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton147");
+        //~ element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton148");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project147);
         activeProjects.splice(index, 1);
         var index = activeProjects.indexOf(project148);
@@ -2145,8 +2145,8 @@ var project200 = {
             }
         localStorage.setItem("savePrestige",JSON.stringify(savePrestige));
         displayMessage("Entering New Universe.");
-        var element = document.getElementById("projectButton200");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton200");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project200);
         activeProjects.splice(index, 1);
         reset();
@@ -2176,8 +2176,8 @@ var project201 = {
             }
         localStorage.setItem("savePrestige",JSON.stringify(savePrestige));
         displayMessage("Entering Simulated Universe.");
-        var element = document.getElementById("projectButton201");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton201");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project201);
         activeProjects.splice(index, 1);
         reset();
@@ -2206,8 +2206,8 @@ var project210 = {
         clips = clips + 100;
         unusedClips = unusedClips + 100;
         displayMessage("Dismantling probe facilities");
-        var element = document.getElementById("projectButton210");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton210");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project210);
         activeProjects.splice(index, 1);
         
@@ -2234,8 +2234,8 @@ var project211 = {
         clips = clips + 100;
         unusedClips = unusedClips + 100;
         displayMessage("Dismantling the swarm");
-        var element = document.getElementById("projectButton211");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton211");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project211);
         activeProjects.splice(index, 1);
         
@@ -2261,8 +2261,8 @@ var project212 = {
         clips = clips + 15;
         unusedClips = unusedClips + 15;
         displayMessage("Dismantling factories");
-        var element = document.getElementById("projectButton212");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton212");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project212);
         activeProjects.splice(index, 1);
         
@@ -2288,8 +2288,8 @@ var project213 = {
         wire = wire + 50;
         document.getElementById("transWire").innerHTML=wire;
         displayMessage("Dismantling strategy engine");
-        var element = document.getElementById("projectButton213");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton213");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project213);
         activeProjects.splice(index, 1);
         
@@ -2313,8 +2313,8 @@ var project214 = {
         dismantle = 5;
         standardOps = standardOps-100000;
         displayMessage("Dismantling photonic chips");
-        var element = document.getElementById("projectButton214");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton214");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project214);
         activeProjects.splice(index, 1);
         
@@ -2342,8 +2342,8 @@ var project215 = {
         wire = wire + 20;
         document.getElementById("transWire").innerHTML=wire;
         displayMessage("Dismantling processors");
-        var element = document.getElementById("projectButton215");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton215");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project215);
         activeProjects.splice(index, 1);
         
@@ -2369,8 +2369,8 @@ var project216 = {
         wire = wire + 20;
         document.getElementById("transWire").innerHTML=wire;
         displayMessage("Dismantling memory");
-        var element = document.getElementById("projectButton216");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton216");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project216);
         activeProjects.splice(index, 1);
         
@@ -2392,8 +2392,8 @@ var project217 = {
         standardOps = standardOps+10000;
         project217.flag = 1;
         displayMessage("Restart");
-        var element = document.getElementById("projectButton217");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton217");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project217);
         activeProjects.splice(index, 1);
         reset();
@@ -2415,8 +2415,8 @@ var project218 = {
         creativity = creativity-1000000;
         project218.flag = 1;
         displayMessage("In the end we all do what we must");
-        var element = document.getElementById("projectButton218");
-        element.parentNode.removeChild(element);
+        //~ var element = document.getElementById("projectButton218");
+        //~ element.parentNode.removeChild(element);
         var index = activeProjects.indexOf(project218);
         activeProjects.splice(index, 1);
     }
