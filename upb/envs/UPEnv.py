@@ -20,47 +20,47 @@ def timeSeconds():
 
 class UPObservationSpace(Box):
     def __init__(self, observation_names):
-        # Set up bounds of possible observation ranges
+        # Set up approximate ranges for possible observations
         self._observation_ranges = {
-            'Unsold Inventory': [0, np.inf],
-            'Price per Clip': [0, np.inf],
-            'Public Demand': [0, np.inf],
-            'Marketing Level': [0, np.inf],
-            'Marketing Cost': [0, np.inf],
-            'Manufacturing Clips per Second': [0, np.inf],
-            'Wire Inches': [0, np.inf],
-            'Wire Cost': [0, np.inf],
-            'Number of Autoclippers': [0, np.inf],
-            'Autoclipper Cost': [0, np.inf],
-            'Paperclips': [0, np.inf],
-            'Available Funds': [0, np.inf],
-            'Processors': [0, np.inf],
-            'Memory': [0, np.inf],
-            'Trust': [0, np.inf],
-            'Next Trust': [0, np.inf],
-            'Operations': [0, np.inf],
-            'Creativity': [0, np.inf],
-            'Improved AutoClippers Activated': [0,1],
-            'Beg for More Wire Activated': [0,1],
-            'Creativity Activated': [0,1],
-            'Even Better AutoClippers Activated': [0,1],
-            'Optimized AutoClippers Activated': [0,1],
-            'Limerick Activated': [0,1],
-            'Improved Wire Extrusion Activated': [0,1],
-            'Optimized Wire Extrusion Activated': [0,1],
-            'Microlattice Shapecasting Activated': [0,1],
-            'New Slogan Activated': [0,1],
-            'Catchy Jingle Activated': [0,1],
-            'Lexical Processing Activated': [0,1],
-            'Combinatory Harmonics Activated': [0,1],
-            'The Hadwiger Problem Activated': [0,1],
-            'The Toth Sausage Conjecture Activated': [0,1],
-            'Hadwiger Clip Diagrams Activated': [0,1],
-            'Donkey Space Activated': [0,1],
-            'Algorithmic Trading Activated': [0,1],
-            'WireBuyer Activated': [0,1],
-            'Hypno Harmonics Activated': [0,1],
-            'RevTracker Activated': [0,1]    
+            'Unsold Inventory': [0, 1.0e3],
+            'Price per Clip': [0, 1.0],
+            'Public Demand': [0, 1.0e3],
+            'Marketing Level': [0, 1.0e2],
+            'Marketing Cost': [0, 1.0e2],
+            'Manufacturing Clips per Second': [0, 1.0e4],
+            'Wire Inches': [0, 1.0e4],
+            'Wire Cost': [0, 1.0e2],
+            'Number of Autoclippers': [0, 1.0e2],
+            'Autoclipper Cost': [0, 1.0e4],
+            'Paperclips': [0, 1.0e6],
+            'Available Funds': [0, 1.0e6],
+            'Processors': [0, 1.0e2],
+            'Memory': [0, 1.0e2],
+            'Trust': [0, 1.0e2],
+            'Next Trust': [0, 1.0e6],
+            'Operations': [0, 1.0e4],
+            'Creativity': [0, 1.0e4],
+            'Improved AutoClippers Activated': [0,1.],
+            'Beg for More Wire Activated': [0,1.],
+            'Creativity Activated': [0,1.],
+            'Even Better AutoClippers Activated': [0,1.],
+            'Optimized AutoClippers Activated': [0,1.],
+            'Limerick Activated': [0,1.],
+            'Improved Wire Extrusion Activated': [0,1.],
+            'Optimized Wire Extrusion Activated': [0,1.],
+            'Microlattice Shapecasting Activated': [0,1.],
+            'New Slogan Activated': [0,1.],
+            'Catchy Jingle Activated': [0,1.],
+            'Lexical Processing Activated': [0,1.],
+            'Combinatory Harmonics Activated': [0,1.],
+            'The Hadwiger Problem Activated': [0,1.],
+            'The Toth Sausage Conjecture Activated': [0,1.],
+            'Hadwiger Clip Diagrams Activated': [0,1.],
+            'Donkey Space Activated': [0,1.],
+            'Algorithmic Trading Activated': [0,1.],
+            'WireBuyer Activated': [0,1.],
+            'Hypno Harmonics Activated': [0,1.],
+            'RevTracker Activated': [0,1.]    
         }
 
         # Order keys
@@ -82,6 +82,8 @@ class UPObservationSpace(Box):
         obs_array = np.zeros(self._nkeys)
         for i in range(self._nkeys):
             obs_array[i] = observation[self._keys[i]]
+            # Normalise
+            obs_array[i] /= self._observation_ranges[self._keys[i]][1]
         return obs_array
         
     def observationAsString(self, obs_array):
@@ -147,18 +149,13 @@ class UPEnv(Env):
         'Limerick Activated',
         'Improved Wire Extrusion Activated',
         'Optimized Wire Extrusion Activated',
-        'Microlattice Shapecasting Activated',
         'New Slogan Activated',
         'Catchy Jingle Activated',
         'Lexical Processing Activated',
         'Combinatory Harmonics Activated',
         'The Hadwiger Problem Activated',
         'The Toth Sausage Conjecture Activated',
-        'Hadwiger Clip Diagrams Activated',
         'Donkey Space Activated',
-        'Algorithmic Trading Activated',
-        'WireBuyer Activated',
-        'Hypno Harmonics Activated',
         'RevTracker Activated'
     ])
     _action_names_stages.append(
@@ -175,19 +172,46 @@ class UPEnv(Env):
         'Activate Limerick',
         'Activate Improved Wire Extrusion',
         'Activate Optimized Wire Extrusion',
-        'Activate Microlattice Shapecasting',
         'Activate New Slogan',
         'Activate Catchy Jingle',
         'Activate Lexical Processing',
         'Activate Combinatory Harmonics',
         'Activate The Hadwiger Problem',
         'Activate The Toth Sausage Conjecture',
-        'Activate Hadwiger Clip Diagrams',
         'Activate Donkey Space',
+        'Activate RevTracker',
+    ])
+    
+    # Stage 2
+    _observation_names_stages.append(
+    _observation_names_stages[-1]+
+    [
+        'Microlattice Shapecasting Activated',
+        'Hadwiger Clip Diagrams Activated',
+        'Algorithmic Trading Activated',
+        'WireBuyer Activated',
+        'Hypno Harmonics Activated',
+    ])
+    _action_names_stages.append(
+    _action_names_stages[-1]+
+    [
+        'Activate Microlattice Shapecasting',
+        'Activate Hadwiger Clip Diagrams',
         'Activate Algorithmic Trading',
         'Activate WireBuyer',
         'Activate Hypno Harmonics',
-        'Activate RevTracker',
+    ])
+    
+    # Stage 3
+    _observation_names_stages.append(
+    _observation_names_stages[-1]+
+    [
+        'Algorithmic Trading Activated',
+    ])
+    _action_names_stages.append(
+    _action_names_stages[-1]+
+    [
+        'Activate Algorithmic Trading',
     ])    
        
     def __init__(self,
@@ -250,8 +274,28 @@ class UPEnv(Env):
                 
         # Update rule for stage 1 -> 2   
         if self._stage == 1:
-            # No definition for stage 2 yet
-            pass            
+            observation_from_handler = self._handler.makeObservation(['Memory'])
+            memory = observation_from_handler['Memory']
+            if memory >= 6:
+                self._stage = 2
+                if self._verbose:
+                    print("Advancing from stage 1 to stage 2.")
+                stage_changed = True
+        
+        # Update rule for stage 2 -> 3
+        if self._stage == 2:
+            observation_from_handler = self._handler.makeObservation(['Memory'])
+            memory = observation_from_handler['Memory']
+            if memory >= 10:
+                self._stage = 3
+                if self._verbose:
+                    print("Advancing from stage 2 to stage 3.")
+                stage_changed = True
+                
+         # Update rule for stage 3 -> 4
+        if self._stage == 3:
+            # No definition for stage 4 yet
+            pass   
         
         if stage_changed:
             self._observation_names = self._observation_names_stages[self._stage]
