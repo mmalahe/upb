@@ -9,11 +9,15 @@ import gym
 class MLPAgent(MlpPolicy):
     def __init__(self, name, *args, **kwargs):
         super(MLPAgent, self).__init__(name, *args, **kwargs)
+        self._hid_size = kwargs['hid_size']
+        self._num_hid_layers = kwargs['num_hid_layers']
         
     def save(self, filename):
         py_vars = {}
         for tf_var in self.get_variables():
             py_vars[tf_var.name] = tf_var.eval()
+        py_vars['hid_size'] = self._hid_size
+        py_vars['num_hid_layers'] = self._num_hid_layers
         with open(filename, 'wb') as f:
             pickle.dump(py_vars, f)
     
@@ -77,6 +81,11 @@ class MLPAgent(MlpPolicy):
         for tf_var in self.get_variables():
             if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
                 raise Exception("Variables not equal!")
+
+def load_mlp_agent_topology(filename):
+    with open(filename, 'rb') as f:
+        py_vars = pickle.load(f)
+    return py_vars['hid_size'], py_vars['num_hid_layers']
 
 class MultiStageAgent:
     def __init__(self, agents, initial_stage=0):

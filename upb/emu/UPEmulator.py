@@ -11,6 +11,31 @@ class UPEmulator(object):
         'intervalLoop4()': 10
     } 
     
+    _project_ids = {
+        'Improved AutoClippers': '1',
+        'Beg for More Wire': '2',
+        'Creativity': '3',
+        'Even Better AutoClippers': '4',
+        'Optimized AutoClippers': '5',
+        'Limerick': '6',
+        'Improved Wire Extrusion': '7',
+        'Optimized Wire Extrusion': '8',
+        'Microlattice Shapecasting': '9',
+        'New Slogan': '11',
+        'Catchy Jingle': '12',
+        'Lexical Processing': '13',
+        'Combinatory Harmonics': '14',
+        'The Hadwiger Problem': '15',
+        'The Toth Sausage Conjecture': '17',
+        'Hadwiger Clip Diagrams': '16',
+        'Donkey Space': '19',
+        'Algorithmic Trading': '21',
+        'WireBuyer': '26',
+        'Hypno Harmonics': '34',
+        'RevTracker': '42'
+    }
+    
+    # Observations
     _obs_to_js = {
         'Paperclips': 'clips',
         'Available Funds': 'funds',
@@ -27,9 +52,14 @@ class UPEmulator(object):
         'Trust': 'trust',
         'Next Trust': 'nextTrust',
         'Processors': 'processors',
-        'Memory': 'memory'        
+        'Memory': 'memory',
+        'Operations': 'operations',
+        'Creativity': 'creativity'
     }
+    for pname, pid in _project_ids.items():
+        _obs_to_js[pname+' Activated'] = 'project{}.flag'.format(pid)
     
+    # Actions
     _action_to_js = {
         'Make Paperclip': 'if (wire>0) {clipClick(1);}',
         'Lower Price': 'if (margin>.01) {lowerPrice();}',
@@ -38,8 +68,10 @@ class UPEmulator(object):
         'Buy Wire': 'if (funds>=wireCost) {buyWire();}',
         'Buy Autoclipper': 'if (funds>=clipperCost) {makeClipper();}',
         'Add Processor': 'if (trust>processors+memory || swarmGifts > 0) {addProc();}',
-        'Add Memory': 'if (trust>processors+memory || swarmGifts > 0) {addMem();}'
+        'Add Memory': 'if (trust>processors+memory || swarmGifts > 0) {addMem();}',
     }
+    for pname, pid in _project_ids.items():
+        _action_to_js['Activate '+pname] = 'if (activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag) {{project{0}.effect();}}'.format(pid)
     
     def __init__(self, 
                  combat_filename=join(dirname(abspath(__file__)),"combat.js"),
@@ -84,7 +116,6 @@ class UPEmulator(object):
         return obs
         
     def takeAction(self, action_name):
-        # @todo Check if action should actually be available
         self._intp.eval(self._action_to_js[action_name])
         
     def advanceTime(self, dt_s):

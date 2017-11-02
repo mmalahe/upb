@@ -18,13 +18,13 @@ from baselines.common import tf_util
 from upb.game.UPGameHandler import LOCAL_GAME_URL_TRAIN
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
-from upb.agents.mlp import MLPAgent
+from upb.agents.mlp import MLPAgent, load_mlp_agent_topology
 import os
 
 import matplotlib.pyplot as plt
 
 # Load latest agent from file
-do_load_latest_agent = True
+do_load_latest_agent = False
 
 # Game emulator
 use_emulator = True
@@ -37,14 +37,15 @@ webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phant
 url_training = LOCAL_GAME_URL_TRAIN
 
 # Resetting environment to an initial stage
-initial_stage = 0
-final_stage = 0 # Stage past which not to actually advance
+initial_stage = 1
+final_stage = 1 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage0.pickle")]
 
 # Training parameters
-episode_length = 2000
-timesteps_per_batch = 4*episode_length
+episode_length = 10000
+timesteps_per_batch = 1*episode_length
 max_iters = 1000
+clip_param = 0.4
 schedule = 'linear'
 iters_per_render = 10
 iters_per_save = 10
@@ -73,8 +74,9 @@ def train():
         ob_space = UPObservationSpace(UPEnv._observation_names_stages[i])
         ac_space = UPActionSpace(UPEnv._action_names_stages[i])
         agent_name = "resetter_agent_stage{}".format(i)
-        agent = MLPAgent(name=agent_name, ob_space=ob_space, ac_space=ac_space, 
-                         hid_size=32, num_hid_layers=2)
+        hid_size, num_hid_layers = load_mlp_agent_topology(resetter_agent_filename)
+        agent = MLPAgent(name=agent_name, ob_space=ob_space, 
+                     ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
         agent.load_and_check(resetter_agent_filename)
         resetter_agents.append(agent)
     
@@ -141,16 +143,20 @@ def train():
     def policy_fn(name, ob_space, ac_space):
         ob_space = UPObservationSpace(UPEnv._observation_names_stages[initial_stage])
         ac_space = UPActionSpace(UPEnv._action_names_stages[initial_stage])
-        agent = MLPAgent(name=name, ob_space=ob_space, 
-                         ac_space=ac_space, hid_size=32, num_hid_layers=2)
         
         if do_load_latest_agent:
+            hid_size, num_hid_layers = load_mlp_agent_topology(policy_filename_latest)
+            agent = MLPAgent(name=name, ob_space=ob_space, 
+                         ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
             if name == "pi":
                 agent.load_and_check(policy_filename_latest)
             elif name == "oldpi":
                 agent.load_and_check(policy_filename_latest_old)
             else:
                 print("WARNING: Don't know how to load {}.".format(name))
+        else:
+            agent = MLPAgent(name=name, ob_space=ob_space, 
+                         ac_space=ac_space, hid_size=64, num_hid_layers=2)
                 
         return agent
     
@@ -158,7 +164,7 @@ def train():
     pposgd_simple.learn(env, policy_fn,
         max_iters=max_iters,
         timesteps_per_batch=timesteps_per_batch,
-        clip_param=0.2, entcoeff=0.0,
+        clip_param=clip_param, entcoeff=0.0,
         optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
         gamma=0.99, lam=0.95,
         schedule=schedule,

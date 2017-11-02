@@ -30,6 +30,7 @@ class UPGameState(object):
         'Memory': ['id','memory'],
         'Trust': ['id','trust'],
         'Next Trust': ['id','nextTrust'],
+        'Operations': ['id','operations']
     }
     
     def __init__(self, driver):        
