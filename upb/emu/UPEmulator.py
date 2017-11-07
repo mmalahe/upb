@@ -82,8 +82,21 @@ class UPEmulator(object):
     
     def makeObservation(self, fields):
         obs = OrderedDict()
-        for field in fields:
-            val = self._intp.eval(self._obs_to_js[field])
+        
+        # Package as a javascript array
+        fields_js = "["
+        for i in range(len(fields)-1):
+            fields_js += self._obs_to_js[fields[i]]+","
+        fields_js += self._obs_to_js[fields[-1]]
+        fields_js += "]"
+        
+        # Fetch array of values
+        vals = self._intp.eval(fields_js)
+        
+        # Populate our array        
+        for i in range(len(fields)):
+            field = fields[i]
+            val = vals[i]
             
             # Any additional scaling that's made before being displayed to webpage
             if field == 'Public Demand':
