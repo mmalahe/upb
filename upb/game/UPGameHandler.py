@@ -8,8 +8,34 @@ import http
 from collections import OrderedDict
 import os
 
+# Global constants
 LOCAL_GAME_URL_TRAIN = "file://"+os.path.join(os.path.dirname(os.path.abspath(__file__)),"index2_train.html")
-LOCAL_GAME_URL_STANDARD = "file://"+os.path.join(os.path.dirname(os.path.abspath(__file__)),"index2.html") 
+LOCAL_GAME_URL_STANDARD = "file://"+os.path.join(os.path.dirname(os.path.abspath(__file__)),"index2.html")
+UP_PROJECT_IDS = {
+    'Improved AutoClippers': '1',
+    'Beg for More Wire': '2',
+    'Creativity': '3',
+    'Even Better AutoClippers': '4',
+    'Optimized AutoClippers': '5',
+    'Limerick': '6',
+    'Improved Wire Extrusion': '7',
+    'Optimized Wire Extrusion': '8',
+    'Microlattice Shapecasting': '9',
+    'Spectral Froth Annealment': '10',
+    'Quantum Foam Annealment': '10b',
+    'New Slogan': '11',
+    'Catchy Jingle': '12',
+    'Lexical Processing': '13',
+    'Combinatory Harmonics': '14',
+    'The Hadwiger Problem': '15',
+    'The Toth Sausage Conjecture': '17',
+    'Hadwiger Clip Diagrams': '16',
+    'Donkey Space': '19',
+    'Algorithmic Trading': '21',
+    'WireBuyer': '26',
+    'Hypno Harmonics': '34',
+    'RevTracker': '42'
+}
 
 class UPGameState(object):
     _scalar_values = {}
@@ -30,7 +56,8 @@ class UPGameState(object):
         'Memory': ['id','memory'],
         'Trust': ['id','trust'],
         'Next Trust': ['id','nextTrust'],
-        'Operations': ['id','operations']
+        'Operations': ['id','operations'],
+        'Creativity': ['id','creativity']
     }
     
     def __init__(self, driver):        
@@ -94,8 +121,10 @@ class UPGameHandler(object):
             'Buy Wire': 'btnBuyWire',
             'Buy Autoclipper': 'btnMakeClipper',
             'Add Processor': 'btnAddProc',
-            'Add Memory': 'btnAddMemory'
+            'Add Memory': 'btnAddMem'
         }
+        self._project_buttons = {"Activate "+pname:"projectButton{}".format(pid) for pname, pid in UP_PROJECT_IDS.items()}
+        self._all_buttons.update(self._project_buttons)
         self._all_actions = list(self._all_buttons.keys())
         
         # Web driver setup
@@ -116,7 +145,8 @@ class UPGameHandler(object):
         except:
             print("WARNING: Unable to fetch page on reset. Starting new driver.")
             self._setUpWebdriver()
-            self.reset()      
+            self.reset()
+        self._active_projects = []
         self._acquired_buttons = {}
         self._updateGameState()
     
@@ -127,20 +157,42 @@ class UPGameHandler(object):
     def makeObservation(self, fields):
         self._updateGameState()
         observation = OrderedDict()
+        visible_fields = []
+        project_fields = []
         for field in fields:
+            if field.endswith("Activated"):
+                project_fields.append(field)
+            else:
+                visible_fields.append(field)
+        for field in visible_fields:
             observation[field] = self._state.get(field)
+        for field in project_fields:
+            project_name = field[:-10]           
+            if project_name in self._active_projects:
+                observation[field] = 1
+            else:
+                observation[field] = 0
         return observation
     
     def takeAction(self, action_name):
         success = False
+        # Buttons
         if action_name in self._all_buttons:
             try:
-                success = self._clickButton(action_name)
+                success = self._clickButton(action_name)                
+                # Register that project has been activated
+                if success:
+                    if action_name in self._project_buttons.keys():
+                        project_name = action_name[9:]
+                        self._active_projects.append(project_name)              
+                    
             except http.client.RemoteDisconnected:
                 print("ERROR: Disconnected while attempting action.")
                 print("WARNING: Handling this by resetting. If this was in the middle of a sample path it's going to mess it up a lot.")
                 self.reset()
                 self.takeAction(action_name)
+
+        # Other cases        
         else:
             print("WARNING: Not sure what to do with action "+action_name+".")
             print("Doing nothing.")
@@ -191,9 +243,22 @@ class UPGameHandler(object):
         if name in self._acquired_buttons.keys():
             button = self._acquired_buttons[name]
         else:
-            button = self._driver.find_elements_by_id(self._all_buttons[name])[0]
-            self._acquired_buttons[name] = button
-        clickable = not button.get_property('disabled')
+            try:
+                button = self._driver.find_elements_by_id(self._all_buttons[name])[0]            
+                self._acquired_buttons[name] = button
+            except:
+                if self._verbose:
+                    print("WARNING: couldn't find button {}.".format(name))
+                button = None
+                clickable = False
+        if button != None:
+            try:
+                clickable = not button.get_property('disabled')
+            except selenium.common.exceptions.StaleElementReferenceException:
+                button = None
+                clickable = False
+                if self._verbose:
+                    print("WARNING: attempted to access missing/removed button {}.".format(name))
         return button, clickable
         
     def _clickButton(self, button_name):

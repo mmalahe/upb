@@ -3,7 +3,7 @@
 
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
-from upb.agents.mlp import MLPAgent
+from upb.agents.mlp import MLPAgent, load_mlp_agent_topology
 from baselines.common import tf_util
 from mpi4py import MPI
 import os
@@ -11,23 +11,21 @@ from upb.game.UPGameHandler import LOCAL_GAME_URL_STANDARD
 
 # Game handler
 use_emulator = False
-webdriver_name_observation = 'Chrome'
-webdriver_path_observation = None
-url_observation = LOCAL_GAME_URL_STANDARD
-desired_action_interval_observation = 0.2
+webdriver_name = 'Chrome'
+webdriver_path = None
+url = LOCAL_GAME_URL_STANDARD
+desired_action_interval = 0.2
 
 # Environment parameters
-stage = 1
-episode_length = 2000
+initial_stage = 1
+final_stage = 1
+episode_length = 5000
 
 # Policy
-policy_filename = 'data/policy_stage{}_latest.pickle'.format(stage)
+#~ policy_filename = 'data/policy_stage{}_latest.pickle'.format(stage)
+resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
+policy_filename = os.path.join("agents","stage{}.pickle".format(initial_stage))
 
-# Pick stage
-if stage == 1:
-    observation_names = up_observation_names_stage1
-    action_names = up_action_names_stage1
-    
 def observe():
      # MPI setup
     rank = MPI.COMM_WORLD.Get_rank()
@@ -35,24 +33,38 @@ def observe():
     sess = tf_util.single_threaded_session()
     sess.__enter__()
     
+    # For resetting to a fixed stage
+    resetter_agents = []
+    for i in range(initial_stage):
+        resetter_agent_filename = resetter_agent_filenames[i]
+        ob_space = UPObservationSpace(UPEnv._observation_names_stages[i])
+        ac_space = UPActionSpace(UPEnv._action_names_stages[i])
+        agent_name = "resetter_agent_stage{}".format(i)
+        hid_size, num_hid_layers = load_mlp_agent_topology(resetter_agent_filename)
+        agent = MLPAgent(name=agent_name, ob_space=ob_space, 
+                     ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
+        agent.load_and_check(resetter_agent_filename)
+        resetter_agents.append(agent)
+    
     # The observation environment
-    env = UPEnv(url_observation, 
-                observation_names, 
-                action_names,
+    env = UPEnv(url, 
+                initial_stage=initial_stage,
+                final_stage=final_stage,
+                resetter_agents=resetter_agents,
                 use_emulator=use_emulator,
                 episode_length=episode_length,
-                desired_action_interval=desired_action_interval_observation,
-                webdriver_name=webdriver_name_observation,
-                webdriver_path=webdriver_path_observation,
+                desired_action_interval=desired_action_interval,
+                webdriver_name=webdriver_name,
+                webdriver_path=webdriver_path,
                 headless=False                  
                 )
                 
     # The agent
-    agent = MLPAgent(name='pi', 
-                     ob_space=env.observation_space, 
-                     ac_space=env.action_space, 
-                     hid_size=32, 
-                     num_hid_layers=2)
+    ob_space = UPObservationSpace(UPEnv._observation_names_stages[initial_stage])
+    ac_space = UPActionSpace(UPEnv._action_names_stages[initial_stage])
+    hid_size, num_hid_layers = load_mlp_agent_topology(policy_filename)
+    agent = MLPAgent(name="pi", ob_space=ob_space, 
+                 ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
     agent.load_and_check(policy_filename)
     
     # Rollout

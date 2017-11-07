@@ -128,10 +128,16 @@ class UPEnv(Env):
         'Buy Wire'
     ])
     
-    # Stage 1
-    _observation_names_stages.append(
-    _observation_names_stages[-1]+
-    [
+    # Observations and actions common to many stages
+    _core_observation_set_1 = [
+        'Unsold Inventory', 
+        'Price per Clip', 
+        'Public Demand', 
+        'Available Funds', 
+        'Autoclipper Cost', 
+        'Number of Autoclippers',
+        'Wire Inches',
+        'Wire Cost',
         'Paperclips',
         'Marketing Level',
         'Marketing Cost',
@@ -140,79 +146,80 @@ class UPEnv(Env):
         'Trust',
         'Next Trust',
         'Operations',
-        'Creativity',
-        'Improved AutoClippers Activated',
-        #~ 'Beg for More Wire Activated',
-        'Creativity Activated',
-        'Even Better AutoClippers Activated',
-        'Optimized AutoClippers Activated',
-        'Limerick Activated',
-        'Improved Wire Extrusion Activated',
-        'Optimized Wire Extrusion Activated',
-        'New Slogan Activated',
-        'Catchy Jingle Activated',
-        'Lexical Processing Activated',
-        'Combinatory Harmonics Activated',
-        'The Hadwiger Problem Activated',
-        'The Toth Sausage Conjecture Activated',
-        'Donkey Space Activated',
-        'RevTracker Activated'
-    ])
-    _action_names_stages.append(
-    _action_names_stages[-1]+
-    [
+        'Creativity'
+    ]    
+    _core_action_set_1 = [
+        'Make Paperclip', 
+        'Lower Price', 
+        'Raise Price', 
+        'Buy Autoclipper',
+        'Buy Wire',
         'Expand Marketing',
         'Add Processor',
-        'Add Memory',
-        'Activate Improved AutoClippers',
-        #~ 'Activate Beg for More Wire',
-        'Activate Creativity',
-        'Activate Even Better AutoClippers',
-        'Activate Optimized AutoClippers',
-        'Activate Limerick',
-        'Activate Improved Wire Extrusion',
-        'Activate Optimized Wire Extrusion',
-        'Activate New Slogan',
-        'Activate Catchy Jingle',
-        'Activate Lexical Processing',
-        'Activate Combinatory Harmonics',
-        'Activate The Hadwiger Problem',
-        'Activate The Toth Sausage Conjecture',
-        'Activate Donkey Space',
-        'Activate RevTracker',
-    ])
+        'Add Memory'
+    ]
+    
+    # Stage 1
+    _stage_1_projects = [
+        'Improved AutoClippers',
+        #~ 'Beg for More Wire',
+        'Creativity',
+        'Even Better AutoClippers',
+        'Optimized AutoClippers',
+        'Limerick',
+        'Improved Wire Extrusion',
+        'Optimized Wire Extrusion',
+        'New Slogan',
+        'Catchy Jingle',
+        'Lexical Processing',
+        'Combinatory Harmonics',
+        'The Hadwiger Problem',
+        'The Toth Sausage Conjecture',
+        'Donkey Space',
+        'RevTracker'
+    ]
+    _stage_1_projects_obs = [proj+" Activated" for proj in _stage_1_projects]
+    _stage_1_projects_ac = ["Activate "+proj for proj in _stage_1_projects]
+    _observation_names_stages.append(_core_observation_set_1+_stage_1_projects_obs)
+    _action_names_stages.append(_core_action_set_1+_stage_1_projects_ac)
     
     # Stage 2
-    _observation_names_stages.append(
-    _observation_names_stages[-1]+
-    [
-        'Microlattice Shapecasting Activated',
-        'Hadwiger Clip Diagrams Activated',
-        'Algorithmic Trading Activated',
-        'WireBuyer Activated',
-        'Hypno Harmonics Activated',
-    ])
-    _action_names_stages.append(
-    _action_names_stages[-1]+
-    [
-        'Activate Microlattice Shapecasting',
-        'Activate Hadwiger Clip Diagrams',
-        'Activate Algorithmic Trading',
-        'Activate WireBuyer',
-        'Activate Hypno Harmonics',
-    ])
+    _stage_2_required_projects = [
+        'Improved AutoClippers',
+        'Creativity',
+        'Even Better AutoClippers',
+        'Optimized AutoClippers',
+        'Limerick',
+        'Improved Wire Extrusion',
+        'Optimized Wire Extrusion',
+        'New Slogan',
+        'Catchy Jingle',
+        'Lexical Processing',
+        'Combinatory Harmonics',
+        'The Hadwiger Problem',
+        'The Toth Sausage Conjecture',
+        'Donkey Space',
+    ]
+    _stage_2_projects = [
+        'Microlattice Shapecasting',
+        'Hadwiger Clip Diagrams',
+        'WireBuyer',
+        'Hypno Harmonics'
+    ]
+    _stage_2_projects_obs = [proj+" Activated" for proj in _stage_2_projects]
+    _stage_2_projects_ac = ["Activate "+proj for proj in _stage_2_projects]
+    _observation_names_stages.append(_core_observation_set_1+_stage_2_projects_obs)
+    _action_names_stages.append(_core_action_set_1+_stage_2_projects_ac)
     
     # Stage 3
-    _observation_names_stages.append(
-    _observation_names_stages[-1]+
-    [
-        'Algorithmic Trading Activated',
-    ])
-    _action_names_stages.append(
-    _action_names_stages[-1]+
-    [
-        'Activate Algorithmic Trading',
-    ])    
+    _stage_3_required_projects = _stage_2_projects
+    _stage_3_projects = [
+        'Algorithmic Trading'
+    ]
+    _stage_3_projects_obs = [proj+" Activated" for proj in _stage_3_projects]
+    _stage_3_projects_ac = ["Activate "+proj for proj in _stage_3_projects]
+    _observation_names_stages.append(_core_observation_set_1+_stage_3_projects_obs)
+    _action_names_stages.append(_core_action_set_1+_stage_3_projects_ac)
        
     def __init__(self,
                  url,
@@ -269,27 +276,35 @@ class UPEnv(Env):
             if clips >= 2000:
                 self._stage = 1
                 if self._verbose:
-                    print("Advancing from stage 0 to stage 1.")
+                    print("Advancing to stage 1.")
                 stage_changed = True
                 
         # Update rule for stage 1 -> 2   
         if self._stage == 1:
-            observation_from_handler = self._handler.makeObservation(['Memory'])
-            memory = observation_from_handler['Memory']
-            if memory >= 6:
+            required_projects_obs = [proj+" Activated" for proj in self._stage_2_required_projects]
+            observation_from_handler = self._handler.makeObservation(required_projects_obs)
+            all_projects_activated = True
+            for name, obs in observation_from_handler.items():
+                if obs != 1:
+                    all_projects_activated = False
+            if all_projects_activated:
                 self._stage = 2
                 if self._verbose:
-                    print("Advancing from stage 1 to stage 2.")
+                    print("Advancing to stage 2.")
                 stage_changed = True
         
         # Update rule for stage 2 -> 3
         if self._stage == 2:
-            observation_from_handler = self._handler.makeObservation(['Memory'])
-            memory = observation_from_handler['Memory']
-            if memory >= 10:
+            required_projects_obs = [proj+" Activated" for proj in self._stage_3_required_projects]
+            observation_from_handler = self._handler.makeObservation(required_projects_obs)
+            all_projects_activated = True
+            for name, obs in observation_from_handler.items():
+                if obs != 1:
+                    all_projects_activated = False
+            if all_projects_activated:
                 self._stage = 3
                 if self._verbose:
-                    print("Advancing from stage 2 to stage 3.")
+                    print("Advancing to stage 3.")
                 stage_changed = True
                 
          # Update rule for stage 3 -> 4
@@ -318,17 +333,31 @@ class UPEnv(Env):
         self._prev_observation_from_handler = observation_from_handler        
         ob = ob_space.observationAsArray(observation_from_handler)
         
+        if target_stage == 1:
+            max_n_steps = 2000
+        elif target_stage == 2:
+            max_n_steps = 12000
+        elif target_stage == 3:
+            max_n_steps = 18000
+        else:
+            raise NotImplementedError("No definition for stage 4+.")
+        
         # Advance
         stochastic = True
         prev_stage = self._stage
-        max_n_steps = 10000
         while self._stage < target_stage:
             # Act
-            agent = agents[self._stage]    
-            ac, vpred = agent.act(stochastic, ob)  
+            agent = agents[self._stage] 
+            ac, vpred = agent.act(stochastic, ob)
             ob, rew, done, info = self._step(ac, self._stage)
             
-            # Restart if failed to get to next stage
+            # Observe in new observation space if stage changed
+            if prev_stage != self._stage:
+                ob_space = UPObservationSpace(self._observation_names_stages[self._stage])
+                observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
+                ob = ob_space.observationAsArray(observation_from_handler)
+            
+            # Restart if failed to get to next stage quickly enough
             if self._n_steps_taken > max_n_steps:
                 print("WARNING: Timed out attempting to reach next stage. Resetting and trying fresh.")
                 self._n_steps_taken = 0
@@ -341,8 +370,11 @@ class UPEnv(Env):
                 ob = ob_space.observationAsArray(observation_from_handler)
             
             # Report
-            if self._verbose and self._stage > prev_stage:
+            #~ if self._stage > prev_stage:
+            if self._verbose and self._stage > prev_stage:            
                 print("Advanced to stage {} after {} steps.".format(self._stage, self._n_steps_taken))
+                
+            prev_stage = self._stage
         if self._verbose:
             print("Completed initial stage advancement.")
     
@@ -378,20 +410,41 @@ class UPEnv(Env):
         return observation
     
     def reward(self, observation_from_handler):
-        if self._stage == 0:
-            return self.assetsAndCashReward(observation_from_handler)
-        elif self._stage == 1:
+        if self._stage >= 0 and self._stage <= 3:
             return self.assetsAndCashReward(observation_from_handler)
         else:
-            raise NotImplementedError("No definition for stage 2+.")
+            raise NotImplementedError("No definition for stage 4+.")
             
     def assetsAndCashReward(self, observation_from_handler):
         return self.cashReward(observation_from_handler) + self.assetsReward(observation_from_handler)
     
+    def _getWirePerSpool(self):
+        wire_obs = [
+            'Quantum Foam Annealment Activated',
+            'Spectral Froth Annealment Activated',
+            'Microlattice Shapecasting Activated',
+            'Optimized Wire Extrusion Activated',
+            'Improved Wire Extrusion Activated'
+        ]
+        obs = self._handler.makeObservation(wire_obs)    
+        if obs['Quantum Foam Annealment Activated'] == 1:
+            wire_per_spool = 173250
+        elif obs['Spectral Froth Annealment Activated'] == 1:
+            wire_per_spool = 15750
+        elif obs['Microlattice Shapecasting Activated'] == 1:
+            wire_per_spool = 5250
+        elif obs['Optimized Wire Extrusion Activated'] == 1:
+            wire_per_spool = 2625
+        elif obs['Improved Wire Extrusion Activated'] == 1:
+            wire_per_spool = 1500
+        else:
+            wire_per_spool = 1000
+        return wire_per_spool
+    
     def assetsReward(self, observation_from_handler):        
         dassets = 0.0
         
-        wire_per_spool = 1000.0
+        wire_per_spool = self._getWirePerSpool()
         dwire = observation_from_handler['Wire Inches'] - self._prev_observation_from_handler['Wire Inches']
         wire_cost = self._prev_observation_from_handler['Wire Cost']/wire_per_spool
         dassets += dwire*wire_cost

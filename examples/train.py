@@ -23,8 +23,10 @@ import os
 
 import matplotlib.pyplot as plt
 
+import numpy as np
+
 # Load latest agent from file
-do_load_latest_agent = False
+do_load_latest_agent = True
 
 # Game emulator
 use_emulator = True
@@ -39,20 +41,30 @@ url_training = LOCAL_GAME_URL_TRAIN
 # Resetting environment to an initial stage
 initial_stage = 1
 final_stage = 1 # Stage past which not to actually advance
-resetter_agent_filenames = [os.path.join("agents","stage0.pickle")]
+resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
 
 # Training parameters
 episode_length = 10000
-timesteps_per_batch = 1*episode_length
-max_iters = 1000
-clip_param = 0.4
+timesteps_per_batch = 4*episode_length
+optim_batchsize = int(episode_length/8)
+#~ optim_batchsize = episode_length
+#~ optim_batchsize = timesteps_per_batch
+max_iters = 500
 schedule = 'linear'
+stochastic = True
+clip_param = 0.3
+vf_loss_coeff = 0.01
+entcoeff = 0.00
+optim_stepsize = 2e-3
+
+# Data management
 iters_per_render = 10
-iters_per_save = 10
+iters_per_save = 1
+iters_per_plot = 1
 data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(initial_stage))
 policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(initial_stage))
-reward_history = []
+rewards_history = []
 
 # Set up data directory
 if not os.path.exists(data_dir):
@@ -115,10 +127,17 @@ def train():
             env = loc['env'].env
             rollout(env, policy)
             env.save_screenshot("data/iter_{:05d}.png".format(iters_so_far))
-            
+        
+        if iters_so_far % iters_per_plot == 0 and iters_so_far > 0:
             # Plot reward history
             fig = plt.figure()
-            plt.plot(np.array(reward_history))
+            r_mean = [np.mean(r) for r in rewards_history]
+            r_std = [np.std(r) for r in rewards_history]
+            r_min = [np.min(r) for r in rewards_history]
+            r_max = [np.max(r) for r in rewards_history]
+            plt.plot(np.array(r_min),'r-')
+            plt.errorbar(np.arange(len(r_mean)), np.array(r_mean), yerr=np.array(r_std), fmt='k-')
+            plt.plot(np.array(r_max),'b-')
             plt.xlabel("Iterations")
             plt.ylabel("Reward")
             plt.savefig(os.path.join(data_dir,"reward_history.png"))
@@ -127,7 +146,9 @@ def train():
     def logging_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
         if iters_so_far > 0:
-            reward_history.append(np.mean(loc['rewbuffer']))
+            print(loc['rews'])
+            print(np.mean(loc['rews']))
+            rewards_history.append(loc['rews'].copy())
                 
     def callback(loc, glob):
         if rank == 0:
@@ -164,10 +185,12 @@ def train():
     pposgd_simple.learn(env, policy_fn,
         max_iters=max_iters,
         timesteps_per_batch=timesteps_per_batch,
-        clip_param=clip_param, entcoeff=0.0,
-        optim_epochs=8, optim_stepsize=1e-3, optim_batchsize=64,
-        gamma=0.99, lam=0.95,
+        clip_param=clip_param, entcoeff=entcoeff,
+        vf_loss_coeff=vf_loss_coeff,
+        optim_epochs=32, optim_stepsize=optim_stepsize, optim_batchsize=optim_batchsize,
+        gamma=1.00, lam=0.95,
         schedule=schedule,
+        stochastic=stochastic,
         callback=callback
     )
 
