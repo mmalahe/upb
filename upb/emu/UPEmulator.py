@@ -10,7 +10,7 @@ class UPEmulator(object):
         'intervalLoop2()': 250,
         'intervalLoop3()': 1,
         'intervalLoop4()': 10
-    } 
+    }    
     
     # Observations
     _obs_to_js = {
@@ -54,7 +54,7 @@ class UPEmulator(object):
                  combat_filename=join(dirname(abspath(__file__)),"combat.js"),
                  globals_filename=join(dirname(abspath(__file__)),"globals.js"),
                  projects_filename=join(dirname(abspath(__file__)),"projects.js"),
-                 main_filename=join(dirname(abspath(__file__)),"main.js")):
+                 main_filename=join(dirname(abspath(__file__)),"main_pre_drones.js")):
 
         # Source file list
         self._js_filenames = [combat_filename, globals_filename, projects_filename, main_filename]
@@ -73,7 +73,11 @@ class UPEmulator(object):
     # "Public" members
     def reset(self):
         self._init()
-        # Allow all main loops to resolve at least once
+        self._loop_counters = {}
+        for loop_name in self._interval_loops_cs.keys():
+            self._loop_counters[loop_name] = 0
+        
+        # Allow primary main loops to resolve at least once
         self.advanceTime(0.5)
     
     def quit(self):
@@ -110,8 +114,18 @@ class UPEmulator(object):
         
     def advanceTime(self, dt_s):
         dt_cs = max(int(100.0*dt_s),1)
-        for i in range(dt_cs):
-            self._time_cs += 1
-            for loop_name, loop_interval in self._interval_loops_cs.items():
-                if self._time_cs % loop_interval == 0:
-                    self._intp.eval(loop_name)
+        time_cs_next = self._time_cs + dt_cs
+        for loop_name, loop_interval in self._interval_loops_cs.items():
+            # Determine how many iterations of the loop to perform
+            loop_time_cs = self._loop_counters[loop_name]*self._interval_loops_cs[loop_name]
+            time_to_advance_cs = time_cs_next - loop_time_cs
+            iters_to_advance = int(time_to_advance_cs/self._interval_loops_cs[loop_name])
+            
+            # Perform the iterations
+            if iters_to_advance > 0:
+                loop_js = "for (var i = 0; i < {}; i++) {{ {} ;}}".format(iters_to_advance, loop_name)
+                self._intp.eval(loop_js)
+            
+            # Update the execution count for the loop
+            self._loop_counters[loop_name] += iters_to_advance
+        self._time_cs = time_cs_next
