@@ -89,8 +89,11 @@ class UPObservationSpace(Box):
     def observationAsString(self, obs_array):
         obs = ""
         for i in range(self._nkeys):
-            obs += "{}={:1.2g},".format(self._keys[i], obs_array[i])
+            obs += "{}={:1.2g},".format(self._keys[i], obs_array[i]*self._observation_ranges[self._keys[i]][1])
         return obs
+        
+    def getObservationName(self, i):
+        return self._keys[i]
 
 class UPActionSpace(Discrete):
     def __init__(self, action_names):
@@ -193,18 +196,18 @@ class UPEnv(Env):
         'Improved Wire Extrusion',
         'Optimized Wire Extrusion',
         'New Slogan',
-        'Catchy Jingle',
-        'Lexical Processing',
-        'Combinatory Harmonics',
-        'The Hadwiger Problem',
-        'The Toth Sausage Conjecture',
-        'Donkey Space',
+        'Catchy Jingle'
     ]
     _stage_2_projects = [
         'Microlattice Shapecasting',
         'Hadwiger Clip Diagrams',
         'WireBuyer',
         'Hypno Harmonics'
+        'Lexical Processing',
+        'Combinatory Harmonics',
+        'The Hadwiger Problem',
+        'The Toth Sausage Conjecture',
+        'Donkey Space'
     ]
     _stage_2_projects_obs = [proj+" Activated" for proj in _stage_2_projects]
     _stage_2_projects_ac = ["Activate "+proj for proj in _stage_2_projects]
@@ -261,7 +264,7 @@ class UPEnv(Env):
         self._resetter_agents = resetter_agents
         
         # Reset
-        self.reset()
+        #~ self.reset()
     
     def _update_stage(self):
         stage_changed = False
@@ -336,9 +339,9 @@ class UPEnv(Env):
         if target_stage == 1:
             max_n_steps = 2000
         elif target_stage == 2:
-            max_n_steps = 12000
+            max_n_steps = 8000
         elif target_stage == 3:
-            max_n_steps = 18000
+            max_n_steps = 14000
         else:
             raise NotImplementedError("No definition for stage 4+.")
         
@@ -410,8 +413,9 @@ class UPEnv(Env):
         return observation
     
     def reward(self, observation_from_handler):
-        if self._stage >= 0 and self._stage <= 3:
-            return self.assetsAndCashReward(observation_from_handler)
+        if self._stage == 0 and self._stage <= 3:
+            #~ return self.assetsAndCashReward(observation_from_handler)
+            return self.clipReward(observation_from_handler)
         else:
             raise NotImplementedError("No definition for stage 4+.")
             
