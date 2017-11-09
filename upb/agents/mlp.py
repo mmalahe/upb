@@ -51,29 +51,35 @@ class MLPAgent(MlpPolicy):
             if not np.array_equal(py_var_out, py_var_in):
                 raise Exception("Variables not equal!")
                 
-    def load_and_check(self, filename):
+    def load_and_check(self, filename, load_only_observation_scaling=False):
         with open(filename, 'rb') as f:
             py_vars = pickle.load(f)
         tf_util.initialize()
         for tf_var in self.get_variables():
-            # Strip the variable name of its scope
-            var_name = tf_var.name
-            end_scopename_idx = var_name.find("/")
-            var_name_scopeless = var_name[end_scopename_idx+1:]
+            do_load = True
+            if load_only_observation_scaling:
+                if 'obfilter' not in tf_var.name:
+                    do_load = False
             
-            # Find the name in the py dict, ignoring scope
-            found_name = None
-            for name in py_vars.keys():
-                if name.endswith(var_name_scopeless):
-                    found_name = name
-                    break
-            if found_name == None:
-                raise Exception("Could not find {}.".format(var_name_scopless))
-            
-            # Load the variable                   
-            tf_var.load(py_vars[found_name])
-            if not np.array_equal(py_vars[found_name], tf_var.eval()):
-                raise Exception("Variables not equal!")
+            if do_load:
+                # Strip the variable name of its scope
+                var_name = tf_var.name
+                end_scopename_idx = var_name.find("/")
+                var_name_scopeless = var_name[end_scopename_idx+1:]
+                
+                # Find the name in the py dict, ignoring scope
+                found_name = None
+                for name in py_vars.keys():
+                    if name.endswith(var_name_scopeless):
+                        found_name = name
+                        break
+                if found_name == None:
+                    raise Exception("Could not find {}.".format(var_name_scopless))
+                
+                # Load the variable                   
+                tf_var.load(py_vars[found_name])
+                if not np.array_equal(py_vars[found_name], tf_var.eval()):
+                    raise Exception("Variables not equal!")
                 
     def check_is_same_as(self, filename):
         with open(filename, 'rb') as f:
@@ -81,6 +87,47 @@ class MLPAgent(MlpPolicy):
         for tf_var in self.get_variables():
             if not np.array_equal(py_vars[tf_var.name], tf_var.eval()):
                 raise Exception("Variables not equal!")
+    
+    def getVarNp(self, var_name, dtype=tf.float32):
+        r"""Get variable as numpy array.
+        """
+        with tf.variable_scope(self.scope, reuse=True, dtype=dtype):
+            weights_var = tf.get_variable(var_name)
+            weights_np = weights_var.eval()
+        return weights_np
+    
+    def getPolicyVars(self, i, kind):
+        if i == self.num_hid_layers:
+            return self.getVarNp("polfinal/{}".format(kind))
+        else:
+            return self.getVarNp("polfc{}/{}".format(i+1, kind))
+    
+    def getPolicyWeights(self, i):        
+        r"""Get the weights of the policy.
+        
+        :param i: Which set of weights. i=0 => weights between input and first hidden layer, etc... 
+        :type i: int
+        :returns: weights -- A rank 2 numpy ndarray of the weights.
+        """
+        return self.getPolicyVars(i, 'w')
+    
+    def getPolicyBiases(self, i):
+        return self.getPolicyVars(i, 'b')
+        
+    def getPolicyNetwork(self):
+        """Return policy network as numpy arrays.
+        """
+        network = {'weights':[],'biases':[]}
+        for i in range(self.num_hid_layers+1):
+            network['weights'].append(self.getPolicyWeights(i))
+            network['biases'].append(self.getPolicyBiases(i))
+        return network
+        
+    def getObservationMeans(self):
+        sums = self.getVarNp("obfilter/runningsum", dtype=tf.float64)
+        counts = self.getVarNp("obfilter/count", dtype=tf.float64)
+        means = sums/counts
+        return means
 
 def load_mlp_agent_topology(filename):
     with open(filename, 'rb') as f:
