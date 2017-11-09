@@ -25,9 +25,6 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-# Load latest agent from file
-do_load_latest_agent = True
-
 # Game emulator
 use_emulator = True
 desired_action_interval_training = 0.2
@@ -39,23 +36,27 @@ webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phant
 url_training = LOCAL_GAME_URL_TRAIN
 
 # Resetting environment to an initial stage
-initial_stage = 1
-final_stage = 1 # Stage past which not to actually advance
+initial_stage = 0
+final_stage = 0 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
 
 # Training parameters
-episode_length = 10000
+do_load_latest_agent = True
+load_only_observation_scaling = False
+episode_length = 2000
 timesteps_per_batch = 4*episode_length
-optim_batchsize = int(episode_length/8)
-#~ optim_batchsize = episode_length
+#~ optim_batchsize = int(episode_length/8)
+optim_batchsize = timesteps_per_batch
 #~ optim_batchsize = timesteps_per_batch
-max_iters = 500
+max_iters = 1000
 schedule = 'linear'
 stochastic = True
-clip_param = 0.3
+clip_param = 0.05
 vf_loss_coeff = 0.01
 entcoeff = 0.00
-optim_stepsize = 2e-3
+optim_stepsize = 1e-3
+optim_epochs = 128
+update_obs_scaling = True
 
 # Data management
 iters_per_render = 10
@@ -65,6 +66,7 @@ data_dir = "data"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(initial_stage))
 policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(initial_stage))
 rewards_history = []
+obs_means_history = []
 
 # Set up data directory
 if not os.path.exists(data_dir):
@@ -130,7 +132,7 @@ def train():
         
         if iters_so_far % iters_per_plot == 0 and iters_so_far > 0:
             # Plot reward history
-            fig = plt.figure()
+            fig = plt.figure(figsize=(16,12))
             r_mean = [np.mean(r) for r in rewards_history]
             r_std = [np.std(r) for r in rewards_history]
             r_min = [np.min(r) for r in rewards_history]
@@ -142,13 +144,35 @@ def train():
             plt.ylabel("Reward")
             plt.savefig(os.path.join(data_dir,"reward_history.png"))
             plt.close(fig)
+            print("Best min at iteration", np.argmax(r_min))
+            print("Best mean at iteration", np.argmax(r_mean))
+            print("Best max at iteration", np.argmax(r_max))
+            
+            # Plot observation means
+            plt.clf()
+            fig = plt.figure(figsize=(16,12))
+            n_obs = len(obs_means_history[0])
+            leg = []
+            for i in range(n_obs):
+                obs_mean_history = [obs_means[i] for obs_means in obs_means_history]
+                plt.semilogy(obs_mean_history)
+                obs_name = loc['env'].observation_space.getObservationName(i)
+                leg.append(obs_name)
+            plt.legend(leg, loc='upper left')
+            plt.xlabel("Iterations")
+            plt.ylabel("Observation running mean")
+            plt.savefig(os.path.join(data_dir,"obs_mean_history.png"))
+            
+            # Close figure
+            plt.close()
             
     def logging_callback(loc, glob):
         iters_so_far = loc['iters_so_far']
         if iters_so_far > 0:
             print(loc['rews'])
-            print(np.mean(loc['rews']))
+            print("Mean reward =", np.mean(loc['rews']))
             rewards_history.append(loc['rews'].copy())
+            obs_means_history.append(loc['pi'].getObservationMeans())
                 
     def callback(loc, glob):
         if rank == 0:
@@ -170,9 +194,9 @@ def train():
             agent = MLPAgent(name=name, ob_space=ob_space, 
                          ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
             if name == "pi":
-                agent.load_and_check(policy_filename_latest)
+                agent.load_and_check(policy_filename_latest, load_only_observation_scaling=load_only_observation_scaling)
             elif name == "oldpi":
-                agent.load_and_check(policy_filename_latest_old)
+                agent.load_and_check(policy_filename_latest_old, load_only_observation_scaling=load_only_observation_scaling)
             else:
                 print("WARNING: Don't know how to load {}.".format(name))
         else:
@@ -187,11 +211,12 @@ def train():
         timesteps_per_batch=timesteps_per_batch,
         clip_param=clip_param, entcoeff=entcoeff,
         vf_loss_coeff=vf_loss_coeff,
-        optim_epochs=32, optim_stepsize=optim_stepsize, optim_batchsize=optim_batchsize,
+        optim_epochs=optim_epochs, optim_stepsize=optim_stepsize, optim_batchsize=optim_batchsize,
         gamma=1.00, lam=0.95,
         schedule=schedule,
         stochastic=stochastic,
-        callback=callback
+        callback=callback,
+        update_obs_scaling=update_obs_scaling
     )
 
 def main():
