@@ -245,6 +245,7 @@ class UPEnv(Env):
         'Trust',
         'Next Trust',
         'Operations',
+        'Creativity',
         'Investment Bankroll',
         'Stocks',
         'Investment Engine Upgrade Cost',
@@ -271,10 +272,16 @@ class UPEnv(Env):
     
     # Stage 4
     _action_intervals_stages.append(2.5)
-    _stage_4_required_projects = _stage_3_projects
+    _stage_4_required_projects = [
+        'Microlattice Shapecasting',
+        'Hadwiger Clip Diagrams',
+        'WireBuyer',
+        'Hypno Harmonics'
+    ]
     _stage_4_projects = [
         'Algorithmic Trading',
-        'Quantum Computing'
+        'Quantum Computing',
+        'Donkey Space'
     ]
     _stage_4_projects_obs = [proj+" Activated" for proj in _stage_4_projects]
     _stage_4_projects_ac = ["Activate "+proj for proj in _stage_4_projects]
@@ -509,13 +516,15 @@ class UPEnv(Env):
     def reward(self, observation_from_handler):
         if self._stage >= 0 and self._stage <= 3:
             reward = self.assetsAndCashReward(observation_from_handler)
-            # Scale reward
             if self._stage < 3:
                 reward *= 1.0
             elif self._stage == 3:
                 reward *= 1e-4
+        elif self._stage == 4:
+            reward = self.assetsAndCashRewardStage4Plus(observation_from_handler)
+            reward *= 1e-5
         else:
-            raise NotImplementedError("No definition for stage 4+.")
+            raise NotImplementedError("No definition for stage 5+.")
             
         return reward
             
@@ -567,6 +576,25 @@ class UPEnv(Env):
                 dassets += dmarketing*marketing_cost
             except:
                 pass
+        return dassets
+        
+    def assetsRewardStage4Plus(self, observation_from_handler):        
+        dassets = 0.0
+        
+        dautoclippers = observation_from_handler['Number of Autoclippers'] - self._prev_observation_from_handler['Number of Autoclippers']
+        autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']        
+        dassets += dautoclippers*autoclipper_cost 
+        
+        dmarketing = observation_from_handler['Marketing Level'] - self._prev_observation_from_handler['Marketing Level']
+        marketing_cost = self._prev_observation_from_handler['Marketing Cost']
+        dassets += dmarketing*marketing_cost
+        
+        dbankroll = observation_from_handler['Investment Bankroll'] - self._prev_observation_from_handler['Investment Bankroll']
+        dassets += dbankroll
+        
+        dstocks = observation_from_handler['Stocks'] - self._prev_observation_from_handler['Stocks']
+        dassets += dstocks
+        
         return dassets
     
     def cashReward(self, observation_from_handler):
