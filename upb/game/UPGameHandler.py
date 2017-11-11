@@ -91,16 +91,10 @@ class UPGameState(object):
                     # Cases where html spaces have been used
                     value = value.replace("&nbsp;","")
                     
-                    # Case where commas are used to separate thousands.
-                    # Sometimes they're used for decimals, but that scaling
-                    # should be captured by any learning system regardless
+                    # Case where commas are used to separate thousands
                     value = value.replace(",","")
                     value = value.replace(u'\xa0',"")
                     self._scalar_values[field] = float(value)
-                    
-                    # Special cases where the exact value is actually important
-                    if field == 'Autoclipper Cost':
-                        self._scalar_values[field] /= 100.0
         
         # All kinds of values combined
         self._all_values = {}
