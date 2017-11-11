@@ -10,15 +10,15 @@ import os
 from upb.game.UPGameHandler import LOCAL_GAME_URL_STANDARD
 
 # Game handler
-use_emulator = False
+use_emulator = True
 webdriver_name = 'Chrome'
 webdriver_path = None
 url = LOCAL_GAME_URL_STANDARD
 action_rate_speedup = 1.0
 
 # Environment parameters
-initial_stage = 1
-final_stage = 1
+initial_stage = 0
+final_stage = 0
 episode_length = 8000
 
 # Policy
@@ -69,7 +69,8 @@ def observe():
     
     # Rollout
     rollout(env, agent)
-    env.save_screenshot("rollout_final.png")      
+    env.save_screenshot("rollout_final.png")    
+    env._handler.saveState("state.txt")  
     
 def main():
     observe()

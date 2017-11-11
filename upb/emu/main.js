@@ -4034,6 +4034,297 @@ for(var i=0; i < activeProjects.length; i++){
     
 }
 
+//@EMUADDITION
+function getSaveAsString() {
+    var projectsUses = [];
+    var projectsFlags = [];
+    var projectsActive = [];
+    var stratsActive = [];
+    
+for(var i=0; i < projects.length; i++){
+    
+    projectsUses[i] = projects[i].uses;
+    projectsFlags[i] = projects[i].flag;
+    
+}
+    
+for(var i=0; i < activeProjects.length; i++){
+    
+    projectsActive[i] = activeProjects[i].id;
+    
+}    
+    
+    for(var i=0; i < allStrats.length; i++){
+    
+    stratsActive[i] = allStrats[i].active;
+    
+}
+    
+    var saveGame = {
+        
+        resetFlag: resetFlag,
+        
+        dismantle: dismantle,
+        endTimer1: endTimer1,
+        endTimer2: endTimer2,
+        endTimer3: endTimer3,
+        endTimer4: endTimer4,
+        endTimer5: endTimer5,
+        endTimer6: endTimer6,
+        
+        testFlag: testFlag,
+        finalClips: finalClips,
+        
+        wireBuyerStatus: wireBuyerStatus,
+        wirePriceTimer: wirePriceTimer,
+        qFade: qFade,
+        autoTourneyStatus: autoTourneyStatus,
+        driftKingMessageCost: driftKingMessageCost,
+        sliderPos: sliderPos,
+        tempOps: tempOps,
+        standardOps: standardOps,
+        opFade: opFade,
+        
+        entertainCost: entertainCost,
+        boredomLevel: boredomLevel,
+        boredomFlag: boredomFlag,
+        boredomMsg: boredomMsg,
+        
+        unitSize: unitSize,
+        driftersKilled: driftersKilled,
+        battleEndDelay: battleEndDelay,
+        battleEndTimer:battleEndTimer,
+        masterBattleClock: masterBattleClock,
+        
+        honorCount: honorCount,
+        threnodyTitle: threnodyTitle,
+        bonusHonor: bonusHonor,
+        honorReward: honorReward,
+        
+        resultsTimer: resultsTimer,
+        resultsFlag: resultsFlag,
+        
+        honor: honor,
+        maxTrust: maxTrust,
+        maxTrustCost: maxTrustCost,
+        disorgCounter: disorgCounter,
+        disorgFlag: disorgFlag,
+        synchCost: synchCost,
+        disorgMsg: disorgMsg,
+        threnodyCost: threnodyCost,
+        
+        farmRate: farmRate,
+        batterySize: batterySize,
+        factoryPowerRate: factoryPowerRate,
+        dronePowerRate: dronePowerRate,
+        farmLevel: farmLevel,
+        batteryLevel: batteryLevel,
+        farmCost: farmCost,
+        batteryCost: batteryCost,
+        storedPower: storedPower,
+        powMod: powMod,
+        farmBill: farmBill,
+        batteryBill: batteryBill,
+        momentum: momentum,
+
+        swarmFlag: swarmFlag,
+        swarmStatus: swarmStatus,
+        swarmGifts: swarmGifts,
+        nextGift: nextGift,
+        giftPeriod: giftPeriod,
+        giftCountdown: giftCountdown,
+        elapsedTime: elapsedTime,
+        
+        maxFactoryLevel: maxFactoryLevel,
+        maxDroneLevel: maxDroneLevel,
+        
+        wirePriceCounter: wirePriceCounter,
+        wireBasePrice: wireBasePrice,
+        
+        egoFlag: egoFlag,
+        autoTourneyFlag: autoTourneyFlag,
+        tothFlag: tothFlag,
+        
+        incomeTracker: incomeTracker.slice(0),
+        qChips: qChips.slice(0),
+        stocks: stocks.slice(0),
+        battles: battles.slice(0),
+        battleNumbers: battleNumbers.slice(0),
+        
+        clips: clips,
+        unusedClips: unusedClips,
+        clipRate: clipRate,
+        clipRateTemp: clipRateTemp,
+        prevClips: prevClips,
+        clipRateTracker: clipRateTracker,
+        clipmakerRate: clipmakerRate,
+        clipmakerLevel: clipmakerLevel,
+        clipperCost: clipperCost,
+        unsoldClips: unsoldClips,
+        funds: funds,
+        margin: margin,
+        wire: wire,
+        wireCost: wireCost,
+        adCost: adCost,
+        demand: demand,
+        clipsSold: clipsSold,
+        avgRev: avgRev,
+        ticks: ticks,
+        marketing: marketing,
+        marketingLvl: marketingLvl,
+        x: x,
+        clippperCost: clippperCost,
+        processors: processors,
+        memory: memory,
+        operations: operations,
+        trust: trust,
+        nextTrust: nextTrust,
+        transaction: transaction,
+        clipperBoost: clipperBoost,
+        blinkCounter: blinkCounter,
+        creativity: creativity,
+        creativityOn: creativityOn,
+        safetyProjectOn: safetyProjectOn,
+        boostLvl: boostLvl,
+        wirePurchase: wirePurchase,
+        wireSupply: wireSupply,
+        marketingEffectiveness: marketingEffectiveness,
+        milestoneFlag: milestoneFlag,
+        bankroll: bankroll,
+        fib1: fib1,
+        fib2: fib2,
+        strategyEngineFlag: strategyEngineFlag,
+        investmentEngineFlag: investmentEngineFlag,
+        revPerSecFlag: revPerSecFlag,
+        compFlag: compFlag,
+        projectsFlag: projectsFlag,
+        autoClipperFlag: autoClipperFlag,
+        megaClipperFlag: megaClipperFlag,
+        megaClipperCost: megaClipperCost,
+        megaClipperLevel: megaClipperLevel,
+        megaClipperBoost: megaClipperBoost,
+        creativitySpeed: creativitySpeed,
+        creativityCounter: creativityCounter,
+        wireBuyerFlag: wireBuyerFlag,
+        demandBoost: demandBoost,
+        humanFlag: humanFlag,
+        trustFlag: trustFlag,
+        nanoWire: nanoWire,
+        creationFlag: creationFlag,
+        wireProductionFlag: wireProductionFlag,
+        spaceFlag: spaceFlag,
+        factoryFlag: factoryFlag,
+        harvesterFlag: harvesterFlag,
+        wireDroneFlag: wireDroneFlag,
+        factoryLevel: factoryLevel,
+        factoryBoost: factoryBoost,
+        droneBoost: droneBoost,
+        availableMatter: availableMatter,
+        acquiredMatter: acquiredMatter,
+        processedMatter: processedMatter,
+        harvesterLevel: harvesterLevel,
+        wireDroneLevel: wireDroneLevel,
+        factoryCost: factoryCost,
+        harvesterCost: harvesterCost,
+        wireDroneCost: wireDroneCost,
+        factoryRate: factoryRate,
+        harvesterRate: harvesterRate,
+        wireDroneRate: wireDroneRate,
+        harvesterBill: harvesterBill,
+        wireDroneBill: wireDroneBill,
+        factoryBill: factoryBill,
+        probeCount: probeCount,
+        totalMatter: totalMatter,
+        foundMatter: foundMatter,
+        qFlag: qFlag,
+        qClock: qClock,
+        qChipCost: qChipCost,
+        nextQchip: nextQchip,
+        bribe: bribe,
+        battleFlag: battleFlag,
+        
+        portfolioSize: portfolioSize,
+        stockID: stockID,
+        secTotal: secTotal,
+        portTotal: portTotal,
+        sellDelay: sellDelay,
+        riskiness: riskiness,
+        maxPort: maxPort,
+        m: m,
+        investLevel: investLevel,
+        investUpgradeCost: investUpgradeCost,
+        stockGainThreshold: stockGainThreshold,
+        ledger: ledger,
+        stockReportCounter: stockReportCounter,
+        
+        tourneyCost: tourneyCost,
+        tourneyLvl: tourneyLvl,
+        stratCounter: stratCounter,
+        roundNum: roundNum,
+        hMove: hMove,
+        vMove: vMove,
+        hMovePrev: hMovePrev,
+        vMovePrev: vMovePrev,
+        aa: aa,
+        ab: ab,
+        ba: ba,
+        bb: bb,
+        rounds: rounds,
+        currentRound: currentRound,
+        rCounter: rCounter,
+        tourneyInProg: tourneyInProg,
+        winnerPtr: winnerPtr,
+        high: high,
+        pick: pick,
+        yomi: yomi,
+        yomiBoost: yomiBoost,
+        
+        probeSpeed: probeSpeed,
+        probeNav: probeNav,
+        probeRep: probeRep,
+        partialProbeSpawn: partialProbeSpawn,
+        probeHaz: probeHaz,
+        partialProbeHaz: partialProbeHaz,
+        probesLostHaz: probesLostHaz,
+        probesLostDrift: probesLostDrift,
+        probesLostCombat: probesLostCombat,
+        probeFac: probeFac,
+        probeWire: probeWire,
+        probeCombat: probeCombat,
+        attackSpeed: attackSpeed,
+        battleSpeed: battleSpeed,
+        attackSpeedFlag: attackSpeedFlag,
+        attackSpeedMod: attackSpeedMod,
+        probeDescendents: probeDescendents,
+        drifterCount: drifterCount,
+        warTrigger: warTrigger,
+        battleID: battleID,
+        battleName: battleName,
+        battleNameFlag: battleNameFlag,
+        maxBattles: maxBattles,
+        battleClock: battleClock,
+        battleAlarm: battleAlarm,
+        outcomeTimer: outcomeTimer,
+        drifterCombat: drifterCombat,
+        probeTrust: probeTrust,
+        probeUsedTrust: probeUsedTrust,
+        probeTrustCost: probeTrustCost,
+        probeLaunchLevel: probeLaunchLevel,
+        probeCost: probeCost
+    
+        }
+    
+    var saveContents = {
+        saveGame: saveGame,
+        saveProjectsUses: projectsUses,
+        saveProjectsFlags: projectsFlags,
+        saveProjectsActive: projectsActive,
+        saveStratsActive: stratsActive        
+    }
+    
+    return JSON.stringify(saveContents);    
+}
+
 function save1() {
     
     var projectsUses = [];

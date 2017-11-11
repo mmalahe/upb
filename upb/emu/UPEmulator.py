@@ -149,3 +149,8 @@ class UPEmulator(object):
             # Update the execution count for the loop
             self._loop_counters[loop_name] += iters_to_advance
         self._time_cs = time_cs_next
+        
+    def saveState(self, filename):
+        with open(filename, 'w') as f:
+            saveString = self._intp.eval("getSaveAsString();")
+            f.write(saveString)
