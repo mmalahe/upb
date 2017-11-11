@@ -1044,6 +1044,7 @@ var resultsTimer = 0;
 var results = [];
 var resultsFlag = 0;
 
+
 var payoffGrid = {
     valueAA:0,
     valueAB:0,
@@ -1326,7 +1327,7 @@ function newTourney(){
     
     //document.getElementById("btnRunTournament").disabled = false;
     //@EMUADDITION
-    runTourneyAvailable = 1;
+    var runTourneyAvailable = 1;
     
     //document.getElementById("vertStrat").innerHTML = "&nbsp";
     //document.getElementById("horizStrat").innerHTML = "&nbsp";
@@ -1339,7 +1340,7 @@ function newTourney(){
 function runTourney(){
     //document.getElementById("btnRunTournament").disabled = true;
     //@EMUADDITION
-    runTourneyAvailable = 0;
+    var runTourneyAvailable = 0;
     
     if (currentRound < rounds){
     round(currentRound);
@@ -3270,28 +3271,28 @@ function intervalLoop3() {
     
 // Clip Rate Tracker
     
-    clipRateTracker++;
+    //~ clipRateTracker++;
     
-    if (clipRateTracker<100){
-        var cr = clips - prevClips;
-        clipRateTemp = clipRateTemp+cr;
-        prevClips = clips;
+    //~ if (clipRateTracker<100){
+        //~ var cr = clips - prevClips;
+        //~ clipRateTemp = clipRateTemp+cr;
+        //~ prevClips = clips;
         
-    } else {
-        clipRateTracker = 0;
-        clipRate = clipRateTemp;
-        clipRateTemp = 0;
-    }
+    //~ } else {
+        //~ clipRateTracker = 0;
+        //~ clipRate = clipRateTemp;
+        //~ clipRateTemp = 0;
+    //~ }
     
 
 // Stock Report
     
-    stockReportCounter++;
-    if (investmentEngineFlag==1 && stockReportCounter>=10000){
-        var r = (ledger+portTotal).toLocaleString();
+    //~ stockReportCounter++;
+    //~ if (investmentEngineFlag==1 && stockReportCounter>=10000){
+        //~ var r = (ledger+portTotal).toLocaleString();
         //displayMessage("Lifetime investment revenue report: $"+r);
-        stockReportCounter = 0;
-    }
+        //~ stockReportCounter = 0;
+    //~ }
     
 // WireBuyer
     
@@ -3301,51 +3302,51 @@ function intervalLoop3() {
     
     
     
-// First, Explore
+//~ // First, Explore
     
-exploreUniverse();     
+//~ exploreUniverse();     
     
-// Then, Drones
+//~ // Then, Drones
     
-if (humanFlag==0 && spaceFlag == 0){
-    updateDroneButtons();  
-    }   
+//~ if (humanFlag==0 && spaceFlag == 0){
+    //~ updateDroneButtons();  
+    //~ }   
 
 
-updatePower();
-updateSwarm();
-acquireMatter();   
-processMatter();
+//~ updatePower();
+//~ updateSwarm();
+//~ acquireMatter();   
+//~ processMatter();
     
-// Then Factories    
+//~ // Then Factories    
   
-var fbst = 1;
+//~ var fbst = 1;
     
-if (factoryBoost > 1){
-    fbst = factoryBoost * factoryLevel;
-    }      
+//~ if (factoryBoost > 1){
+    //~ fbst = factoryBoost * factoryLevel;
+    //~ }      
 
     
-if (dismantle<4){
-    clipClick(powMod*fbst*(Math.floor(factoryLevel)*factoryRate));    
-    }    
-// Then Other Probe Functions
+//~ if (dismantle<4){
+    //~ clipClick(powMod*fbst*(Math.floor(factoryLevel)*factoryRate));    
+    //~ }    
+//~ // Then Other Probe Functions
 
-if (spaceFlag == 1) {
+//~ if (spaceFlag == 1) {
     
-if (probeCount<0){
-    probeCount = 0;
-}    
+//~ if (probeCount<0){
+    //~ probeCount = 0;
+//~ }    
     
-encounterHazards();
-spawnFactories();
-spawnHarvesters();
-spawnWireDrones();
-spawnProbes();       
-drift();
-war();
+//~ encounterHazards();
+//~ spawnFactories();
+//~ spawnHarvesters();
+//~ spawnWireDrones();
+//~ spawnProbes();       
+//~ drift();
+//~ war();
     
-}
+//~ }
     
 // Auto-Clipper
     
@@ -3373,230 +3374,230 @@ if (dismantle<4){
     
 // Ending
     
-    if (dismantle >= 1){
+    //~ if (dismantle >= 1){
     
-    //document.getElementById("probeDesignDiv").style.display="none";
-    if (endTimer1>=50) { 
-        //document.getElementById("increaseProbeTrustDiv").style.display="none"; 
-        }
+    //~ //document.getElementById("probeDesignDiv").style.display="none";
+    //~ if (endTimer1>=50) { 
+        //~ //document.getElementById("increaseProbeTrustDiv").style.display="none"; 
+        //~ }
     
-    if (endTimer1>=100) { 
-        //document.getElementById("increaseMaxTrustDiv").style.display="none"; 
-        }
+    //~ if (endTimer1>=100) { 
+        //~ //document.getElementById("increaseMaxTrustDiv").style.display="none"; 
+        //~ }
     
-    if (endTimer1>=150) { 
-        //document.getElementById("spaceDiv").style.display="none";
-        }
+    //~ if (endTimer1>=150) { 
+        //~ //document.getElementById("spaceDiv").style.display="none";
+        //~ }
 
     
-    if (endTimer1>=175) {     
-        //document.getElementById("battleCanvasDiv").style.display="none";
-        }
+    //~ if (endTimer1>=175) {     
+        //~ //document.getElementById("battleCanvasDiv").style.display="none";
+        //~ }
         
-    if (endTimer1>=190) {     
-        //document.getElementById("honorDiv").style.display="none";
-        }
+    //~ if (endTimer1>=190) {     
+        //~ //document.getElementById("honorDiv").style.display="none";
+        //~ }
     
-    }   
+    //~ }   
     
-if (dismantle >= 2){
+//~ if (dismantle >= 2){
     
-    //document.getElementById("wireProductionDiv").style.display="none";
-    //document.getElementById("wireTransDiv").style.display="";
+    //~ //document.getElementById("wireProductionDiv").style.display="none";
+    //~ //document.getElementById("wireTransDiv").style.display="";
     
-    if (endTimer2 >= 50) {
-    //document.getElementById("swarmGiftDiv").style.display="none"; 
-        }
+    //~ if (endTimer2 >= 50) {
+    //~ //document.getElementById("swarmGiftDiv").style.display="none"; 
+        //~ }
     
-    if (endTimer2 >= 100) {
-    //document.getElementById("swarmEngine").style.display="none"; 
-        }
+    //~ if (endTimer2 >= 100) {
+    //~ //document.getElementById("swarmEngine").style.display="none"; 
+        //~ }
     
-    if (endTimer2 >= 150) {
-    //document.getElementById("swarmSliderDiv").style.display="none";
-        }
+    //~ if (endTimer2 >= 150) {
+    //~ //document.getElementById("swarmSliderDiv").style.display="none";
+        //~ }
     
-    } 
+    //~ } 
     
-if (dismantle >= 3) {
-    //document.getElementById("factoryDivSpace").style.display="none";
-    //document.getElementById("clipsPerSecDiv").style.display="none";
-    //document.getElementById("tothDiv").style.display="none";     
+//~ if (dismantle >= 3) {
+    //~ //document.getElementById("factoryDivSpace").style.display="none";
+    //~ //document.getElementById("clipsPerSecDiv").style.display="none";
+    //~ //document.getElementById("tothDiv").style.display="none";     
     
-}      
+//~ }      
     
-if (dismantle >= 4) {
-   //document.getElementById("strategyEngine").style.display="none"; 
-   //document.getElementById("tournamentManagement").style.display="none";
-}    
+//~ if (dismantle >= 4) {
+   //~ //document.getElementById("strategyEngine").style.display="none"; 
+   //~ //document.getElementById("tournamentManagement").style.display="none";
+//~ }    
     
-if (dismantle >= 5) {
+//~ if (dismantle >= 5) {
     
-    //document.getElementById("btnQcompute").style.display="none";
+    //~ //document.getElementById("btnQcompute").style.display="none";
     
-   for (var i = 0; i<qChips.length; i++){
-        qChips[i].value = .5;
-        //document.getElementById("qChip"+i).style.opacity=qChips[i].value;
-        }
+   //~ for (var i = 0; i<qChips.length; i++){
+        //~ qChips[i].value = .5;
+        //~ //document.getElementById("qChip"+i).style.opacity=qChips[i].value;
+        //~ }
     
-    if (endTimer4==10){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==10){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=10){
-        //document.getElementById("qChip9").style.display="none";
-    }
+    //~ if (endTimer4>=10){
+        //~ //document.getElementById("qChip9").style.display="none";
+    //~ }
     
-    if (endTimer4==60){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==60){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=60){
-        //document.getElementById("qChip8").style.display="none";
-    }    
+    //~ if (endTimer4>=60){
+        //~ //document.getElementById("qChip8").style.display="none";
+    //~ }    
   
-    if (endTimer4==100){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==100){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=100){
-        //document.getElementById("qChip7").style.display="none";
-    }        
+    //~ if (endTimer4>=100){
+        //~ //document.getElementById("qChip7").style.display="none";
+    //~ }        
  
-    if (endTimer4==130){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==130){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=130){
-        //document.getElementById("qChip6").style.display="none";
-    }   
+    //~ if (endTimer4>=130){
+        //~ //document.getElementById("qChip6").style.display="none";
+    //~ }   
     
-    if (endTimer4==150){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==150){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=150){
-        //document.getElementById("qChip5").style.display="none";
-    }     
+    //~ if (endTimer4>=150){
+        //~ //document.getElementById("qChip5").style.display="none";
+    //~ }     
 
-    if (endTimer4==160){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==160){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=160){
-        //document.getElementById("qChip4").style.display="none";
-    }   
+    //~ if (endTimer4>=160){
+        //~ //document.getElementById("qChip4").style.display="none";
+    //~ }   
 
-    if (endTimer4==165){
-        wire = wire+1;
-    }
+    //~ if (endTimer4==165){
+        //~ wire = wire+1;
+    //~ }
     
-    if (endTimer4>=165){
-        //document.getElementById("qChip3").style.display="none";
-    }  
+    //~ if (endTimer4>=165){
+        //~ //document.getElementById("qChip3").style.display="none";
+    //~ }  
     
-    if (endTimer4==169){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==169){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=169){
-        //document.getElementById("qChip2").style.display="none";
-    } 
+    //~ if (endTimer4>=169){
+        //~ //document.getElementById("qChip2").style.display="none";
+    //~ } 
 
-    if (endTimer4==172){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==172){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=172){
-        //document.getElementById("qChip1").style.display="none";
-    }    
+    //~ if (endTimer4>=172){
+        //~ //document.getElementById("qChip1").style.display="none";
+    //~ }    
 
-    if (endTimer4==174){
-        wire = wire+1;
-        //document.getElementById("transWire").innerHTML=wire;
-    }
+    //~ if (endTimer4==174){
+        //~ wire = wire+1;
+        //~ //document.getElementById("transWire").innerHTML=wire;
+    //~ }
     
-    if (endTimer4>=174){
-        //document.getElementById("qChip0").style.display="none";
-    }    
+    //~ if (endTimer4>=174){
+        //~ //document.getElementById("qChip0").style.display="none";
+    //~ }    
     
-    if (endTimer4>=250){
-        //document.getElementById("qComputing").style.display="none";
-    }     
+    //~ if (endTimer4>=250){
+        //~ //document.getElementById("qComputing").style.display="none";
+    //~ }     
 
-}     
+//~ }     
     
-if (dismantle >= 6) {
-    //document.getElementById("processorDisplay").style.display="none"; 
-    }    
+//~ if (dismantle >= 6) {
+    //~ //document.getElementById("processorDisplay").style.display="none"; 
+    //~ }    
     
-if (dismantle >= 7) {
-    //document.getElementById("compDiv").style.display="none"; 
-    //document.getElementById("projectsDiv").style.display="none"; 
+//~ if (dismantle >= 7) {
+    //~ //document.getElementById("compDiv").style.display="none"; 
+    //~ //document.getElementById("projectsDiv").style.display="none"; 
     
-    }      
+    //~ }      
     
-    if (project148.flag == 1){
-        endTimer1++;    
-        }
+    //~ if (project148.flag == 1){
+        //~ endTimer1++;    
+        //~ }
     
-    if (project211.flag == 1){
-        endTimer2++;
-        }
+    //~ if (project211.flag == 1){
+        //~ endTimer2++;
+        //~ }
     
-    if (project212.flag == 1){
-        endTimer3++;
-        }
+    //~ if (project212.flag == 1){
+        //~ endTimer3++;
+        //~ }
     
-    if (project213.flag == 1){
-        endTimer4++;
-        }
+    //~ if (project213.flag == 1){
+        //~ endTimer4++;
+        //~ }
     
-    if (project215.flag == 1){
-        endTimer5++;
-        }
+    //~ if (project215.flag == 1){
+        //~ endTimer5++;
+        //~ }
     
-    if (project216.flag == 1 && wire == 0){
-        endTimer6++;
-    }
+    //~ if (project216.flag == 1 && wire == 0){
+        //~ endTimer6++;
+    //~ }
     
-    if (endTimer6>=250) {
-        //document.getElementById("creationDiv").style.display="none";
-    }
+    //~ if (endTimer6>=250) {
+        //~ //document.getElementById("creationDiv").style.display="none";
+    //~ }
     
-    if (endTimer6>=500 && milestoneFlag == 15) {
-        playThrenody();
-        //displayMessage("Universal Paperclips");
-        milestoneFlag++;
-    }
+    //~ if (endTimer6>=500 && milestoneFlag == 15) {
+        //~ playThrenody();
+        //~ //displayMessage("Universal Paperclips");
+        //~ milestoneFlag++;
+    //~ }
     
-    if (endTimer6>=600 && milestoneFlag == 16) {
-        //displayMessage("a game by Frank Lantz");
-        milestoneFlag++;
-    }
+    //~ if (endTimer6>=600 && milestoneFlag == 16) {
+        //~ //displayMessage("a game by Frank Lantz");
+        //~ milestoneFlag++;
+    //~ }
     
-    if (endTimer6>=700 && milestoneFlag == 17) {
-        //displayMessage("combat programming by Bennett Foddy");
-        milestoneFlag++;
-    }
+    //~ if (endTimer6>=700 && milestoneFlag == 17) {
+        //~ //displayMessage("combat programming by Bennett Foddy");
+        //~ milestoneFlag++;
+    //~ }
     
-    if (endTimer6>=800 && milestoneFlag == 18) {
-        //displayMessage("'Riversong' by Tonto's Expanding Headband used by kind permission of Malcolm Cecil");
-        milestoneFlag++;
-    }
+    //~ if (endTimer6>=800 && milestoneFlag == 18) {
+        //~ //displayMessage("'Riversong' by Tonto's Expanding Headband used by kind permission of Malcolm Cecil");
+        //~ milestoneFlag++;
+    //~ }
     
-    if (endTimer6>=900 && milestoneFlag == 19) {
-        //displayMessage("&#169; 2017 Everybody House Games");
-        milestoneFlag++;
-    }
+    //~ if (endTimer6>=900 && milestoneFlag == 19) {
+        //~ //displayMessage("&#169; 2017 Everybody House Games");
+        //~ milestoneFlag++;
+    //~ }
     
     
 
@@ -4322,7 +4323,7 @@ for(var i=0; i < activeProjects.length; i++){
         saveStratsActive: stratsActive        
     }
     
-    return JSON.stringify(saveContents);    
+    return JSON.stringify(saveContents);
 }
 
 function save1() {
@@ -5527,8 +5528,6 @@ function loadStateFromString(stateString) {
     }
     
 }
-
-//@EMUADDITION
 
 function load1() {
     

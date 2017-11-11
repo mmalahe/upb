@@ -70,7 +70,12 @@ def observe():
     # Rollout
     rollout(env, agent)
     env.save_screenshot("rollout_final.png")    
-    env._handler.saveState("state.txt")  
+    env._handler.saveState("state.txt")
+    
+    # Check reload is good
+    env._handler.reset()
+    env._handler.loadState("state.txt")
+    env.save_screenshot("rollout_final.png")  
     
 def main():
     observe()

@@ -27,7 +27,7 @@ import numpy as np
 
 # Game emulator
 use_emulator = True
-desired_action_interval_training = 0.2
+action_rate_speedup = 1.0
 
 # Game handler
 webdriver_name_training = 'PhantomJS'
@@ -36,27 +36,25 @@ webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phant
 url_training = LOCAL_GAME_URL_TRAIN
 
 # Resetting environment to an initial stage
-initial_stage = 0
-final_stage = 0 # Stage past which not to actually advance
+initial_stage = 5
+final_stage = 5 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
 
 # Training parameters
 do_load_latest_agent = True
-load_only_observation_scaling = False
-episode_length = 2000
-timesteps_per_batch = 4*episode_length
-#~ optim_batchsize = int(episode_length/8)
-optim_batchsize = timesteps_per_batch
-#~ optim_batchsize = timesteps_per_batch
+load_only_observation_scaling = True
+episode_length = 720
+timesteps_per_batch = 2*episode_length
+optim_batchsize = episode_length
 max_iters = 1000
-schedule = 'linear'
+schedule = 'constant'
 stochastic = True
-clip_param = 0.05
+clip_param = 0.2
 vf_loss_coeff = 0.01
-entcoeff = 0.00
+entcoeff = 0.01
 optim_stepsize = 1e-3
 optim_epochs = 128
-update_obs_scaling = True
+update_obs_scaling = False
 
 # Data management
 iters_per_render = 10
@@ -102,7 +100,7 @@ def train():
                 final_stage=final_stage,
                 resetter_agents=resetter_agents,
                 episode_length=episode_length,
-                desired_action_interval=desired_action_interval_training,
+                action_rate_speedup=action_rate_speedup,
                 use_emulator=use_emulator,
                 webdriver_name=webdriver_name_training,
                 webdriver_path=webdriver_path_training,
