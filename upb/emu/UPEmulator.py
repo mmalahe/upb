@@ -140,6 +140,10 @@ class UPEmulator(object):
             # Create new tournament
             self._intp.eval("newTourney();")
             
+            # Make a pick
+            # For the moment, just pick 0, but can be made random or selected in future
+            self._intp.eval("pick=0;")
+            
             # The tournament takes 100 ms per round. 
             # See the setTimeout arguments in "function round(roundNum)".
             tourney_run_time_cs = 10*self._intp.eval("rounds") 
