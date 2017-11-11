@@ -1044,7 +1044,6 @@ var resultsTimer = 0;
 var results = [];
 var resultsFlag = 0;
 
-
 var payoffGrid = {
     valueAA:0,
     valueAB:0,
@@ -1187,6 +1186,8 @@ var hStrat = strats[0];
 var vStrat = strats[0];
 
 //document.getElementById("btnRunTournament").disabled = true;
+//@EMUADDITION
+var runTourneyAvailable = 0;
 
 function findBiggestPayoff(){
     if (aa>=ab && aa>=ba && aa>=bb){
@@ -1324,6 +1325,8 @@ function newTourney(){
     generateGrid();
     
     //document.getElementById("btnRunTournament").disabled = false;
+    //@EMUADDITION
+    runTourneyAvailable = 1;
     
     //document.getElementById("vertStrat").innerHTML = "&nbsp";
     //document.getElementById("horizStrat").innerHTML = "&nbsp";
@@ -1335,6 +1338,9 @@ function newTourney(){
 
 function runTourney(){
     //document.getElementById("btnRunTournament").disabled = true;
+    //@EMUADDITION
+    runTourneyAvailable = 0;
+    
     if (currentRound < rounds){
     round(currentRound);
     } else {

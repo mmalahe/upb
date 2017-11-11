@@ -35,8 +35,13 @@ class UPEmulator(object):
         'Investment Bankroll': 'bankroll',
         'Stocks': 'secTotal',
         'Investment Engine Upgrade Cost': 'investUpgradeCost',
-        'Photonic Chips': 'nextQchip',
-        'Photonic Chip 0 Level': 'qChips[0].value'
+        'Number of Photonic Chips': 'nextQchip',
+        'Photonic Chip 0 Level': 'qChips[0].value',
+        'Riskiness': 'riskiness',
+        'MegaClipper Cost': 'megaClipperCost',
+        'Number of MegaClippers': 'megaClipperLevel',
+        'Yomi': 'yomi',
+        'Tournament Cost': 'tourneyCost'
     }
     for pname, pid in UP_PROJECT_IDS.items():
         _obs_to_js[pname+' Activated'] = 'project{}.flag'.format(pid)
@@ -57,7 +62,10 @@ class UPEmulator(object):
         'Withdraw': 'investWithdraw();',
         'Deposit': 'investDeposit();',
         'Upgrade Investment Engine': 'if (yomi>=investUpgradeCost) {investUpgrade();}',
-        'Quantum Compute': 'qComp();'
+        'Quantum Compute': 'qComp();',
+        'Buy MegaClipper': 'if (funds>=megaClipperCost) {makeMegaClipper();}',
+        'New Tournament': 'if (operations>=tourneyCost && tourneyInProg == 0) {newTourney();}'
+        'Run Tournament': 'if (runTourneyAvailable == 1) {runTourney();}'
     }
     for pname, pid in UP_PROJECT_IDS.items():
         _action_to_js['Activate '+pname] = 'if (activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag) {{project{0}.effect();}}'.format(pid)

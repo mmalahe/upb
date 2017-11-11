@@ -40,6 +40,14 @@ class UPObservationSpace(Box):
             'Next Trust': [0, 1.0e6],
             'Operations': [0, 1.0e4],
             'Creativity': [0, 1.0e4],
+            'Investment Bankroll': [0, 1e6],
+            'Stocks': [0, 1e6],
+            'Investment Engine Upgrade Cost': [0, 1e4],
+            'MegaClipper Cost': [500.0, 1e6],
+            'Number of MegaClippers': [0, 1.0e2],
+            'Riskiness': [1., 7.],
+            'Number of Photonic Chips': [0, 10.],
+            'Photonic Chip 0 Level': [-1., 1.],
             'Improved AutoClippers Activated': [0,1.],
             'Beg for More Wire Activated': [0,1.],
             'Creativity Activated': [0,1.],
@@ -60,7 +68,8 @@ class UPObservationSpace(Box):
             'Algorithmic Trading Activated': [0,1.],
             'WireBuyer Activated': [0,1.],
             'Hypno Harmonics Activated': [0,1.],
-            'RevTracker Activated': [0,1.]    
+            'RevTracker Activated': [0,1.],
+            'Quantum Computing Activated': [0,1.]
         }
 
         # Order keys
@@ -248,12 +257,11 @@ class UPEnv(Env):
         'Creativity',
         'Investment Bankroll',
         'Stocks',
-        'Investment Engine Upgrade Cost',
+        'Riskiness',
         'Number of Photonic Chips',
         'Photonic Chip 0 Level'      
     ]    
     _core_action_set_2 = [
-        'Make Paperclip', 
         'Lower Price', 
         'Raise Price', 
         'Buy Autoclipper',
@@ -265,7 +273,6 @@ class UPEnv(Env):
         'Set Investment High',
         'Withdraw',
         'Deposit',
-        'Upgrade Investment Engine',      
         'Activate Photonic Chip',
         'Quantum Compute'
     ]
@@ -290,12 +297,17 @@ class UPEnv(Env):
     
     # Observations and actions common to stages 5+
     _core_observation_set_3 = _core_observation_set_2 + [
+        'MegaClipper Cost',
+        'Number of MegaClippers',
+        'Investment Engine Upgrade Cost',
         'Yomi',
-        'Tournament Cost',
+        'Tournament Cost'
     ]
     _core_action_set_3 = _core_action_set_2 + [
+        'Buy MegaClipper',
+        'Upgrade Investment Engine',
         'New Tournament',
-        'Run Tournament',
+        'Run Tournament'
     ]
     
     # Stage 5
@@ -304,7 +316,7 @@ class UPEnv(Env):
     _stage_5_projects = [
         'Spectral Froth Annealment',
         'MegaClippers',
-        'Strategic Modeling'       
+        'Strategic Modeling',   
     ]
     _stage_5_projects_obs = [proj+" Activated" for proj in _stage_5_projects]
     _stage_5_projects_ac = ["Activate "+proj for proj in _stage_5_projects]
@@ -440,7 +452,9 @@ class UPEnv(Env):
         elif target_stage == 4:
             max_game_time = 2200
         elif target_stage == 5:
-            raise NotImplementedError("No definition for stage 5+.")
+            max_game_time = 2800
+        elif target_stage == 6:
+            raise NotImplementedError("No definition for stage 6+.")
         
         # Advance
         stochastic = True
@@ -472,9 +486,9 @@ class UPEnv(Env):
                 ob = ob_space.observationAsArray(observation_from_handler)
             
             # Report
-            #~ if self._stage > prev_stage:
-            if self._verbose and self._stage > prev_stage:      
-                print("Advanced to stage {} after {} steps.".format(self._stage, self._n_steps_taken))
+            #~ if self._verbose and self._stage > prev_stage:
+            if self._stage > prev_stage:            
+                print("Advanced to stage {} after {} seconds.".format(self._stage, self._game_time))
                 
             prev_stage = self._stage
         if self._verbose:
@@ -513,7 +527,9 @@ class UPEnv(Env):
         # Return
         return observation
     
-    def reward(self, observation_from_handler):
+    def reward(self):
+        ob_space = UPObservationSpace(self._observation_names_stages[self._stage])
+        observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
         if self._stage >= 0 and self._stage <= 3:
             reward = self.assetsAndCashReward(observation_from_handler)
             if self._stage < 3:
@@ -589,10 +605,17 @@ class UPEnv(Env):
         marketing_cost = self._prev_observation_from_handler['Marketing Cost']
         dassets += dmarketing*marketing_cost
         
-        dbankroll = observation_from_handler['Investment Bankroll'] - self._prev_observation_from_handler['Investment Bankroll']
+        try:
+            prev_bankroll = self._prev_observation_from_handler['Investment Bankroll']
+            prev_stocks = self._prev_observation_from_handler['Stocks']
+        except KeyError:
+            prev_bankroll = 0
+            prev_stocks = 0
+        
+        dbankroll = observation_from_handler['Investment Bankroll'] - prev_bankroll
         dassets += dbankroll
         
-        dstocks = observation_from_handler['Stocks'] - self._prev_observation_from_handler['Stocks']
+        dstocks = observation_from_handler['Stocks'] - prev_stocks
         dassets += dstocks
         
         return dassets
@@ -663,7 +686,7 @@ class UPEnv(Env):
             print(observation_from_handler)
         
         # Get reward
-        reward = self.reward(observation_from_handler)
+        reward = self.reward()
         
         # Advance time the rest of the way
         if self._use_emulator:
