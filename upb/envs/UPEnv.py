@@ -458,6 +458,7 @@ class UPEnv(Env):
                 self._prev_act_time = None
                 self._handler.reset()
                 self._stage = 0
+                self._game_time = 0.0
                 ob_space = UPObservationSpace(self._observation_names_stages[self._stage])
                 observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
                 self._prev_observation_from_handler = observation_from_handler        
