@@ -411,7 +411,7 @@ class UPEnv(Env):
                     print("Advancing to stage 3.")
                 stage_changed = True
                 
-         # Update rule for stage 3 -> 4
+        # Update rule for stage 3 -> 4
         if self._stage == 3:
             required_projects_obs = [proj+" Activated" for proj in self._stage_4_required_projects]
             observation_from_handler = self._handler.makeObservation(required_projects_obs)
@@ -423,7 +423,21 @@ class UPEnv(Env):
                 self._stage = 4
                 if self._verbose:
                     print("Advancing to stage 4.")
-                stage_changed = True  
+                stage_changed = True
+                
+        # Update rule for stage 4 -> 5
+        if self._stage == 4:
+            required_projects_obs = [proj+" Activated" for proj in self._stage_5_required_projects]
+            observation_from_handler = self._handler.makeObservation(required_projects_obs)
+            all_projects_activated = True
+            for name, obs in observation_from_handler.items():
+                if obs != 1:
+                    all_projects_activated = False
+            if all_projects_activated:
+                self._stage = 5
+                if self._verbose:
+                    print("Advancing to stage 5.")
+                stage_changed = True 
         
         if stage_changed:
             self._observation_names = self._observation_names_stages[self._stage]
@@ -480,6 +494,7 @@ class UPEnv(Env):
             #~ print(self._game_time)
             if self._game_time > max_game_time:
                 print("WARNING: Timed out in stage {}. Resetting and trying fresh.".format(self._stage))
+                print(self._prev_observation_from_handler)
                 self._n_steps_taken = 0
                 self._prev_act_time = None
                 self._handler.reset()
@@ -491,13 +506,12 @@ class UPEnv(Env):
                 ob = ob_space.observationAsArray(observation_from_handler)
             
             # Report
-            #~ if self._verbose and self._stage > prev_stage:
-            if self._stage > prev_stage:            
+            if self._verbose and self._stage > prev_stage:          
                 print("Advanced to stage {} after {} seconds.".format(self._stage, self._game_time))
-                
+            
             prev_stage = self._stage
-        if self._verbose:
-            print("Completed initial stage advancement.")
+        
+        print("Completed initial stage advancement after {} seconds.".format(self._game_time))
     
     def _reset(self):
         """
@@ -541,11 +555,14 @@ class UPEnv(Env):
                 reward *= 1.0
             elif self._stage == 3:
                 reward *= 1e-4
-        elif self._stage == 4:
+        elif self._stage >= 4 and self._stage <= 5:
             reward = self.assetsAndCashRewardStage4Plus(observation_from_handler)
-            reward *= 1e-5
+            if self._stage == 4:
+                reward *= 1e-5
+            elif self._stage == 5:
+                reward *= 1e-6
         else:
-            raise NotImplementedError("No definition for stage 5+.")
+            raise NotImplementedError("No definition for stage 6+.")
             
         return reward
             
