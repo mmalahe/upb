@@ -6,6 +6,7 @@ import numpy as np
 from datetime import datetime
 import time
 from collections import OrderedDict
+import pickle
 
 # To microsecond precision
 # @fixme Resets at the month boundary
@@ -334,6 +335,7 @@ class UPEnv(Env):
        
     def __init__(self,
                  url,
+                 initial_states_filename=None,
                  initial_stage=0,
                  final_stage=None,
                  resetter_agents=[],
@@ -363,6 +365,12 @@ class UPEnv(Env):
         self._episode_length = episode_length
         self._action_rate_speedup = action_rate_speedup
         self._verbose = verbose
+        
+        # Initial states
+        self._init_states = None
+        if initial_states_filename != None:
+            with open(initial_states_filename, 'rb') as f:
+                self._init_states = pickle.load(f)            
         
         # Parameters for working up to a given stage
         if initial_stage != len(resetter_agents):
@@ -516,6 +524,11 @@ class UPEnv(Env):
         
         print("Completed initial stage advancement after {} seconds.".format(self._game_time))
     
+    def _loadInitialState(self):
+        if self._init_states != None:
+            init_state = np.random.choice(self._init_states)
+            self.loadStateFromString(init_state)
+    
     def _reset(self):
         """
         Resets the state of the environment, returning an initial observation.
@@ -524,12 +537,15 @@ class UPEnv(Env):
         observation : the initial observation of the space. (Initial reward is assumed to be 0.)
         """
         
-        # Reset page
+        # Reset handler
         self._handler.reset()
+        
+        # Load an initial state to handler if available and possible
+        self._loadInitialState()
         
         # Set correct initial stage
         self._stage = 0
-        self._update_stage()
+        self._update_stage()      
         
         # Advance to initial stage
         self._game_time = 0.0

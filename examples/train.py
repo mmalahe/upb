@@ -42,7 +42,7 @@ resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) fo
 
 # Training parameters
 do_load_latest_agent = True
-load_only_observation_scaling = True
+load_only_observation_scaling = False
 episode_length = 720
 timesteps_per_batch = 2*episode_length
 optim_batchsize = episode_length
@@ -61,8 +61,10 @@ iters_per_render = 10
 iters_per_save = 1
 iters_per_plot = 1
 data_dir = "data"
+init_states_dir = "inits"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(initial_stage))
 policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(initial_stage))
+initial_states_filename = os.path.join(init_states_dir, "stage{}.pickle".format(initial_stage))
 rewards_history = []
 obs_means_history = []
 
@@ -95,7 +97,8 @@ def train():
         resetter_agents.append(agent)
     
     # The training environment
-    env = UPEnv(url_training, 
+    env = UPEnv(url_training,
+                initial_states_filename=initial_states_filename,
                 initial_stage=initial_stage,
                 final_stage=final_stage,
                 resetter_agents=resetter_agents,

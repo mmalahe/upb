@@ -63,7 +63,7 @@ def observe():
         resetter_agents.append(agent)
     
     # The observation environment
-    env = UPEnv(url, 
+    env = UPEnv(url,
                 initial_stage=initial_stage,
                 final_stage=final_stage,
                 resetter_agents=resetter_agents,
