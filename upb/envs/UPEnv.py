@@ -740,6 +740,18 @@ class UPEnv(Env):
         else:
             self._handler.save_screenshot(filename)
     
+    def getStateAsString(self):
+        if self._use_emulator:
+            return self._handler.getStateAsString()
+        else:
+            raise NotImplementedError("No implementation for state fetching without emulator.")
+            
+    def loadStateFromString(self, stateString):
+        if self._use_emulator:
+            self._handler.loadStateFromString(stateString)
+        else:
+            raise NotImplementedError("No implementation for setting state without emulator.")
+    
     def _close(self):
         self._handler.quit()
         

@@ -8,6 +8,7 @@ from baselines.common import tf_util
 from mpi4py import MPI
 import os
 from upb.game.UPGameHandler import LOCAL_GAME_URL_STANDARD
+import pickle
 
 # Game handler
 use_emulator = True
@@ -16,15 +17,23 @@ webdriver_path = None
 url = LOCAL_GAME_URL_STANDARD
 action_rate_speedup = 1.0
 
-# Environment parameters
-initial_stage = 0
-final_stage = 0
-episode_length = 8000
+# Files
+agents_dir = "agents"
+inits_dir = "inits"
 
-# Policy
-#~ policy_filename = 'data/policy_stage{}_latest.pickle'.format(stage)
-resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
-policy_filename = os.path.join("agents","stage{}.pickle".format(initial_stage))
+# Environment parameters
+initial_stage = 5
+final_stage = 5
+episode_length = 0
+
+# Agents
+resetter_agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(initial_stage)]
+policy_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
+
+# Creating initial states
+create_init_states = True
+n_init_states = 2
+init_states_filename = os.path.join(inits_dir,"stage{}.pickle".format(initial_stage))
 
 def observe():
      # MPI setup
@@ -32,6 +41,13 @@ def observe():
     comm_size = MPI.COMM_WORLD.Get_size()
     sess = tf_util.single_threaded_session()
     sess.__enter__()
+    
+    # Set up data directories
+    if rank == 0:
+        for a_dir in [agents_dir, inits_dir]:
+            if not os.path.exists(a_dir):
+                os.makedirs(a_dir)
+    MPI.COMM_WORLD.Barrier()
     
     # For resetting to a fixed stage
     resetter_agents = []
@@ -67,15 +83,19 @@ def observe():
                  ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
     agent.load_and_check(policy_filename)
     
-    # Rollout
-    rollout(env, agent)
-    env.save_screenshot("rollout_final.png")    
-    env._handler.saveState("state.txt")
-    
-    # Check reload is good
-    env._handler.reset()
-    env._handler.loadState("state.txt")
-    env.save_screenshot("rollout_final.png")  
+    # Create a new set of initial conditions
+    if create_init_states:
+        init_states = []
+        for i in range(n_init_states):
+            print("Creating init state {}.".format(i))
+            rollout(env, agent)
+            init_states.append(env.getStateAsString())
+        with open(init_states_filename, 'wb') as f:
+            pickle.dump(init_states, f)
+    # Normal Rollout
+    else:
+        rollout(env, agent)
+        env.save_screenshot("rollout_final.png")   
     
 def main():
     observe()
