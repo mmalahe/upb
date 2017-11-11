@@ -56,16 +56,16 @@ class UPEmulator(object):
         'Buy Autoclipper': 'if (funds>=clipperCost) {makeClipper();}',
         'Add Processor': 'if (trust>processors+memory || swarmGifts > 0) {addProc();}',
         'Add Memory': 'if (trust>processors+memory || swarmGifts > 0) {addMem();}',
-        'Set Investment Low': 'riskiness = 7;',
-        'Set Investment Medium': 'riskiness = 5;',
-        'Set Investment High': 'riskiness = 1;',
-        'Withdraw': 'investWithdraw();',
-        'Deposit': 'investDeposit();',
-        'Upgrade Investment Engine': 'if (yomi>=investUpgradeCost) {investUpgrade();}',
-        'Quantum Compute': 'qComp();',
-        'Buy MegaClipper': 'if (funds>=megaClipperCost) {makeMegaClipper();}',
-        'New Tournament': 'if (operations>=tourneyCost && tourneyInProg == 0) {newTourney();}',
-        'Run Tournament': 'if (runTourneyAvailable == 1) {runTourney();}'
+        'Set Investment Low': 'if (investmentEngineFlag == 1) {riskiness = 7;}',
+        'Set Investment Medium': 'if (investmentEngineFlag == 1) {riskiness = 5;}',
+        'Set Investment High': 'if (investmentEngineFlag == 1) {riskiness = 1;}',
+        'Withdraw': 'if (investmentEngineFlag == 1) {investWithdraw();}',
+        'Deposit': 'if (investmentEngineFlag == 1) {investDeposit();}',
+        'Upgrade Investment Engine': 'if (investmentEngineFlag == 1 && yomi>=investUpgradeCost) {investUpgrade();}',
+        'Quantum Compute': 'if (qFlag == 1) {qComp();}',
+        'Buy MegaClipper': 'if (funds>=megaClipperCost && megaClipperFlag == 1) {makeMegaClipper();}',
+        'New Tournament': 'if (strategyEngineFlag == 1 && operations>=tourneyCost && tourneyInProg == 0) {newTourney();}',
+        'Run Tournament': 'if (strategyEngineFlag == 1 && runTourneyAvailable == 1) {runTourney();}'
     }
     for pname, pid in UP_PROJECT_IDS.items():
         _action_to_js['Activate '+pname] = 'if (activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag) {{project{0}.effect();}}'.format(pid)

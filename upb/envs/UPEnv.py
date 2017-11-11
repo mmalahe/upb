@@ -317,8 +317,12 @@ class UPEnv(Env):
     
     # Stage 5
     _action_intervals_stages.append(2.5)
-    _stage_5_required_projects = _stage_4_projects
+    _stage_5_required_projects = [
+        'Donkey Space'
+    ]
     _stage_5_projects = [
+        'Algorithmic Trading',
+        'Quantum Computing',
         'Spectral Froth Annealment',
         'MegaClippers',
         'Strategic Modeling',   
@@ -471,7 +475,7 @@ class UPEnv(Env):
         elif target_stage == 4:
             max_game_time = 2200
         elif target_stage == 5:
-            max_game_time = 3400
+            max_game_time = 2800
         elif target_stage == 6:
             raise NotImplementedError("No definition for stage 6+.")
         
@@ -494,7 +498,6 @@ class UPEnv(Env):
             #~ print(self._game_time)
             if self._game_time > max_game_time:
                 print("WARNING: Timed out in stage {}. Resetting and trying fresh.".format(self._stage))
-                print(self._prev_observation_from_handler)
                 self._n_steps_taken = 0
                 self._prev_act_time = None
                 self._handler.reset()

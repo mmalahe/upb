@@ -515,7 +515,7 @@ var project20 = {
         var index = activeProjects.indexOf(project20);
         activeProjects.splice(index, 1);
         strategyEngineFlag = 1;
-        document.getElementById("tournamentResultsTable").style.display = "none";
+        //~ document.getElementById("tournamentResultsTable").style.display = "none";
     }
 }
 
