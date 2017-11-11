@@ -48,6 +48,8 @@ class UPObservationSpace(Box):
             'Riskiness': [1., 7.],
             'Number of Photonic Chips': [0, 10.],
             'Photonic Chip 0 Level': [-1., 1.],
+            'Yomi': [0, 1e5],
+            'Tournament Cost': [0, 1e5],
             'Improved AutoClippers Activated': [0,1.],
             'Beg for More Wire Activated': [0,1.],
             'Creativity Activated': [0,1.],
@@ -69,7 +71,10 @@ class UPObservationSpace(Box):
             'WireBuyer Activated': [0,1.],
             'Hypno Harmonics Activated': [0,1.],
             'RevTracker Activated': [0,1.],
-            'Quantum Computing Activated': [0,1.]
+            'Quantum Computing Activated': [0,1.],
+            'Spectral Froth Annealment Activated': [0,1.],
+            'MegaClippers Activated': [0,1.],
+            'Strategic Modeling Activated': [0,1.]
         }
 
         # Order keys
@@ -452,7 +457,7 @@ class UPEnv(Env):
         elif target_stage == 4:
             max_game_time = 2200
         elif target_stage == 5:
-            max_game_time = 2800
+            max_game_time = 3400
         elif target_stage == 6:
             raise NotImplementedError("No definition for stage 6+.")
         

@@ -64,7 +64,7 @@ class UPEmulator(object):
         'Upgrade Investment Engine': 'if (yomi>=investUpgradeCost) {investUpgrade();}',
         'Quantum Compute': 'qComp();',
         'Buy MegaClipper': 'if (funds>=megaClipperCost) {makeMegaClipper();}',
-        'New Tournament': 'if (operations>=tourneyCost && tourneyInProg == 0) {newTourney();}'
+        'New Tournament': 'if (operations>=tourneyCost && tourneyInProg == 0) {newTourney();}',
         'Run Tournament': 'if (runTourneyAvailable == 1) {runTourney();}'
     }
     for pname, pid in UP_PROJECT_IDS.items():

@@ -14,12 +14,12 @@ use_emulator = False
 webdriver_name = 'Chrome'
 webdriver_path = None
 url = LOCAL_GAME_URL_STANDARD
-desired_action_interval = 0.2
+action_rate_speedup = 1.0
 
 # Environment parameters
 initial_stage = 1
 final_stage = 1
-episode_length = 5000
+episode_length = 8000
 
 # Policy
 #~ policy_filename = 'data/policy_stage{}_latest.pickle'.format(stage)
@@ -53,7 +53,7 @@ def observe():
                 resetter_agents=resetter_agents,
                 use_emulator=use_emulator,
                 episode_length=episode_length,
-                desired_action_interval=desired_action_interval,
+                action_rate_speedup=action_rate_speedup,
                 webdriver_name=webdriver_name,
                 webdriver_path=webdriver_path,
                 headless=False                  
