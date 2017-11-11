@@ -28,13 +28,21 @@ UP_PROJECT_IDS = {
     'Lexical Processing': '13',
     'Combinatory Harmonics': '14',
     'The Hadwiger Problem': '15',
-    'The Toth Sausage Conjecture': '17',
     'Hadwiger Clip Diagrams': '16',
+    'The Toth Sausage Conjecture': '17',
+    'Toth Tubule Enfolding': '18',
     'Donkey Space': '19',
+    'Strategic Modeling': '20',
     'Algorithmic Trading': '21',
+    'MegaClippers': '22',
+    'Improved MegaClippers': '23',
+    'Even Better MegaClippers': '24',
+    'Optimized MegaClippers': '25',
     'WireBuyer': '26',
     'Hypno Harmonics': '34',
-    'RevTracker': '42'
+    'RevTracker': '42',
+    'Quantum Computing': '50',
+    'Photonic Chip': '51'
 }
 
 class UPGameState(object):

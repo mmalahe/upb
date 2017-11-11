@@ -109,8 +109,10 @@ class UPActionSpace(Discrete):
 class UPEnv(Env):
     _observation_names_stages = []
     _action_names_stages = []
+    _action_intervals_stages = []
     
     # Stage 0
+    _action_intervals_stages.append(0.2)
     _observation_names_stages.append(
     [
         'Unsold Inventory', 
@@ -131,7 +133,7 @@ class UPEnv(Env):
         'Buy Wire'
     ])
     
-    # Observations and actions common to many stages
+    # Observations and actions common to stages 1-3
     _core_observation_set_1 = [
         'Unsold Inventory', 
         'Price per Clip', 
@@ -163,23 +165,17 @@ class UPEnv(Env):
     ]
     
     # Stage 1
+    _action_intervals_stages.append(0.2)
     _stage_1_projects = [
         'Improved AutoClippers',
-        #~ 'Beg for More Wire',
         'Creativity',
-        'Even Better AutoClippers',
-        'Optimized AutoClippers',
-        'Limerick',
+        'Even Better AutoClippers',        
         'Improved Wire Extrusion',
-        'Optimized Wire Extrusion',
         'New Slogan',
-        'Catchy Jingle',
+        'Limerick',
         'Lexical Processing',
         'Combinatory Harmonics',
-        'The Hadwiger Problem',
-        'The Toth Sausage Conjecture',
-        'Donkey Space',
-        'RevTracker'
+        'The Hadwiger Problem'
     ]
     _stage_1_projects_obs = [proj+" Activated" for proj in _stage_1_projects]
     _stage_1_projects_ac = ["Activate "+proj for proj in _stage_1_projects]
@@ -187,23 +183,20 @@ class UPEnv(Env):
     _action_names_stages.append(_core_action_set_1+_stage_1_projects_ac)
     
     # Stage 2
+    _action_intervals_stages.append(0.2)
     _stage_2_required_projects = [
         'Improved AutoClippers',
         'Creativity',
         'Even Better AutoClippers',
-        'Optimized AutoClippers',
-        'Limerick',
         'Improved Wire Extrusion',
-        'Optimized Wire Extrusion',
         'New Slogan',
-        'Catchy Jingle'
+        'Limerick',
+        'Lexical Processing'
     ]
-    _stage_2_projects = [
-        'Microlattice Shapecasting',
-        'Hadwiger Clip Diagrams',
-        'WireBuyer',
-        'Hypno Harmonics'
-        'Lexical Processing',
+    _stage_2_projects = [        
+        'Optimized AutoClippers',                
+        'Optimized Wire Extrusion',        
+        'Catchy Jingle',
         'Combinatory Harmonics',
         'The Hadwiger Problem',
         'The Toth Sausage Conjecture',
@@ -215,14 +208,101 @@ class UPEnv(Env):
     _action_names_stages.append(_core_action_set_1+_stage_2_projects_ac)
     
     # Stage 3
-    _stage_3_required_projects = _stage_2_projects
+    _action_intervals_stages.append(0.2)
+    _stage_3_required_projects = [        
+        'Optimized AutoClippers',                
+        'Optimized Wire Extrusion',        
+        'Catchy Jingle',
+        'Combinatory Harmonics',
+        'The Hadwiger Problem',
+        'The Toth Sausage Conjecture',
+    ]
     _stage_3_projects = [
-        'Algorithmic Trading'
+        'Microlattice Shapecasting',
+        'Hadwiger Clip Diagrams',
+        'WireBuyer',
+        'Hypno Harmonics',
+        'Donkey Space'
     ]
     _stage_3_projects_obs = [proj+" Activated" for proj in _stage_3_projects]
     _stage_3_projects_ac = ["Activate "+proj for proj in _stage_3_projects]
     _observation_names_stages.append(_core_observation_set_1+_stage_3_projects_obs)
     _action_names_stages.append(_core_action_set_1+_stage_3_projects_ac)
+    
+    # Observations and actions common to stages 4+
+    _core_observation_set_2 = [
+        'Unsold Inventory', 
+        'Price per Clip', 
+        'Public Demand', 
+        'Available Funds', 
+        'Autoclipper Cost', 
+        'Number of Autoclippers',
+        'Paperclips',
+        'Marketing Level',
+        'Marketing Cost',
+        'Processors',
+        'Memory',
+        'Trust',
+        'Next Trust',
+        'Operations',
+        'Investment Bankroll',
+        'Stocks',
+        'Investment Engine Upgrade Cost',
+        'Number of Photonic Chips',
+        'Photonic Chip 0 Level'      
+    ]    
+    _core_action_set_2 = [
+        'Make Paperclip', 
+        'Lower Price', 
+        'Raise Price', 
+        'Buy Autoclipper',
+        'Expand Marketing',
+        'Add Processor',
+        'Add Memory',
+        'Set Investment Low',
+        'Set Investment Medium',
+        'Set Investment High',
+        'Withdraw',
+        'Deposit',
+        'Upgrade Investment Engine',      
+        'Activate Photonic Chip',
+        'Quantum Compute'
+    ]
+    
+    # Stage 4
+    _action_intervals_stages.append(2.5)
+    _stage_4_required_projects = _stage_3_projects
+    _stage_4_projects = [
+        'Algorithmic Trading',
+        'Quantum Computing'
+    ]
+    _stage_4_projects_obs = [proj+" Activated" for proj in _stage_4_projects]
+    _stage_4_projects_ac = ["Activate "+proj for proj in _stage_4_projects]
+    _observation_names_stages.append(_core_observation_set_2+_stage_4_projects_obs)
+    _action_names_stages.append(_core_action_set_2+_stage_4_projects_ac)    
+    
+    # Observations and actions common to stages 5+
+    _core_observation_set_3 = _core_observation_set_2 + [
+        'Yomi',
+        'Tournament Cost',
+    ]
+    _core_action_set_3 = _core_action_set_2 + [
+        'New Tournament',
+        'Run Tournament',
+    ]
+    
+    # Stage 5
+    _action_intervals_stages.append(2.5)
+    _stage_5_required_projects = _stage_4_projects
+    _stage_5_projects = [
+        'Spectral Froth Annealment',
+        'MegaClippers',
+        'Strategic Modeling'       
+    ]
+    _stage_5_projects_obs = [proj+" Activated" for proj in _stage_5_projects]
+    _stage_5_projects_ac = ["Activate "+proj for proj in _stage_5_projects]
+    _observation_names_stages.append(_core_observation_set_3+_stage_5_projects_obs)
+    _action_names_stages.append(_core_action_set_3+_stage_5_projects_ac)
        
     def __init__(self,
                  url,
@@ -231,7 +311,7 @@ class UPEnv(Env):
                  resetter_agents=[],
                  use_emulator=False,
                  episode_length=None,
-                 desired_action_interval=0.2,
+                 action_rate_speedup=1.0,
                  webdriver_name='Chrome',
                  webdriver_path=None,
                  headless=False,
@@ -253,7 +333,7 @@ class UPEnv(Env):
         
         # Other
         self._episode_length = episode_length
-        self._desired_action_interval = desired_action_interval
+        self._action_rate_speedup = action_rate_speedup
         self._verbose = verbose
         
         # Parameters for working up to a given stage
@@ -262,9 +342,6 @@ class UPEnv(Env):
         self._initial_stage = initial_stage
         self._final_stage = final_stage
         self._resetter_agents = resetter_agents
-        
-        # Reset
-        #~ self.reset()
     
     def _update_stage(self):
         stage_changed = False
@@ -312,12 +389,23 @@ class UPEnv(Env):
                 
          # Update rule for stage 3 -> 4
         if self._stage == 3:
-            # No definition for stage 4 yet
-            pass   
+            required_projects_obs = [proj+" Activated" for proj in self._stage_4_required_projects]
+            observation_from_handler = self._handler.makeObservation(required_projects_obs)
+            all_projects_activated = True
+            for name, obs in observation_from_handler.items():
+                if obs != 1:
+                    all_projects_activated = False
+            if all_projects_activated:
+                self._stage = 4
+                if self._verbose:
+                    print("Advancing to stage 4.")
+                stage_changed = True  
         
         if stage_changed:
             self._observation_names = self._observation_names_stages[self._stage]
             self._action_names = self._action_names_stages[self._stage]
+        
+        self._desired_action_interval = self._action_intervals_stages[self._stage]/self._action_rate_speedup
         
         return stage_changed
     
@@ -337,13 +425,15 @@ class UPEnv(Env):
         ob = ob_space.observationAsArray(observation_from_handler)
         
         if target_stage == 1:
-            max_n_steps = 2000
+            max_game_time = 400
         elif target_stage == 2:
-            max_n_steps = 8000
+            max_game_time = 1000
         elif target_stage == 3:
-            max_n_steps = 14000
-        else:
-            raise NotImplementedError("No definition for stage 4+.")
+            max_game_time = 1600
+        elif target_stage == 4:
+            max_game_time = 2200
+        elif target_stage == 5:
+            raise NotImplementedError("No definition for stage 5+.")
         
         # Advance
         stochastic = True
@@ -361,8 +451,9 @@ class UPEnv(Env):
                 ob = ob_space.observationAsArray(observation_from_handler)
             
             # Restart if failed to get to next stage quickly enough
-            if self._n_steps_taken > max_n_steps:
-                print("WARNING: Timed out attempting to reach next stage. Resetting and trying fresh.")
+            #~ print(self._game_time)
+            if self._game_time > max_game_time:
+                print("WARNING: Timed out in stage {}. Resetting and trying fresh.".format(self._stage))
                 self._n_steps_taken = 0
                 self._prev_act_time = None
                 self._handler.reset()
@@ -374,7 +465,7 @@ class UPEnv(Env):
             
             # Report
             #~ if self._stage > prev_stage:
-            if self._verbose and self._stage > prev_stage:            
+            if self._verbose and self._stage > prev_stage:      
                 print("Advanced to stage {} after {} steps.".format(self._stage, self._n_steps_taken))
                 
             prev_stage = self._stage
@@ -397,8 +488,10 @@ class UPEnv(Env):
         self._update_stage()
         
         # Advance to initial stage
+        self._game_time = 0.0
         if self._initial_stage != 0:
             self._advance_to_stage(self._initial_stage, self._resetter_agents)
+        self._desired_action_interval = self._action_intervals_stages[self._initial_stage]/self._action_rate_speedup
         
         # Observe
         observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
@@ -413,14 +506,23 @@ class UPEnv(Env):
         return observation
     
     def reward(self, observation_from_handler):
-        if self._stage == 0 and self._stage <= 3:
-            #~ return self.assetsAndCashReward(observation_from_handler)
-            return self.clipReward(observation_from_handler)
+        if self._stage >= 0 and self._stage <= 3:
+            reward = self.assetsAndCashReward(observation_from_handler)
+            # Scale reward
+            if self._stage < 3:
+                reward *= 1.0
+            elif self._stage == 3:
+                reward *= 1e-4
         else:
             raise NotImplementedError("No definition for stage 4+.")
             
+        return reward
+            
     def assetsAndCashReward(self, observation_from_handler):
         return self.cashReward(observation_from_handler) + self.assetsReward(observation_from_handler)
+    
+    def assetsAndCashRewardStage4Plus(self, observation_from_handler):
+        return self.cashReward(observation_from_handler) + self.assetsRewardStage4Plus(observation_from_handler)
     
     def _getWirePerSpool(self):
         wire_obs = [
@@ -489,15 +591,19 @@ class UPEnv(Env):
         done : a boolean, indicating whether the episode has ended
         info : a dictionary containing other diagnostic information from the previous action
         """
-        # Wall clock action rate control
-        if not self._use_emulator:       
+        # Timing control
+        if self._use_emulator:
+            self._game_time += self._desired_action_interval
+        else:       
             if self._prev_act_time != None:
                 dt = timeSeconds() - self._prev_act_time
                 time_remaining = self._desired_action_interval - dt
                 if time_remaining > 0:
                     time.sleep(time_remaining)
+                    self._game_time += self._desired_action_interval
                 else:
                     print("WARNING: Took {:1.2g} s for step, which is more than the desired {:1.2g} s.".format(dt, self._desired_action_interval))
+                    self._game_time += dt
         
         # Act
         self._prev_act_time = timeSeconds();

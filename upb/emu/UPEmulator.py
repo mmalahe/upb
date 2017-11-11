@@ -31,7 +31,12 @@ class UPEmulator(object):
         'Processors': 'processors',
         'Memory': 'memory',
         'Operations': 'operations',
-        'Creativity': 'creativity'
+        'Creativity': 'creativity',
+        'Investment Bankroll': 'bankroll',
+        'Stocks': 'secTotal',
+        'Investment Engine Upgrade Cost': 'investUpgradeCost',
+        'Photonic Chips': 'nextQchip',
+        'Photonic Chip 0 Level': 'qChips[0].value'
     }
     for pname, pid in UP_PROJECT_IDS.items():
         _obs_to_js[pname+' Activated'] = 'project{}.flag'.format(pid)
@@ -46,6 +51,13 @@ class UPEmulator(object):
         'Buy Autoclipper': 'if (funds>=clipperCost) {makeClipper();}',
         'Add Processor': 'if (trust>processors+memory || swarmGifts > 0) {addProc();}',
         'Add Memory': 'if (trust>processors+memory || swarmGifts > 0) {addMem();}',
+        'Set Investment Low': 'riskiness = 7;',
+        'Set Investment Medium': 'riskiness = 5;',
+        'Set Investment High': 'riskiness = 1;',
+        'Withdraw': 'investWithdraw();',
+        'Deposit': 'investDeposit();',
+        'Upgrade Investment Engine': 'if (yomi>=investUpgradeCost) {investUpgrade();}',
+        'Quantum Compute': 'qComp();'
     }
     for pname, pid in UP_PROJECT_IDS.items():
         _action_to_js['Activate '+pname] = 'if (activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag) {{project{0}.effect();}}'.format(pid)
