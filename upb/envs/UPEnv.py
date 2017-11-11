@@ -312,8 +312,7 @@ class UPEnv(Env):
     _core_action_set_3 = _core_action_set_2 + [
         'Buy MegaClipper',
         'Upgrade Investment Engine',
-        'New Tournament',
-        'Run Tournament'
+        'Run New Tournament'
     ]
     
     # Stage 5

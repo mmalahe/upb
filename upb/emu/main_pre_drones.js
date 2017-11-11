@@ -1353,7 +1353,53 @@ function runTourney(){
     }    
 }
 
+//@EMUADDITION
+function instantRunTourney() {
+    var runTourneyAvailable = 0;
+    if (currentRound < rounds){
+        instantRound(currentRound);
+    } else {
+    tourneyInProg = 0;
+    pickWinner();    
+    calculatePlaceScore();
+    calculateShowScore();    
+    declareWinner();    
+    }    
+}
 
+//@EMUADDITION
+function instantRound(roundNum){
+    roundSetup();
+    roundLoop();
+    
+    function roundSetup(){
+        rCounter = 0;
+        pickStrats(roundNum);
+    }
+    
+    
+    function roundLoop(){
+    if (rCounter<10){
+        runRound();
+        } else {
+        currentRound++;
+        instantRunTourney();    
+        }
+    }
+    
+    
+    function runRound() { 
+        
+        rCounter++;
+        
+        hMovePrev = hMove;
+        vMovePrev = vMove;
+        hMove = hStrat.pickMove();
+        vMove = vStrat.pickMove();
+        
+        calcPayoff(hMove, vMove);   
+    }
+}
 
 function pickWinner(){
     
@@ -1434,9 +1480,6 @@ function calculateShowScore(){
     
     
 }
-
-
-
 
 function declareWinner(){
     
@@ -1587,8 +1630,8 @@ function round(roundNum){
     function roundSetup(){
         rCounter = 0;
         pickStrats(roundNum);
-        var $ = ("Round "+(roundNum+1));
-        tourneyReport($); 
+        //~ var $ = ("Round "+(roundNum+1));
+        //~ tourneyReport($); 
     }
     
     

@@ -4,13 +4,13 @@ from collections import OrderedDict
 from upb.game.UPGameHandler import UP_PROJECT_IDS
 
 class UPEmulator(object):
-    # Names and centisecond intervals of interval loops
+    # Names and centisecond intervals of interval loops that run over the full game
     _interval_loops_cs = {
         'intervalLoop1()': 100,
         'intervalLoop2()': 250,
         'intervalLoop3()': 1,
         'intervalLoop4()': 10
-    }    
+    }
     
     # Observations
     _obs_to_js = {
@@ -64,8 +64,6 @@ class UPEmulator(object):
         'Upgrade Investment Engine': 'if (investmentEngineFlag == 1 && yomi>=investUpgradeCost) {investUpgrade();}',
         'Quantum Compute': 'if (qFlag == 1) {qComp();}',
         'Buy MegaClipper': 'if (funds>=megaClipperCost && megaClipperFlag == 1) {makeMegaClipper();}',
-        'New Tournament': 'if (strategyEngineFlag == 1 && operations>=tourneyCost && tourneyInProg == 0) {newTourney();}',
-        'Run Tournament': 'if (strategyEngineFlag == 1 && runTourneyAvailable == 1) {runTourney();}'
     }
     for pname, pid in UP_PROJECT_IDS.items():
         _action_to_js['Activate '+pname] = 'if (activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag) {{project{0}.effect();}}'.format(pid)
@@ -96,6 +94,9 @@ class UPEmulator(object):
         self._loop_counters = {}
         for loop_name in self._interval_loops_cs.keys():
             self._loop_counters[loop_name] = 0
+        
+        # Other init
+        self._tourney_running = False
         
         # Allow primary main loops to resolve at least once
         self.advanceTime(0.5)
@@ -128,9 +129,28 @@ class UPEmulator(object):
                 
             obs[field] = val
         return obs
-        
+    
+    def runNewTournament(self):
+        tourney_possible = self._intp.eval("strategyEngineFlag == 1 && operations>=tourneyCost && tourneyInProg == 0")
+        if tourney_possible:
+            # Check we haven't messed something up
+            if self._tourney_running:
+                raise Exception("Python and JS tournament logic have become incompatible somehow.")             
+            
+            # Create new tournament
+            self._intp.eval("newTourney();")
+            
+            # The tournament takes 100 ms per round. 
+            # See the setTimeout arguments in "function round(roundNum)".
+            tourney_run_time_cs = 10*self._intp.eval("rounds") 
+            self._tourney_end_time_cs = self._time_cs+tourney_run_time_cs
+            self._tourney_running = True
+    
     def takeAction(self, action_name):
-        self._intp.eval(self._action_to_js[action_name])
+        if action_name == "Run New Tournament":
+            self.runNewTournament()
+        else:
+            self._intp.eval(self._action_to_js[action_name])
         
     def advanceTime(self, dt_s):
         dt_cs = max(int(100.0*dt_s),1)
@@ -149,12 +169,26 @@ class UPEmulator(object):
             # Update the execution count for the loop
             self._loop_counters[loop_name] += iters_to_advance
         self._time_cs = time_cs_next
+        
+        # Check for tournament completion
+        if self._tourney_running:
+            # Complete the tournament by running all its rounds instantly
+            if self._time_cs > self._tourney_end_time_cs:
+                self._intp.eval("instantRunTourney();")
+                self._tourney_running = False
     
     def getStateAsString(self):
         stateString = self._intp.eval("getSaveAsString();")
         return stateString
     
     def saveState(self, filename):
+        # Complete any tournaments before saving state
+        tourney_time_remaining_cs = self._tourney_end_time_cs - self._time_cs
+        if self._tourney_running:
+            self.advanceTime((tourney_time_remaining_cs+2.0)/100.0)
+        assert not self._tourney_running
+        
+        # Save
         with open(filename, 'w') as f:
             f.write(self.getStateAsString())
             
