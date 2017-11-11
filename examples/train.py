@@ -68,10 +68,6 @@ policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pi
 rewards_history = []
 obs_means_history = []
 
-# Set up data directory
-if not os.path.exists(data_dir):
-    os.makedirs(data_dir)
-
 def train():
     # MPI setup
     rank = MPI.COMM_WORLD.Get_rank()
@@ -80,6 +76,12 @@ def train():
     sess.__enter__()
     if rank != 0:
         logger.set_level(logger.DISABLED)
+        
+    # Set up data directory
+    if rank == 0:
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+    MPI.COMM_WORLD.Barrier()
     
     # For resetting to a fixed stage
     resetter_agents = []
