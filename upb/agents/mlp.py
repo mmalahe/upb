@@ -128,6 +128,14 @@ class MLPAgent(MlpPolicy):
         counts = self.getVarNp("obfilter/count", dtype=tf.float64)
         means = sums/counts
         return means
+        
+    def getActionProbabilities(self, ob):
+        with tf.variable_scope(self.scope):
+            stochastic = True
+            ob_tfvar = tf_util.get_placeholder_cached(name="ob")
+            logits = self.pd.logits.eval(feed_dict={ob_tfvar:ob[None]})
+            probs = np.exp(logits)/np.sum(np.exp(logits))
+            return probs[0]       
 
 def load_mlp_agent_topology(filename):
     with open(filename, 'rb') as f:
