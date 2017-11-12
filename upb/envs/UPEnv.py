@@ -102,6 +102,14 @@ class UPObservationSpace(Box):
             obs_array[i] /= self._observation_ranges[self._keys[i]][1]
         return obs_array
         
+    def observationAsOrderedDict(self, obs_array):
+        obs_dict = OrderedDict()
+        for i in range(self._nkeys):
+            obs_dict[self._keys[i]] = obs_array[i]
+            # Denormalise
+            obs_dict[self._keys[i]] *= self._observation_ranges[self._keys[i]][1]
+        return obs_dict
+        
     def observationAsString(self, obs_array):
         obs = ""
         for i in range(self._nkeys):
@@ -121,6 +129,9 @@ class UPActionSpace(Discrete):
     # Converts action into a form that can be read by the game handler
     def actionAsString(self, action):
         return self._keys[action]
+        
+    def allActionsAsStrings(self):
+        return self._keys.copy()
 
 class UPEnv(Env):
     _observation_names_stages = []

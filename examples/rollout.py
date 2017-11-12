@@ -3,6 +3,7 @@
 
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
+from upb.util.visualise import render_agent_decision
 from upb.agents.mlp import MLPAgent, load_mlp_agent
 from baselines.common import tf_util
 from mpi4py import MPI
@@ -20,11 +21,12 @@ action_rate_speedup = 1.0
 # Files
 agents_dir = "agents"
 inits_dir = "inits"
+render_dir = "render"
 
 # Environment parameters
 initial_stage = 5
 final_stage = 5
-episode_length = 2
+episode_length = 1440
 
 # Agents
 resetter_agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(initial_stage)]
@@ -43,6 +45,11 @@ n_init_states = 128
 init_states_creation_filename = os.path.join(inits_dir,"stage{}.pickle".format(initial_stage))
 if do_create_init_states:
     assert episode_length == 0
+    
+# Display
+do_render_agent_decision = True
+decision_base_filename = os.path.join(render_dir,"decision")
+i_decision = 0
 
 def main():
      # MPI setup
@@ -53,7 +60,7 @@ def main():
     
     # Set up data directories
     if rank == 0:
-        for a_dir in [agents_dir, inits_dir]:
+        for a_dir in [agents_dir, inits_dir, render_dir]:
             if not os.path.exists(a_dir):
                 os.makedirs(a_dir)
     MPI.COMM_WORLD.Barrier()
@@ -77,18 +84,18 @@ def main():
                 
     # The main agent
     agent = load_mlp_agent(agent_filename, "main", env.observation_space, env.action_space)
-    
-    # Callbacks
-    def printActionProbs(agent, ob, ac, vpred, rew, done, info):
-        print(agent.getActionProbabilities(ob))
+        
+    def callback(iter_num, env, agent, ob, ac, vpred, rew, done, info):
+        if do_render_agent_decision:
+            decision_filename = decision_base_filename+str(iter_num).zfill(5)+".png"
+            render_agent_decision(env, agent, ob, ac, vpred, rew, decision_filename)
     
     # Create a new set of initial conditions
     if do_create_init_states:
         create_states_batch(env, agent, n_init_states, init_states_creation_filename)
     # Normal Rollout
     else:
-        rollout(env, agent, callback=printActionProbs)
-        env.save_screenshot("rollout_final.png.")
+        rollout(env, agent, callback=callback)
     
 if __name__ == "__main__":
     main()
