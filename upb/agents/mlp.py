@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 import keras
 import gym
+from upb.envs.UPEnv import UPObservationSpace, UPActionSpace
 
 class MLPAgent(MlpPolicy):
     def __init__(self, name, *args, **kwargs):
@@ -141,6 +142,13 @@ def load_mlp_agent_topology(filename):
     with open(filename, 'rb') as f:
         py_vars = pickle.load(f)
     return py_vars['hid_size'], py_vars['num_hid_layers']
+    
+def load_mlp_agent(filename, agent_name, ob_space, ac_space):
+    hid_size, num_hid_layers = load_mlp_agent_topology(filename)
+    agent = MLPAgent(name=agent_name, ob_space=ob_space, 
+                 ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
+    agent.load_and_check(filename)
+    return agent
 
 class MultiStageAgent:
     def __init__(self, agents, initial_stage=0):

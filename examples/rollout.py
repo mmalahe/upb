@@ -3,7 +3,7 @@
 
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
-from upb.agents.mlp import MLPAgent, load_mlp_agent_topology
+from upb.agents.mlp import MLPAgent, load_mlp_agent
 from baselines.common import tf_util
 from mpi4py import MPI
 import os
@@ -24,18 +24,27 @@ inits_dir = "inits"
 # Environment parameters
 initial_stage = 5
 final_stage = 5
-episode_length = 0
+episode_length = 2
 
 # Agents
 resetter_agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(initial_stage)]
-policy_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
+agent_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
+
+# Loading initial states
+do_load_init_states = True
+if do_load_init_states:
+    init_states_loading_filename = os.path.join(inits_dir,"stage{}.pickle".format(initial_stage))
+else:
+    init_states_loading_filename = None
 
 # Creating initial states
-create_init_states = True
-n_init_states = 2
-init_states_filename = os.path.join(inits_dir,"stage{}.pickle".format(initial_stage))
+do_create_init_states = False
+n_init_states = 128
+init_states_creation_filename = os.path.join(inits_dir,"stage{}.pickle".format(initial_stage))
+if do_create_init_states:
+    assert episode_length == 0
 
-def observe():
+def main():
      # MPI setup
     rank = MPI.COMM_WORLD.Get_rank()
     comm_size = MPI.COMM_WORLD.Get_size()
@@ -50,20 +59,11 @@ def observe():
     MPI.COMM_WORLD.Barrier()
     
     # For resetting to a fixed stage
-    resetter_agents = []
-    for i in range(initial_stage):
-        resetter_agent_filename = resetter_agent_filenames[i]
-        ob_space = UPObservationSpace(UPEnv._observation_names_stages[i])
-        ac_space = UPActionSpace(UPEnv._action_names_stages[i])
-        agent_name = "resetter_agent_stage{}".format(i)
-        hid_size, num_hid_layers = load_mlp_agent_topology(resetter_agent_filename)
-        agent = MLPAgent(name=agent_name, ob_space=ob_space, 
-                     ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
-        agent.load_and_check(resetter_agent_filename)
-        resetter_agents.append(agent)
+    resetter_agents = load_resetter_agents(initial_stage, resetter_agent_filenames)
     
-    # The observation environment
+    # The rollout environment
     env = UPEnv(url,
+                initial_states_filename=init_states_loading_filename,
                 initial_stage=initial_stage,
                 final_stage=final_stage,
                 resetter_agents=resetter_agents,
@@ -75,30 +75,20 @@ def observe():
                 headless=False                  
                 )
                 
-    # The agent
-    ob_space = UPObservationSpace(UPEnv._observation_names_stages[initial_stage])
-    ac_space = UPActionSpace(UPEnv._action_names_stages[initial_stage])
-    hid_size, num_hid_layers = load_mlp_agent_topology(policy_filename)
-    agent = MLPAgent(name="pi", ob_space=ob_space, 
-                 ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
-    agent.load_and_check(policy_filename)
+    # The main agent
+    agent = load_mlp_agent(agent_filename, "main", env.observation_space, env.action_space)
+    
+    # Callbacks
+    def printActionProbs(agent, ob, ac, vpred, rew, done, info):
+        print(agent.getActionProbabilities(ob))
     
     # Create a new set of initial conditions
-    if create_init_states:
-        init_states = []
-        for i in range(n_init_states):
-            print("Creating init state {}.".format(i))
-            rollout(env, agent)
-            init_states.append(env.getStateAsString())
-        with open(init_states_filename, 'wb') as f:
-            pickle.dump(init_states, f)
+    if do_create_init_states:
+        create_states_batch(env, agent, n_init_states, init_states_creation_filename)
     # Normal Rollout
     else:
-        rollout(env, agent)
-        env.save_screenshot("rollout_final.png")   
+        rollout(env, agent, callback=printActionProbs)
+        env.save_screenshot("rollout_final.png.")
     
-def main():
-    observe()
-
 if __name__ == "__main__":
     main()

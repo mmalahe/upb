@@ -41,20 +41,20 @@ final_stage = 5 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
 
 # Training parameters
-do_load_latest_agent = True
+do_load_latest_agent = False
 load_only_observation_scaling = False
-episode_length = 720
-timesteps_per_batch = 2*episode_length
+episode_length = 1440
+timesteps_per_batch = 8*episode_length
 optim_batchsize = episode_length
 max_iters = 1000
 schedule = 'constant'
 stochastic = True
-clip_param = 0.2
+clip_param = 0.3
 vf_loss_coeff = 0.01
-entcoeff = 0.01
+entcoeff = 0.05
 optim_stepsize = 1e-3
 optim_epochs = 128
-update_obs_scaling = False
+update_obs_scaling = True
 
 # Data management
 iters_per_render = 10
@@ -84,17 +84,7 @@ def train():
     MPI.COMM_WORLD.Barrier()
     
     # For resetting to a fixed stage
-    resetter_agents = []
-    for i in range(initial_stage):
-        resetter_agent_filename = resetter_agent_filenames[i]
-        ob_space = UPObservationSpace(UPEnv._observation_names_stages[i])
-        ac_space = UPActionSpace(UPEnv._action_names_stages[i])
-        agent_name = "resetter_agent_stage{}".format(i)
-        hid_size, num_hid_layers = load_mlp_agent_topology(resetter_agent_filename)
-        agent = MLPAgent(name=agent_name, ob_space=ob_space, 
-                     ac_space=ac_space, hid_size=hid_size, num_hid_layers=num_hid_layers)
-        agent.load_and_check(resetter_agent_filename)
-        resetter_agents.append(agent)
+    resetter_agents = load_resetter_agents(initial_stage, resetter_agent_filenames)
     
     # The training environment
     env = UPEnv(url_training,
