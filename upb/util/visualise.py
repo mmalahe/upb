@@ -15,7 +15,25 @@ def render_agent_decision(env, agent, ob, ac, vpred, rew, filename):
         ac_prob_dict[action_names[i]] = ac_probs[i]
     selected_action = action_names[ac]
     
-    # Plot action probabilities
+    # Set up plots
+    fig, ax_list = plt.subplots(ncols=2)
+    
+    # Observations
+    ob_ax = ax_list[0]
+    row_labels = list(obs_dict.keys())
+    col_labels = ["Value"]
+    table_text = [["{:1.3g}".format(value)] for value in obs_dict.values()]
+    ob_ax.axis('tight')
+    ob_ax.axis('off')
+    the_table = ob_ax.table(cellText=table_text,
+                      rowLabels=row_labels,
+                      colLabels=col_labels,
+                      loc='center',
+                      colWidths=[0.2]
+                      )  
+    
+    
+    # Actions
     labels = action_names
     sizes = ac_probs
     explode = [0 for i in range(len(ac_prob_dict))]
@@ -27,12 +45,17 @@ def render_agent_decision(env, agent, ob, ac, vpred, rew, filename):
         if i != ac and ac_prob < 0.05:
             labels[i] = ''
     
-    # Plot
-    fig1, ax1 = plt.subplots()
-    patches, texts, autotexts = ax1.pie(sizes, explode=explode, labels=labels, autopct='',
+    # Plot actions
+    ac_ax = ax_list[1]
+    patches, texts, autotexts = ac_ax.pie(sizes, explode=explode, labels=labels, autopct='',
             shadow=False, startangle=90)
-    #~ texts[ac].set_fontsize(20)
     texts[ac].set_weight('bold')
-    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
+    ac_ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
+    
+    # Make rooom for pie chart labels
+    #~ plt.subplots_adjust(wspace=0.5, right=0.8)
+    
+    # Save figure and close
     plt.savefig(filename, bbox_inches='tight')
+    #~ plt.savefig(filename)
     plt.close()
