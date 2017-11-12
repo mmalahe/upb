@@ -656,6 +656,16 @@ class UPEnv(Env):
         autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']        
         dassets += dautoclippers*autoclipper_cost 
         
+        try:
+            prev_megaclippers = self._prev_observation_from_handler['Number of MegaClippers']
+            megaclipper_cost = self._prev_observation_from_handler['MegaClipper Cost']
+        except KeyError:
+            prev_megaclippers = 0
+            megaclipper_cost = 0
+        
+        dmegaclippers = observation_from_handler['Number of MegaClippers'] - prev_megaclippers      
+        dassets += dmegaclippers*megaclipper_cost
+        
         dmarketing = observation_from_handler['Marketing Level'] - self._prev_observation_from_handler['Marketing Level']
         marketing_cost = self._prev_observation_from_handler['Marketing Cost']
         dassets += dmarketing*marketing_cost
