@@ -3677,6 +3677,14 @@ function intervalLoop4() {
         saveTimer = 0;
     }
     
+    // Stock value update
+    m = 0;    
+    for (var i=0; i<portfolioSize; i++){
+        m = m + stocks[i].total;
+    }
+    secTotal = m;    
+    portTotal = bankroll + secTotal;
+    
     
 //~ }, 100);
 }
