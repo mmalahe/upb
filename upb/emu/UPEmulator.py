@@ -37,6 +37,7 @@ class UPEmulator(object):
         'Investment Engine Level': 'investLevel',
         'Investment Engine Upgrade Cost': 'investUpgradeCost',
         'Number of Photonic Chips': 'nextQchip',
+        'Latest QOps': 'latestQops',
         'Photonic Chip 0 Level': 'qChips[0].value',
         'Riskiness': 'riskiness',
         'MegaClipper Cost': 'megaClipperCost',

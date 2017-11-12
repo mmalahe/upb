@@ -49,6 +49,7 @@ class UPObservationSpace(Box):
             'Number of MegaClippers': [0, 1.0e2],
             'Riskiness': [1., 7.],
             'Number of Photonic Chips': [0, 10.],
+            'Latest QOps': [0,1e4],
             'Photonic Chip 0 Level': [-1., 1.],
             'Yomi': [0, 1e5],
             'Tournament Cost': [0, 1e5],
@@ -315,6 +316,7 @@ class UPEnv(Env):
     
     # Observations and actions common to stages 5+
     _core_observation_set_3 = _core_observation_set_2 + [
+        'Latest QOps',
         'MegaClipper Cost',
         'Number of MegaClippers',
         'Investment Engine Level',

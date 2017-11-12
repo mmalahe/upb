@@ -142,6 +142,9 @@ function quantumCompute(){
     }
 }
 
+//@EMUADDITION
+var latestQops = 0;
+
 function qComp(){
     
     qFade = 1;
@@ -169,6 +172,9 @@ function qComp(){
         
         standardOps = standardOps + qq;
         //document.getElementById("qCompDisplay").innerHTML = "qOps: " + Math.ceil(q*360).toLocaleString();
+        
+        //@EMUADDITION
+        latestQops = Math.ceil(q*360);
     }
     
 }
