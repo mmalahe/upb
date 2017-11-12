@@ -34,6 +34,7 @@ class UPEmulator(object):
         'Creativity': 'creativity',
         'Investment Bankroll': 'bankroll',
         'Stocks': 'secTotal',
+        'Investment Engine Level': 'investLevel',
         'Investment Engine Upgrade Cost': 'investUpgradeCost',
         'Number of Photonic Chips': 'nextQchip',
         'Photonic Chip 0 Level': 'qChips[0].value',

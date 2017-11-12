@@ -43,6 +43,7 @@ class UPObservationSpace(Box):
             'Creativity': [0, 1.0e4],
             'Investment Bankroll': [0, 1e6],
             'Stocks': [0, 1e6],
+            'Investment Engine Level': [0, 10],
             'Investment Engine Upgrade Cost': [0, 1e4],
             'MegaClipper Cost': [500.0, 1e6],
             'Number of MegaClippers': [0, 1.0e2],
@@ -305,6 +306,7 @@ class UPEnv(Env):
     _core_observation_set_3 = _core_observation_set_2 + [
         'MegaClipper Cost',
         'Number of MegaClippers',
+        'Investment Engine Level',
         'Investment Engine Upgrade Cost',
         'Yomi',
         'Tournament Cost'
