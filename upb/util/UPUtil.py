@@ -2,14 +2,17 @@ from upb.agents.mlp import load_mlp_agent
 from upb.envs.UPEnv import UPEnv, UPObservationSpace, UPActionSpace
 
 def rollout(env, agent, callback=None):
-    ob = env.reset()
+    ob_prev = env.reset()
     done = False
     stochastic = True
+    iter_num = 0
     while not done:                
-        ac, vpred = agent.act(stochastic, ob)
+        ac, vpred = agent.act(stochastic, ob_prev)
         ob, rew, done, info = env.step(ac)
         if callback != None:
-            callback(agent, ob, ac, vpred, rew, done, info)
+            callback(iter_num, env, agent, ob_prev, ac, vpred, rew, done, info)
+        ob_prev = ob        
+        iter_num += 1
     
 def load_resetter_agents(initial_stage, resetter_agent_filenames):
     resetter_agents = []
@@ -27,6 +30,7 @@ def create_states_batch(env, agent, n_init_states, filename):
     for i in range(n_init_states):
         print("Creating init state {}.".format(i))
         rollout(env, agent)
+        env.save_screenshot("")
         init_states.append(env.getStateAsString())
     with open(filename, 'wb') as f:
         pickle.dump(init_states, f)
