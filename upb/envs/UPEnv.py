@@ -588,12 +588,12 @@ class UPEnv(Env):
                 reward *= 1.0
             elif self._stage == 3:
                 reward *= 1e-4
-        elif self._stage >= 4 and self._stage <= 5:
+        elif self._stage == 4:
             reward = self.assetsAndCashRewardStage4Plus(observation_from_handler)
-            if self._stage == 4:
-                reward *= 1e-5
-            elif self._stage == 5:
-                reward *= 1e-6
+            reward *= 1e-5
+        elif self._stage == 5:
+            reward = self.assetsAndCashRewardStage5Plus(observation_from_handler)
+            reward *= 1e-6
         else:
             raise NotImplementedError("No definition for stage 6+.")
             
@@ -604,6 +604,9 @@ class UPEnv(Env):
     
     def assetsAndCashRewardStage4Plus(self, observation_from_handler):
         return self.cashReward(observation_from_handler) + self.assetsRewardStage4Plus(observation_from_handler)
+        
+    def assetsAndCashRewardStage5Plus(self, observation_from_handler):
+        return self.cashReward(observation_from_handler) + self.assetsRewardStage5Plus(observation_from_handler)
     
     def _getWirePerSpool(self):
         wire_obs = [
@@ -656,16 +659,6 @@ class UPEnv(Env):
         autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']        
         dassets += dautoclippers*autoclipper_cost 
         
-        try:
-            prev_megaclippers = self._prev_observation_from_handler['Number of MegaClippers']
-            megaclipper_cost = self._prev_observation_from_handler['MegaClipper Cost']
-        except KeyError:
-            prev_megaclippers = 0
-            megaclipper_cost = 0
-        
-        dmegaclippers = observation_from_handler['Number of MegaClippers'] - prev_megaclippers      
-        dassets += dmegaclippers*megaclipper_cost
-        
         dmarketing = observation_from_handler['Marketing Level'] - self._prev_observation_from_handler['Marketing Level']
         marketing_cost = self._prev_observation_from_handler['Marketing Cost']
         dassets += dmarketing*marketing_cost
@@ -683,7 +676,22 @@ class UPEnv(Env):
         dstocks = observation_from_handler['Stocks'] - prev_stocks
         dassets += dstocks
         
-        return dassets
+        return dassets 
+        
+    def assetsRewardStage5Plus(self, observation_from_handler):
+        dassets = self.assetsRewardStage4Plus(observation_from_handler)
+        
+        try:
+            prev_megaclippers = self._prev_observation_from_handler['Number of MegaClippers']
+            megaclipper_cost = self._prev_observation_from_handler['MegaClipper Cost']
+        except KeyError:
+            prev_megaclippers = 0
+            megaclipper_cost = 0
+        
+        dmegaclippers = observation_from_handler['Number of MegaClippers'] - prev_megaclippers      
+        dassets += dmegaclippers*megaclipper_cost
+        
+        return dassets        
     
     def cashReward(self, observation_from_handler):
         dcash = observation_from_handler['Available Funds'] - self._prev_observation_from_handler['Available Funds']
