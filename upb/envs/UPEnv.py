@@ -584,8 +584,12 @@ class UPEnv(Env):
         observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
         if self._stage >= 0 and self._stage <= 3:
             reward = self.assetsAndCashReward(observation_from_handler)
-            if self._stage < 3:
-                reward *= 1.0
+            if self._stage == 0:
+                reward *= 1e-2
+            elif self._stage == 1:
+                reward *= 1e-3
+            elif self._stage == 2:
+                reward *= 5e-4
             elif self._stage == 3:
                 reward *= 1e-4
         elif self._stage == 4:
@@ -747,14 +751,16 @@ class UPEnv(Env):
         # Update stage
         stage_changed = self._update_stage()
         
-        # Observe
+        # Observe and determine available actions
         if stage == None:
             observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
             observation = self.observation_space.observationAsArray(observation_from_handler)
+            ac_avail = self._handler.getAvailableActions(self._action_names_stages[self._initial_stage])
         else:
             ob_space = UPObservationSpace(self._observation_names_stages[stage])
             observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
             observation = ob_space.observationAsArray(observation_from_handler)
+            ac_avail = self._handler.getAvailableActions(self._action_names_stages[stage])
         if self._verbose:
             print(observation_from_handler)
         
@@ -776,7 +782,7 @@ class UPEnv(Env):
             done = self._n_steps_taken >= self._episode_length
         
         # Additional info
-        info = {'stage': self._stage}
+        info = {'Available Actions': np.array(ac_avail)}
         
         # Return
         return (observation, reward, done, info)

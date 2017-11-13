@@ -48,9 +48,9 @@ class UPEmulator(object):
     for pname, pid in UP_PROJECT_IDS.items():
         _obs_to_js[pname+' Activated'] = 'project{}.flag'.format(pid)
     
-    # Actions
+    # Actions and their availability
     _action_to_js = {
-        'Make Paperclip': 'if (wire>0) {clipClick(1);}',
+        'Make Paperclip': 'if (wire>=1) {clipClick(1);}',
         'Lower Price': 'if (margin>.01) {lowerPrice();}',
         'Raise Price': 'raisePrice();',
         'Expand Marketing': 'if (funds>=adCost) {buyAds();}',
@@ -65,11 +65,31 @@ class UPEmulator(object):
         'Deposit': 'if (investmentEngineFlag == 1) {investDeposit();}',
         'Upgrade Investment Engine': 'if (investmentEngineFlag == 1 && yomi>=investUpgradeCost) {investUpgrade();}',
         'Quantum Compute': 'if (qFlag == 1) {qComp();}',
-        'Buy MegaClipper': 'if (funds>=megaClipperCost && megaClipperFlag == 1) {makeMegaClipper();}',
+        'Buy MegaClipper': 'if (funds>=megaClipperCost && megaClipperFlag == 1) {makeMegaClipper();}'
     }
+    _action_avail_to_js = {
+        'Make Paperclip': 'wire>=1',
+        'Lower Price': 'margin>.01',
+        'Raise Price': 'true',
+        'Expand Marketing': 'funds>=adCost',
+        'Buy Wire': 'funds>=wireCost',
+        'Buy Autoclipper': 'funds>=clipperCost',
+        'Add Processor': 'trust>processors+memory || swarmGifts > 0',
+        'Add Memory': 'trust>processors+memory || swarmGifts > 0',
+        'Set Investment Low': 'investmentEngineFlag == 1',
+        'Set Investment Medium': 'investmentEngineFlag == 1',
+        'Set Investment High': 'investmentEngineFlag == 1',
+        'Withdraw': 'investmentEngineFlag == 1',
+        'Deposit': 'investmentEngineFlag == 1',
+        'Upgrade Investment Engine': 'investmentEngineFlag == 1 && yomi>=investUpgradeCost',
+        'Quantum Compute': 'qFlag == 1',
+        'Buy MegaClipper': 'funds>=megaClipperCost && megaClipperFlag == 1'
+    }
+    
     for pname, pid in UP_PROJECT_IDS.items():
         _action_to_js['Activate '+pname] = 'if (activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag) {{project{0}.effect();}}'.format(pid)
-    
+        _action_avail_to_js['Activate '+pname] = 'activeProjects.indexOf(project{0}) >= 0 && project{0}.cost() && !project{0}.flag'.format(pid)
+
     def __init__(self, 
                  combat_filename=join(dirname(abspath(__file__)),"combat.js"),
                  globals_filename=join(dirname(abspath(__file__)),"globals.js"),
@@ -131,6 +151,19 @@ class UPEmulator(object):
                 
             obs[field] = val
         return obs
+    
+    def getAvailableActions(self, ac_names):
+        # Package as a javascript array
+        acs_js = "["
+        for i in range(len(ac_names)-1):
+            acs_js += self._action_avail_to_js[ac_names[i]]+","
+        acs_js += self._action_avail_to_js[ac_names[-1]]
+        acs_js += "]"
+        
+        # Fetch array of availability
+        acs_avail = self._intp.eval(acs_js)
+        acs_avail = [float(ac) for ac in acs_avail]
+        return acs_avail
     
     def runNewTournament(self):
         tourney_possible = self._intp.eval("strategyEngineFlag == 1 && operations>=tourneyCost && tourneyInProg == 0")
