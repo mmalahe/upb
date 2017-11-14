@@ -133,6 +133,10 @@ class UPActionSpace(Discrete):
         
     def allActionsAsStrings(self):
         return self._keys.copy()
+        
+    @property
+    def shape(self):
+        return (self.n,)
 
 class UPEnv(Env):
     _observation_names_stages = []
@@ -140,7 +144,7 @@ class UPEnv(Env):
     _action_intervals_stages = []
     
     # Stage 0
-    _action_intervals_stages.append(0.2)
+    _action_intervals_stages.append(0.5)
     _observation_names_stages.append(
     [
         'Unsold Inventory', 
@@ -154,6 +158,7 @@ class UPEnv(Env):
     ])
     _action_names_stages.append(
     [
+        'Do Nothing',
         'Make Paperclip', 
         'Lower Price', 
         'Raise Price', 
@@ -182,6 +187,7 @@ class UPEnv(Env):
         'Creativity'
     ]    
     _core_action_set_1 = [
+        'Do Nothing',
         'Make Paperclip', 
         'Lower Price', 
         'Raise Price', 
@@ -193,7 +199,7 @@ class UPEnv(Env):
     ]
     
     # Stage 1
-    _action_intervals_stages.append(0.2)
+    _action_intervals_stages.append(0.5)
     _stage_1_projects = [
         'Improved AutoClippers',
         'Creativity',
@@ -211,7 +217,7 @@ class UPEnv(Env):
     _action_names_stages.append(_core_action_set_1+_stage_1_projects_ac)
     
     # Stage 2
-    _action_intervals_stages.append(0.2)
+    _action_intervals_stages.append(0.5)
     _stage_2_required_projects = [
         'Improved AutoClippers',
         'Creativity',
@@ -236,7 +242,7 @@ class UPEnv(Env):
     _action_names_stages.append(_core_action_set_1+_stage_2_projects_ac)
     
     # Stage 3
-    _action_intervals_stages.append(0.2)
+    _action_intervals_stages.append(0.5)
     _stage_3_required_projects = [        
         'Optimized AutoClippers',                
         'Optimized Wire Extrusion',        
@@ -281,6 +287,7 @@ class UPEnv(Env):
         'Photonic Chip 0 Level'      
     ]    
     _core_action_set_2 = [
+        'Do Nothing',
         'Lower Price', 
         'Raise Price', 
         'Buy Autoclipper',
@@ -705,6 +712,13 @@ class UPEnv(Env):
         dclips = observation_from_handler['Paperclips'] - self._prev_observation_from_handler['Paperclips']
         return dclips
     
+    def getAvailableActions(self, stage=None):
+        if stage == None:
+            ac_avail = self._handler.getAvailableActions(self._action_names_stages[self._initial_stage])
+        else:
+            ac_avail = self._handler.getAvailableActions(self._action_names_stages[stage])
+        return np.array(ac_avail)
+    
     def _step(self, action, stage=None):
         """
         Run one timestep of the environment's dynamics. When end of episode
@@ -755,12 +769,11 @@ class UPEnv(Env):
         if stage == None:
             observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
             observation = self.observation_space.observationAsArray(observation_from_handler)
-            ac_avail = self._handler.getAvailableActions(self._action_names_stages[self._initial_stage])
         else:
             ob_space = UPObservationSpace(self._observation_names_stages[stage])
             observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
             observation = ob_space.observationAsArray(observation_from_handler)
-            ac_avail = self._handler.getAvailableActions(self._action_names_stages[stage])
+        ac_avail = self.getAvailableActions(stage)
         if self._verbose:
             print(observation_from_handler)
         

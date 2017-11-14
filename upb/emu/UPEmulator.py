@@ -50,6 +50,7 @@ class UPEmulator(object):
     
     # Actions and their availability
     _action_to_js = {
+        'Do Nothing': '',
         'Make Paperclip': 'if (wire>=1) {clipClick(1);}',
         'Lower Price': 'if (margin>.01) {lowerPrice();}',
         'Raise Price': 'raisePrice();',
@@ -68,6 +69,7 @@ class UPEmulator(object):
         'Buy MegaClipper': 'if (funds>=megaClipperCost && megaClipperFlag == 1) {makeMegaClipper();}'
     }
     _action_avail_to_js = {
+        'Do Nothing': 'true',
         'Make Paperclip': 'wire>=1',
         'Lower Price': 'margin>.01',
         'Raise Price': 'true',

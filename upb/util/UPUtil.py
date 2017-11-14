@@ -3,14 +3,17 @@ from upb.envs.UPEnv import UPEnv, UPObservationSpace, UPActionSpace
 
 def rollout(env, agent, callback=None):
     ob_prev = env.reset()
+    ac_avail = env.getAvailableActions()
     done = False
     stochastic = True
     iter_num = 0
     while not done:                
-        ac, vpred = agent.act(stochastic, ob_prev)
-        ob, rew, done, info = env.step(ac)
-        if callback != None:
-            callback(iter_num, env, agent, ob_prev, ac, vpred, rew, done, info)
+        ac, vpred = agent.act(stochastic, ob_prev, ac_avail)
+        if iter_num > 0:
+            if callback != None:
+                callback(iter_num, env, agent, ob_prev, ac_avail, ac, vpred, rew, done, info)
+        ob, rew, done, info = env.step(ac)        
+        ac_avail = info['Available Actions']        
         ob_prev = ob        
         iter_num += 1
     

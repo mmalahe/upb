@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import matplotlib.pyplot as plt
 
-def render_agent_decision(env, agent, ob, ac, vpred, rew, filename):    
+def render_agent_decision(env, agent, ob, ac_avail, ac, vpred, rew, filename):    
     # Get observations
     obs_dict = env.observation_space.observationAsOrderedDict(ob)
     n_obs = len(obs_dict)
@@ -9,7 +9,7 @@ def render_agent_decision(env, agent, ob, ac, vpred, rew, filename):
     # Get actions
     action_names = env.action_space.allActionsAsStrings()
     n_actions = len(action_names)
-    ac_probs = agent.getActionProbabilities(ob)
+    ac_probs = agent.getActionProbabilities(ob, ac_avail)
     ac_prob_dict = OrderedDict()
     for i in range(n_actions):
         ac_prob_dict[action_names[i]] = ac_probs[i]

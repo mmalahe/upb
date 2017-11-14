@@ -130,11 +130,12 @@ class MLPAgent(MlpPolicy):
         means = sums/counts
         return means
         
-    def getActionProbabilities(self, ob):
+    def getActionProbabilities(self, ob, ac_avail):
         with tf.variable_scope(self.scope):
             stochastic = True
             ob_tfvar = tf_util.get_placeholder_cached(name="ob")
-            logits = self.pd.logits.eval(feed_dict={ob_tfvar:ob[None]})
+            ac_avail_tfvar = tf_util.get_placeholder_cached(name="acavail")
+            logits = self.pd.logits.eval(feed_dict={ob_tfvar:ob[None], ac_avail_tfvar:ac_avail[None]})
             probs = np.exp(logits)/np.sum(np.exp(logits))
             return probs[0]       
 

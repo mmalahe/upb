@@ -24,16 +24,17 @@ inits_dir = "inits"
 render_dir = "render"
 
 # Environment parameters
-initial_stage = 5
-final_stage = 5
-episode_length = 1440
+initial_stage = 0
+final_stage = 0
+episode_length = 1200
 
 # Agents
 resetter_agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(initial_stage)]
-agent_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
+#~ agent_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
+agent_filename = "data/policy_stage0_iter127.pickle"
 
 # Loading initial states
-do_load_init_states = True
+do_load_init_states = False
 if do_load_init_states:
     init_states_loading_filename = os.path.join(inits_dir,"stage{}.pickle".format(initial_stage))
 else:
@@ -85,10 +86,10 @@ def main():
     # The main agent
     agent = load_mlp_agent(agent_filename, "main", env.observation_space, env.action_space)
         
-    def callback(iter_num, env, agent, ob, ac, vpred, rew, done, info):
+    def callback(iter_num, env, agent, ob, ac_avail, ac, vpred, rew, done, info):
         if do_render_agent_decision:
             decision_filename = decision_base_filename+str(iter_num).zfill(5)+".png"
-            render_agent_decision(env, agent, ob, ac, vpred, rew, decision_filename)
+            render_agent_decision(env, agent, ob, ac_avail, ac, vpred, rew, decision_filename)
     
     # Create a new set of initial conditions
     if do_create_init_states:

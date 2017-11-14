@@ -36,25 +36,27 @@ webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phant
 url_training = LOCAL_GAME_URL_TRAIN
 
 # Resetting environment to an initial stage
-initial_stage = 5
-final_stage = 5 # Stage past which not to actually advance
+initial_stage = 0
+final_stage = 0 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
 
 # Training parameters
-do_load_latest_agent = False
+do_load_latest_agent = True
 load_only_observation_scaling = False
-episode_length = 1440
-timesteps_per_batch = 8*episode_length
+update_obs_scaling = True
+episode_length = 1200
+timesteps_per_batch = 4*episode_length
 optim_batchsize = episode_length
 max_iters = 1000
-schedule = 'constant'
+schedule = 'linear'
 stochastic = True
-clip_param = 0.3
+clip_param = 0.1
 vf_loss_coeff = 0.01
-entcoeff = 0.05
+entcoeff = 0.00
 optim_stepsize = 1e-3
 optim_epochs = 128
-update_obs_scaling = True
+gamma = 1.0
+lam = 0.95
 
 # Data management
 iters_per_render = 10
@@ -64,7 +66,8 @@ data_dir = "data"
 init_states_dir = "inits"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(initial_stage))
 policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(initial_stage))
-initial_states_filename = os.path.join(init_states_dir, "stage{}.pickle".format(initial_stage))
+#~ initial_states_filename = os.path.join(init_states_dir, "stage{}.pickle".format(initial_stage))
+initial_states_filename = None
 rewards_history = []
 obs_means_history = []
 
@@ -119,7 +122,7 @@ def train():
         iters_so_far = loc['iters_so_far']
         if iters_so_far % iters_per_render == 0 and iters_so_far > 0:
             policy = loc['pi']
-            env = loc['env'].env
+            env = loc['env']
             rollout(env, policy)
             env.save_screenshot("data/iter_{:05d}.png".format(iters_so_far))
         
@@ -130,15 +133,19 @@ def train():
             r_std = [np.std(r) for r in rewards_history]
             r_min = [np.min(r) for r in rewards_history]
             r_max = [np.max(r) for r in rewards_history]
+            r_median = [np.median(r) for r in rewards_history] 
             plt.plot(np.array(r_min),'r-')
-            plt.errorbar(np.arange(len(r_mean)), np.array(r_mean), yerr=np.array(r_std), fmt='k-')
-            plt.plot(np.array(r_max),'b-')
+            plt.plot(np.array(r_median), 'k--')
+            #~ plt.errorbar(np.arange(len(r_mean)), np.array(r_mean), yerr=np.array(r_std), fmt='k-')
+            plt.plot(np.array(r_mean), 'k-')
+            #~ plt.plot(np.array(r_max),'b-')
             plt.xlabel("Iterations")
             plt.ylabel("Reward")
             plt.savefig(os.path.join(data_dir,"reward_history.png"))
             plt.close(fig)
             print("Best min at iteration", np.argmax(r_min))
             print("Best mean at iteration", np.argmax(r_mean))
+            print("Best median at iteration", np.argmax(r_median))
             print("Best max at iteration", np.argmax(r_max))
             
             # Plot observation means
@@ -171,11 +178,7 @@ def train():
         if rank == 0:
             save_callback(loc, glob)
             logging_callback(loc,glob)
-            observe_callback(loc, glob)           
-    
-    # Monitoring
-    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), "%i.monitor.json"%rank))
-    gym.logger.setLevel(logging.WARN)
+            observe_callback(loc, glob)
     
     # Policy generating function
     def policy_fn(name, ob_space, ac_space):
@@ -205,7 +208,7 @@ def train():
         clip_param=clip_param, entcoeff=entcoeff,
         vf_loss_coeff=vf_loss_coeff,
         optim_epochs=optim_epochs, optim_stepsize=optim_stepsize, optim_batchsize=optim_batchsize,
-        gamma=1.00, lam=0.95,
+        gamma=gamma, lam=gamma,
         schedule=schedule,
         stochastic=stochastic,
         callback=callback,
