@@ -3,7 +3,6 @@ from baselines.ppo1.mlp_policy import MlpPolicy
 import pickle
 import numpy as np
 import tensorflow as tf
-import keras
 import gym
 from upb.envs.UPEnv import UPObservationSpace, UPActionSpace
 
