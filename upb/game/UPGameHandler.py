@@ -194,8 +194,8 @@ class UPGameHandler(object):
                 print("WARNING: Handling this by resetting. If this was in the middle of a sample path it's going to mess it up a lot.")
                 self.reset()
                 self.takeAction(action_name)
-
-        # Other cases        
+        elif action_name == "Do Nothing":
+            pass      
         else:
             print("WARNING: Not sure what to do with action "+action_name+".")
             print("Doing nothing.")
@@ -274,6 +274,23 @@ class UPGameHandler(object):
             success = True       
         return success
     
+    def actionAvailable(self, ac_name):
+        # Actions that are buttons
+        if ac_name in self._all_buttons.keys():
+            button, clickable = self._findButton(ac_name)
+            return clickable
+            
+        if ac_name == "Do Nothing":
+            return True
+        else:
+            raise Exception("Don't know how to determine availability of {}.".format(ac_name))
+    
+    def getAvailableActions(self, ac_names):
+        acs_avail = []
+        for ac_name in ac_names:
+            acs_avail.append(float(self.actionAvailable(ac_name)))
+        return acs_avail
+        
     def _getAvailableActions(self):
         available = []
         for button_name in self._all_buttons:
