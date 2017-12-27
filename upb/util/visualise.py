@@ -1,8 +1,12 @@
 from collections import OrderedDict
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import matplotlib as mp
+from matplotlib import gridspec
 
 class DecisionRenderer:
-    def __init__(self, ac_plot_type='bar'):
+    def __init__(self, ob_plot_type='screenshot', ac_plot_type='bar'):
+        self._ob_plot_type = ob_plot_type
         self._ac_plot_type = ac_plot_type
         self._fig = None
         self._obs_prev = None
@@ -32,27 +36,51 @@ class DecisionRenderer:
         if new_plot:
             if self._fig != None:
                 plt.close(self._fig)
-            self._fig, self._ax_list = plt.subplots(ncols=2, figsize=(12,9))
+            dpi = 96
+            self._fig = plt.figure(figsize=(1.47*1920/dpi,1.22*1080/dpi), dpi=dpi)
+            gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
+            self._ax_list = []
+            self._ax_list.append(plt.subplot(gs[0]))
+            self._ax_list.append(plt.subplot(gs[1]))
+            plt.subplots_adjust(wspace=0.0)
         
         # Observations
         ob_ax = self._ax_list[0]
-        table_text = [["{:1.3g}".format(value)] for value in obs_dict.values()]
-        if new_plot:
-            row_labels = list(obs_dict.keys())
-            col_labels = ["Value"]
+        
+        if self._ob_plot_type == 'screenshot':
+            env.save_screenshot("tmp.png")
+            im = mpimg.imread("tmp.png")
+            if new_plot:
+                self._ob_handle = ob_ax.imshow(im, interpolation='lanczos')
+                ob_ax.set_xticks([])
+                ob_ax.set_xticklabels([])
+                ob_ax.set_yticks([])
+                ob_ax.set_yticklabels([])
+            else:
+                self._ob_handle.set_data(im)
+                plt.draw()
             
-            ob_ax.axis('tight')
-            ob_ax.axis('off')
-            self._ob_handle = ob_ax.table(cellText=table_text,
-                              rowLabels=row_labels,
-                              colLabels=col_labels,
-                              loc='center',
-                              colWidths=[0.2]
-                              )
-        else:             
-            for i_row in range(len(table_text)):
-                for i_col in range(len(table_text[0])):                    
-                    self._ob_handle._cells[(i_row+1, i_col)]._text.set_text(table_text[i_row][i_col])
+        elif self._ob_plot_type == 'table':
+            table_text = [["{:1.3g}".format(value)] for value in obs_dict.values()]
+            if new_plot:
+                row_labels = list(obs_dict.keys())
+                col_labels = ["Value"]
+                
+                ob_ax.axis('tight')
+                ob_ax.axis('off')
+                self._ob_handle = ob_ax.table(cellText=table_text,
+                                  rowLabels=row_labels,
+                                  colLabels=col_labels,
+                                  loc='center',
+                                  colWidths=[0.2]
+                                  )
+            else:             
+                for i_row in range(len(table_text)):
+                    for i_col in range(len(table_text[0])):                    
+                        self._ob_handle._cells[(i_row+1, i_col)]._text.set_text(table_text[i_row][i_col])
+                        
+        else:
+            raise Exception("Don't know what to do with observation plot type {}.".format(self._ob_plot_type))
                     
         # Plot actions
         labels = action_names
@@ -95,7 +123,7 @@ class DecisionRenderer:
                 self._ac_handle[ac].set_color('red')       
             
         else:
-            raise Exception("Don't know what to do with plot type {}.".format(plot_type))
+            raise Exception("Don't know what to do with action plot type {}.".format(self._ac_plot_type))
                     
         # Save figure
-        self._fig.savefig(filename, bbox_inches='tight')                   
+        self._fig.savefig(filename, bbox_inches='tight', dpi='figure')                   
