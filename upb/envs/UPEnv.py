@@ -846,6 +846,16 @@ class UPEnv(Env):
     def _seed(self, seed=None):
         return []
     
+    def getCurrentActionSpace(self):
+        return UPActionSpace(self._action_names_stages[self.stage])
+        
+    def getCurrentObservationSpace(self):
+        return UPObservationSpace(self._observation_names_stages[self.stage])
+    
+    @property
+    def stage(self):
+        return self._stage
+    
     @property
     def action_space(self):
         return UPActionSpace(self._action_names_stages[self._initial_stage])

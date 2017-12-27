@@ -3,7 +3,6 @@
 
 from upb.envs.UPEnv import *
 from upb.util.UPUtil import *
-from upb.util.visualise import render_agent_decision
 from upb.agents.mlp import MLPAgent, load_mlp_agent
 from baselines.common import tf_util
 from mpi4py import MPI
@@ -12,7 +11,7 @@ from upb.game.UPGameHandler import LOCAL_GAME_URL_STANDARD
 import pickle
 
 # Game handler
-use_emulator = True
+use_emulator = False
 webdriver_name = 'Chrome'
 webdriver_path = None
 url = LOCAL_GAME_URL_STANDARD
@@ -26,12 +25,10 @@ render_dir = "render"
 # Environment parameters
 initial_stage = 0
 final_stage = 6
-episode_length = 250
+episode_length = 5000
 
 # Agents
-resetter_agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(initial_stage)]
-agent_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
-#~ agent_filename = "data/policy_stage{}_iter137.pickle".format(initial_stage)
+agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(final_stage+1)]
 
 # Loading initial states
 do_load_init_states = False
@@ -48,7 +45,7 @@ if do_create_init_states:
     assert episode_length == 0
     
 # Display
-do_render_agent_decision = False
+do_render_agent_decision = True
 decision_base_filename = os.path.join(render_dir,"decision")
 i_decision = 0
 
@@ -67,7 +64,7 @@ def main():
     MPI.COMM_WORLD.Barrier()
     
     # For resetting to a fixed stage
-    resetter_agents = load_resetter_agents(initial_stage, resetter_agent_filenames)
+    resetter_agents = load_agents(initial_stage, agent_filenames, base_name="resetter_agent")
     
     # The rollout environment
     env = UPEnv(url,
@@ -83,21 +80,20 @@ def main():
                 headless=False                  
                 )
                 
-    # The main agent
-    agent = load_mlp_agent(agent_filename, "main", env.observation_space, env.action_space)
-        
+    # The main agents
+    agents = load_agents(final_stage+1, agent_filenames, base_name="agent")
+    
+    # Callback
     def callback(iter_num, env, agent, ob, ac_avail, ac, vpred, rew, done, info):
-        if do_render_agent_decision:
-            decision_filename = decision_base_filename+str(iter_num).zfill(5)+".png"
-            render_agent_decision(env, agent, ob, ac_avail, ac, vpred, rew, decision_filename)
+        pass
     
     # Create a new set of initial conditions
     if do_create_init_states:
-        create_states_batch(env, agent, n_init_states, init_states_creation_filename)
+        create_states_batch(env, agents, n_init_states, init_states_creation_filename)
     # Normal Rollout
     else:
-        rollout(env, agent, callback=callback)
-        env.save_screenshot("")
+        rollout(env, agents, render_decision_basename=decision_base_filename, callback=callback)
+        env.save_screenshot("final_state.png")
     
 if __name__ == "__main__":
     main()

@@ -11,6 +11,7 @@ class MLPAgent(MlpPolicy):
         super(MLPAgent, self).__init__(name, *args, **kwargs)
         self._hid_size = kwargs['hid_size']
         self._num_hid_layers = kwargs['num_hid_layers']
+        self._name = name
         
     def save(self, filename):
         py_vars = {}
@@ -132,11 +133,16 @@ class MLPAgent(MlpPolicy):
     def getActionProbabilities(self, ob, ac_avail):
         with tf.variable_scope(self.scope):
             stochastic = True
-            ob_tfvar = tf_util.get_placeholder_cached(name="ob")
-            ac_avail_tfvar = tf_util.get_placeholder_cached(name="acavail")
+            sequence_length = None
+            ob_tfvar = tf_util.get_placeholder_cached(name=self.scope+"ob")
+            ac_avail_tfvar = tf_util.get_placeholder_cached(name=self.scope+"acavail")
             logits = self.pd.logits.eval(feed_dict={ob_tfvar:ob[None], ac_avail_tfvar:ac_avail[None]})
             probs = np.exp(logits)/np.sum(np.exp(logits))
-            return probs[0]       
+            return probs[0]
+            
+    @property
+    def name(self):
+        return self._name
 
 def load_mlp_agent_topology(filename):
     with open(filename, 'rb') as f:
