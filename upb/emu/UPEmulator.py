@@ -78,14 +78,15 @@ class UPEmulator(object):
         'Buy Autoclipper': 'funds>=clipperCost',
         'Add Processor': 'trust>processors+memory || swarmGifts > 0',
         'Add Memory': 'trust>processors+memory || swarmGifts > 0',
-        'Set Investment Low': 'investmentEngineFlag == 1',
-        'Set Investment Medium': 'investmentEngineFlag == 1',
-        'Set Investment High': 'investmentEngineFlag == 1',
+        'Set Investment Low': 'investmentEngineFlag == 1 && riskiness != 7',
+        'Set Investment Medium': 'investmentEngineFlag == 1 && riskiness != 5',
+        'Set Investment High': 'investmentEngineFlag == 1 && riskiness != 1',
         'Withdraw': 'investmentEngineFlag == 1',
         'Deposit': 'investmentEngineFlag == 1',
         'Upgrade Investment Engine': 'investmentEngineFlag == 1 && yomi>=investUpgradeCost',
-        'Quantum Compute': 'qFlag == 1',
-        'Buy MegaClipper': 'funds>=megaClipperCost && megaClipperFlag == 1'
+        'Quantum Compute': 'qFlag == 1 && qChips[0].active != 0',
+        'Buy MegaClipper': 'funds>=megaClipperCost && megaClipperFlag == 1',
+        'Run New Tournament': 'strategyEngineFlag == 1 && operations>=tourneyCost && tourneyInProg == 0'
     }
     
     for pname, pid in UP_PROJECT_IDS.items():
@@ -158,7 +159,8 @@ class UPEmulator(object):
         # Package as a javascript array
         acs_js = "["
         for i in range(len(ac_names)-1):
-            acs_js += self._action_avail_to_js[ac_names[i]]+","
+            ac_name = ac_names[i]
+            acs_js += self._action_avail_to_js[ac_name]+","
         acs_js += self._action_avail_to_js[ac_names[-1]]
         acs_js += "]"
         

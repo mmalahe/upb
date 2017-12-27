@@ -1,6 +1,8 @@
 """Usage example: mpirun -np 4 python3 train.py
 """
 
+# export CUDA_VISIBLE_DEVICES=""
+
 import sys
 import pickle
 
@@ -36,27 +38,27 @@ webdriver_path_training = "/home/mikl/sfw/phantomjs-2.1.1-linux-x86_64/bin/phant
 url_training = LOCAL_GAME_URL_TRAIN
 
 # Resetting environment to an initial stage
-initial_stage = 0
-final_stage = 0 # Stage past which not to actually advance
+initial_stage = 5
+final_stage = 5 # Stage past which not to actually advance
 resetter_agent_filenames = [os.path.join("agents","stage{}.pickle".format(i)) for i in range(initial_stage)]
 
 # Training parameters
 do_load_latest_agent = True
 load_only_observation_scaling = False
 update_obs_scaling = True
-episode_length = 1200
-timesteps_per_batch = 4*episode_length
-optim_batchsize = episode_length
-max_iters = 1000
+episode_length = 720
+timesteps_per_batch = 64*episode_length
+optim_batchsize = timesteps_per_batch
+max_iters = 245
 schedule = 'linear'
 stochastic = True
-clip_param = 0.1
+clip_param = 0.175
 vf_loss_coeff = 0.01
 entcoeff = 0.00
 optim_stepsize = 1e-3
-optim_epochs = 128
+optim_epochs = 256
 gamma = 1.0
-lam = 0.95
+lam = 1.0
 
 # Data management
 iters_per_render = 10
@@ -66,8 +68,8 @@ data_dir = "data"
 init_states_dir = "inits"
 policy_filename_latest = os.path.join(data_dir,"policy_stage{}_latest.pickle".format(initial_stage))
 policy_filename_latest_old = os.path.join(data_dir,"policy_stage{}_latest_old.pickle".format(initial_stage))
-#~ initial_states_filename = os.path.join(init_states_dir, "stage{}.pickle".format(initial_stage))
-initial_states_filename = None
+initial_states_filename = os.path.join(init_states_dir, "stage{}.pickle".format(initial_stage))
+#~ initial_states_filename = None
 rewards_history = []
 obs_means_history = []
 
@@ -75,6 +77,7 @@ def train():
     # MPI setup
     rank = MPI.COMM_WORLD.Get_rank()
     comm_size = MPI.COMM_WORLD.Get_size()
+    
     sess = tf_util.single_threaded_session()
     sess.__enter__()
     if rank != 0:
@@ -147,9 +150,9 @@ def train():
             print("Best mean at iteration", np.argmax(r_mean))
             print("Best median at iteration", np.argmax(r_median))
             print("Best max at iteration", np.argmax(r_max))
+            plt.close()
             
-            # Plot observation means
-            plt.clf()
+            # Plot observation means            
             fig = plt.figure(figsize=(16,12))
             n_obs = len(obs_means_history[0])
             leg = []
@@ -164,6 +167,7 @@ def train():
             plt.savefig(os.path.join(data_dir,"obs_mean_history.png"))
             
             # Close figure
+            plt.close(fig)
             plt.close()
             
     def logging_callback(loc, glob):
@@ -197,7 +201,7 @@ def train():
                 print("WARNING: Don't know how to load {}.".format(name))
         else:
             agent = MLPAgent(name=name, ob_space=ob_space, 
-                         ac_space=ac_space, hid_size=64, num_hid_layers=2)
+                         ac_space=ac_space, hid_size=96, num_hid_layers=2)
                 
         return agent
     

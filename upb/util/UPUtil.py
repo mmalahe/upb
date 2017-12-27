@@ -1,5 +1,6 @@
 from upb.agents.mlp import load_mlp_agent
 from upb.envs.UPEnv import UPEnv, UPObservationSpace, UPActionSpace
+import pickle
 
 def rollout(env, agent, callback=None):
     ob_prev = env.reset()

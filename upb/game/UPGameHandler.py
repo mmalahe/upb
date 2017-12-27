@@ -42,7 +42,8 @@ UP_PROJECT_IDS = {
     'Hypno Harmonics': '34',
     'RevTracker': '42',
     'Quantum Computing': '50',
-    'Photonic Chip': '51'
+    'Photonic Chip': '51',
+    'New Strategy: A100': '60'
 }
 
 class UPGameState(object):

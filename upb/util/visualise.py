@@ -16,7 +16,7 @@ def render_agent_decision(env, agent, ob, ac_avail, ac, vpred, rew, filename):
     selected_action = action_names[ac]
     
     # Set up plots
-    fig, ax_list = plt.subplots(ncols=2)
+    fig, ax_list = plt.subplots(ncols=2, figsize=(16,12))
     
     # Observations
     ob_ax = ax_list[0]

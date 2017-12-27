@@ -62,6 +62,7 @@ class UPObservationSpace(Box):
             'Improved Wire Extrusion Activated': [0,1.],
             'Optimized Wire Extrusion Activated': [0,1.],
             'Microlattice Shapecasting Activated': [0,1.],
+            'Quantum Foam Annealment Activated': [0,1.],
             'New Slogan Activated': [0,1.],
             'Catchy Jingle Activated': [0,1.],
             'Lexical Processing Activated': [0,1.],
@@ -77,7 +78,9 @@ class UPObservationSpace(Box):
             'Quantum Computing Activated': [0,1.],
             'Spectral Froth Annealment Activated': [0,1.],
             'MegaClippers Activated': [0,1.],
-            'Strategic Modeling Activated': [0,1.]
+            'Improved MegaClippers Activated': [0,1.],
+            'Strategic Modeling Activated': [0,1.],            
+            'New Strategy: A100 Activated': [0,1.]
         }
 
         # Order keys
@@ -243,20 +246,12 @@ class UPEnv(Env):
     
     # Stage 3
     _action_intervals_stages.append(0.5)
-    _stage_3_required_projects = [        
-        'Optimized AutoClippers',                
-        'Optimized Wire Extrusion',        
-        'Catchy Jingle',
-        'Combinatory Harmonics',
-        'The Hadwiger Problem',
-        'The Toth Sausage Conjecture',
-    ]
+    _stage_3_required_projects = _stage_2_projects
     _stage_3_projects = [
         'Microlattice Shapecasting',
         'Hadwiger Clip Diagrams',
         'WireBuyer',
         'Hypno Harmonics',
-        'Donkey Space'
     ]
     _stage_3_projects_obs = [proj+" Activated" for proj in _stage_3_projects]
     _stage_3_projects_ac = ["Activate "+proj for proj in _stage_3_projects]
@@ -271,6 +266,8 @@ class UPEnv(Env):
         'Available Funds', 
         'Autoclipper Cost', 
         'Number of Autoclippers',
+        'Wire Inches',
+        'Wire Cost',
         'Paperclips',
         'Marketing Level',
         'Marketing Cost',
@@ -284,7 +281,14 @@ class UPEnv(Env):
         'Stocks',
         'Riskiness',
         'Number of Photonic Chips',
-        'Photonic Chip 0 Level'      
+        'Photonic Chip 0 Level',
+        'Latest QOps',
+        'MegaClipper Cost',
+        'Number of MegaClippers',
+        'Investment Engine Level',
+        'Investment Engine Upgrade Cost',
+        'Yomi',
+        'Tournament Cost'    
     ]    
     _core_action_set_2 = [
         'Do Nothing',
@@ -300,59 +304,59 @@ class UPEnv(Env):
         'Withdraw',
         'Deposit',
         'Activate Photonic Chip',
-        'Quantum Compute'
-    ]
-    
-    # Stage 4
-    _action_intervals_stages.append(2.5)
-    _stage_4_required_projects = [
-        'Microlattice Shapecasting',
-        'Hadwiger Clip Diagrams',
-        'WireBuyer',
-        'Hypno Harmonics'
-    ]
-    _stage_4_projects = [
-        'Algorithmic Trading',
-        'Quantum Computing',
-        'Donkey Space'
-    ]
-    _stage_4_projects_obs = [proj+" Activated" for proj in _stage_4_projects]
-    _stage_4_projects_ac = ["Activate "+proj for proj in _stage_4_projects]
-    _observation_names_stages.append(_core_observation_set_2+_stage_4_projects_obs)
-    _action_names_stages.append(_core_action_set_2+_stage_4_projects_ac)    
-    
-    # Observations and actions common to stages 5+
-    _core_observation_set_3 = _core_observation_set_2 + [
-        'Latest QOps',
-        'MegaClipper Cost',
-        'Number of MegaClippers',
-        'Investment Engine Level',
-        'Investment Engine Upgrade Cost',
-        'Yomi',
-        'Tournament Cost'
-    ]
-    _core_action_set_3 = _core_action_set_2 + [
+        'Quantum Compute',
         'Buy MegaClipper',
         'Upgrade Investment Engine',
         'Run New Tournament'
     ]
     
-    # Stage 5
+    # Stage 4
     _action_intervals_stages.append(2.5)
-    _stage_5_required_projects = [
-        'Donkey Space'
-    ]
-    _stage_5_projects = [
+    _stage_4_required_projects = _stage_3_projects
+    _stage_4_projects = [
         'Algorithmic Trading',
         'Quantum Computing',
         'Spectral Froth Annealment',
         'MegaClippers',
-        'Strategic Modeling',   
+        'Strategic Modeling',
+    ]
+    _stage_4_projects_obs = [proj+" Activated" for proj in _stage_4_projects]
+    _stage_4_projects_ac = ["Activate "+proj for proj in _stage_4_projects]
+    _observation_names_stages.append(_core_observation_set_2+_stage_4_projects_obs)
+    _action_names_stages.append(_core_action_set_2+_stage_4_projects_ac)
+    
+     # Stage 5
+    _action_intervals_stages.append(2.5)
+    _stage_5_required_projects = [
+        'Algorithmic Trading',
+        'Quantum Computing',
+    ]
+    _stage_5_projects = [
+        'Spectral Froth Annealment',
+        'MegaClippers',
+        'Strategic Modeling',
     ]
     _stage_5_projects_obs = [proj+" Activated" for proj in _stage_5_projects]
     _stage_5_projects_ac = ["Activate "+proj for proj in _stage_5_projects]
-    _observation_names_stages.append(_core_observation_set_3+_stage_5_projects_obs)
-    _action_names_stages.append(_core_action_set_3+_stage_5_projects_ac)
+    _observation_names_stages.append(_core_observation_set_2+_stage_5_projects_obs)
+    _action_names_stages.append(_core_action_set_2+_stage_5_projects_ac)
+    
+    # Stage 6
+    _action_intervals_stages.append(2.5)
+    _stage_6_required_projects = [        
+        'Strategic Modeling'
+    ]
+    _stage_6_projects = [
+        #~ 'MegaClippers',
+        #~ 'Spectral Froth Annealment',
+        'Improved MegaClippers',
+        'Quantum Foam Annealment',
+        'New Strategy: A100'
+    ]
+    _stage_6_projects_obs = [proj+" Activated" for proj in _stage_6_projects]
+    _stage_6_projects_ac = ["Activate "+proj for proj in _stage_6_projects]
+    _observation_names_stages.append(_core_observation_set_2+_stage_6_projects_obs)
+    _action_names_stages.append(_core_action_set_2+_stage_6_projects_ac)
        
     def __init__(self,
                  url,
@@ -470,7 +474,21 @@ class UPEnv(Env):
                 self._stage = 5
                 if self._verbose:
                     print("Advancing to stage 5.")
-                stage_changed = True 
+                stage_changed = True
+                
+        # Update rule for stage 5 -> 6
+        if self._stage == 5:
+            required_projects_obs = [proj+" Activated" for proj in self._stage_6_required_projects]
+            observation_from_handler = self._handler.makeObservation(required_projects_obs)
+            all_projects_activated = True
+            for name, obs in observation_from_handler.items():
+                if obs != 1:
+                    all_projects_activated = False
+            if all_projects_activated:
+                self._stage = 6
+                if self._verbose:
+                    print("Advancing to stage 5.")
+                stage_changed = True
         
         if stage_changed:
             self._observation_names = self._observation_names_stages[self._stage]
@@ -494,6 +512,7 @@ class UPEnv(Env):
         observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
         self._prev_observation_from_handler = observation_from_handler        
         ob = ob_space.observationAsArray(observation_from_handler)
+        ac_avail = self.getAvailableActions(self._stage)
         
         if target_stage == 1:
             max_game_time = 400
@@ -506,7 +525,9 @@ class UPEnv(Env):
         elif target_stage == 5:
             max_game_time = 2800
         elif target_stage == 6:
-            raise NotImplementedError("No definition for stage 6+.")
+            max_game_time = 3400
+        else:
+            raise NotImplementedError("No definition for stage 7+.")
         
         # Advance
         stochastic = True
@@ -514,14 +535,16 @@ class UPEnv(Env):
         while self._stage < target_stage:
             # Act
             agent = agents[self._stage] 
-            ac, vpred = agent.act(stochastic, ob)
+            ac, vpred = agent.act(stochastic, ob, ac_avail)
             ob, rew, done, info = self._step(ac, self._stage)
+            ac_avail = info["Available Actions"]
             
             # Observe in new observation space if stage changed
             if prev_stage != self._stage:
                 ob_space = UPObservationSpace(self._observation_names_stages[self._stage])
                 observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
                 ob = ob_space.observationAsArray(observation_from_handler)
+                ac_avail = self.getAvailableActions(self._stage)
             
             # Restart if failed to get to next stage quickly enough
             #~ print(self._game_time)
@@ -536,6 +559,7 @@ class UPEnv(Env):
                 observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
                 self._prev_observation_from_handler = observation_from_handler        
                 ob = ob_space.observationAsArray(observation_from_handler)
+                ac_avail = self.getAvailableActions(self._stage)
             
             # Report
             if self._verbose and self._stage > prev_stage:          
@@ -598,15 +622,18 @@ class UPEnv(Env):
             elif self._stage == 2:
                 reward *= 5e-4
             elif self._stage == 3:
-                reward *= 1e-4
+                reward *= 1e-5
         elif self._stage == 4:
             reward = self.assetsAndCashRewardStage4Plus(observation_from_handler)
-            reward *= 1e-5
+            reward *= 1e-6
         elif self._stage == 5:
             reward = self.assetsAndCashRewardStage5Plus(observation_from_handler)
-            reward *= 1e-6
+            reward *= 5e-7
+        elif self._stage == 6:
+            reward = self.assetsAndCashRewardStage5Plus(observation_from_handler)
+            reward *= 1e-7
         else:
-            raise NotImplementedError("No definition for stage 6+.")
+            raise NotImplementedError("No definition for stage 7+.")
             
         return reward
             
@@ -664,15 +691,7 @@ class UPEnv(Env):
         return dassets
         
     def assetsRewardStage4Plus(self, observation_from_handler):        
-        dassets = 0.0
-        
-        dautoclippers = observation_from_handler['Number of Autoclippers'] - self._prev_observation_from_handler['Number of Autoclippers']
-        autoclipper_cost = self._prev_observation_from_handler['Autoclipper Cost']        
-        dassets += dautoclippers*autoclipper_cost 
-        
-        dmarketing = observation_from_handler['Marketing Level'] - self._prev_observation_from_handler['Marketing Level']
-        marketing_cost = self._prev_observation_from_handler['Marketing Cost']
-        dassets += dmarketing*marketing_cost
+        dassets = self.assetsReward(observation_from_handler)
         
         try:
             prev_bankroll = self._prev_observation_from_handler['Investment Bankroll']
@@ -687,11 +706,6 @@ class UPEnv(Env):
         dstocks = observation_from_handler['Stocks'] - prev_stocks
         dassets += dstocks
         
-        return dassets 
-        
-    def assetsRewardStage5Plus(self, observation_from_handler):
-        dassets = self.assetsRewardStage4Plus(observation_from_handler)
-        
         try:
             prev_megaclippers = self._prev_observation_from_handler['Number of MegaClippers']
             megaclipper_cost = self._prev_observation_from_handler['MegaClipper Cost']
@@ -702,6 +716,10 @@ class UPEnv(Env):
         dmegaclippers = observation_from_handler['Number of MegaClippers'] - prev_megaclippers      
         dassets += dmegaclippers*megaclipper_cost
         
+        return dassets 
+        
+    def assetsRewardStage5Plus(self, observation_from_handler):
+        dassets = self.assetsRewardStage4Plus(observation_from_handler)
         return dassets        
     
     def cashReward(self, observation_from_handler):

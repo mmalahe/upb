@@ -25,13 +25,13 @@ render_dir = "render"
 
 # Environment parameters
 initial_stage = 0
-final_stage = 0
-episode_length = 1200
+final_stage = 6
+episode_length = 250
 
 # Agents
 resetter_agent_filenames = [os.path.join(agents_dir,"stage{}.pickle".format(i)) for i in range(initial_stage)]
-#~ agent_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
-agent_filename = "data/policy_stage0_iter127.pickle"
+agent_filename = os.path.join(agents_dir,"stage{}.pickle".format(initial_stage))
+#~ agent_filename = "data/policy_stage{}_iter137.pickle".format(initial_stage)
 
 # Loading initial states
 do_load_init_states = False
@@ -48,7 +48,7 @@ if do_create_init_states:
     assert episode_length == 0
     
 # Display
-do_render_agent_decision = True
+do_render_agent_decision = False
 decision_base_filename = os.path.join(render_dir,"decision")
 i_decision = 0
 
@@ -97,6 +97,7 @@ def main():
     # Normal Rollout
     else:
         rollout(env, agent, callback=callback)
+        env.save_screenshot("")
     
 if __name__ == "__main__":
     main()
