@@ -737,6 +737,16 @@ class UPEnv(Env):
             ac_avail = self._handler.getAvailableActions(self._action_names_stages[stage])
         return np.array(ac_avail)
     
+    def observe(self, stage=None):
+        if stage == None:
+            observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
+            observation = self.observation_space.observationAsArray(observation_from_handler)
+        else:
+            ob_space = UPObservationSpace(self._observation_names_stages[stage])
+            observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
+            observation = ob_space.observationAsArray(observation_from_handler)
+        return observation_from_handler, observation
+    
     def _step(self, action, stage=None):
         """
         Run one timestep of the environment's dynamics. When end of episode
@@ -784,13 +794,7 @@ class UPEnv(Env):
         stage_changed = self._update_stage()
         
         # Observe and determine available actions
-        if stage == None:
-            observation_from_handler = self._handler.makeObservation(self.observation_space.getPossibleObservations())
-            observation = self.observation_space.observationAsArray(observation_from_handler)
-        else:
-            ob_space = UPObservationSpace(self._observation_names_stages[stage])
-            observation_from_handler = self._handler.makeObservation(ob_space.getPossibleObservations())
-            observation = ob_space.observationAsArray(observation_from_handler)
+        observation_from_handler, observation = self.observe(stage)
         ac_avail = self.getAvailableActions(stage)
         if self._verbose:
             print(observation_from_handler)
