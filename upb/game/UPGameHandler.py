@@ -72,11 +72,15 @@ class UPGameState(object):
         'Investment Engine Upgrade Cost': ['id', 'investUpgradeCost'],
         'Tournament Cost': ['id', 'newTourneyCost']
     }
+    _proj_avail_finders = {pname+' Available': ['id', 'projectButton'+UP_PROJECT_IDS[pname]] for pname in UP_PROJECT_IDS.keys()}
     
     def __init__(self, driver):        
         # The soup
         html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")        
         html_parser = lxml.html.document_fromstring(html_source)
+        
+        # All kinds of values combined
+        self._all_values = {}
         
         # Scalar values
         for field, finder in self._scalar_values_finders.items():
@@ -118,10 +122,20 @@ class UPGameState(object):
                             multiplier /= 100.0
                     
                     self._scalar_values[field] = multiplier*float(value)
-        
-        # All kinds of values combined
-        self._all_values = {}
         self._all_values.update(self._scalar_values)
+        
+        # Project availability
+        self._proj_avail = {}
+        for field, finder in self._proj_avail_finders.items():      
+            if finder[0] == 'id':
+                value = html_parser.get_element_by_id(finder[1], None)
+            else:
+                raise NotImplementedError("Don't know how to find project availability by "+finder[0])                
+            if value == None:
+                self._proj_avail[field] = False
+            else:
+                self._proj_avail[field] = True
+        self._all_values.update(self._proj_avail)
         
     def get(self, field):
         return self._all_values[field]
@@ -172,6 +186,7 @@ class UPGameHandler(object):
             'Tournament Cost'
         ]
         self._avail_observations += [pname+" Activated" for pname in UP_PROJECT_IDS.keys()]
+        self._avail_observations += [pname+" Available" for pname in UP_PROJECT_IDS.keys()]
         
         self._ac_avail_funcs = {
             'Do Nothing': lambda x: True,
@@ -345,6 +360,15 @@ class UPGameHandler(object):
         # Action availability that can be resolved with other observables
         if ac_name in self._ac_avail_funcs.keys():
             return self._ac_avail_funcs[ac_name](observation)
+        
+        # Project activations
+        elif ac_name in self._project_buttons.keys():
+            project_name = ac_name[9:]
+            if observation[project_name+' Available']:
+                button, clickable = self._findButton(ac_name)
+                return clickable
+            else:
+                return False
         
         # Other actions that are buttons
         elif ac_name in self._all_buttons.keys():
