@@ -66,7 +66,11 @@ class UPGameState(object):
         'Trust': ['id','trust'],
         'Next Trust': ['id','nextTrust'],
         'Operations': ['id','operations'],
-        'Creativity': ['id','creativity']
+        'Creativity': ['id','creativity'],
+        #~ 'Riskiness': ['id', 'investStrat'],
+        'Yomi': ['id', 'yomiDisplay'],
+        'Investment Engine Upgrade Cost': ['id', 'investUpgradeCost'],
+        'Tournament Cost': ['id', 'newTourneyCost']
     }
     
     def __init__(self, driver):        
@@ -86,16 +90,34 @@ class UPGameState(object):
             if value == None:
                 self._scalar_values[field] = None
             else:
+                multiplier = 1.0
+                
                 try:
                     self._scalar_values[field] = float(value)
                 except:
-                    # Cases where html spaces have been used
-                    value = value.replace("&nbsp;","")
+                    if value.endswith("Risk"):
+                        if value.startswith("Low"):
+                            value = 7
+                        elif value.startswith("Med"):
+                            value = 5
+                        elif value.startswith("High"):
+                            value = 1
+                        else:
+                            raise Exception("Don't know what to do with \"{}\".".format(value))
                     
-                    # Case where commas are used to separate thousands
-                    value = value.replace(",","")
-                    value = value.replace(u'\xa0',"")
-                    self._scalar_values[field] = float(value)
+                    else:
+                        # Cases where html spaces have been used
+                        value = value.replace("&nbsp;","")
+                        
+                        # Assume commas are used to separate thousands, so simply remove them
+                        value = value.replace(",","")
+                        value = value.replace(u'\xa0',"")
+                        
+                        # Handle known cases where they're used to represent decimals
+                        if field == 'Autoclipper Cost':
+                            multiplier /= 100.0
+                    
+                    self._scalar_values[field] = multiplier*float(value)
         
         # All kinds of values combined
         self._all_values = {}
@@ -129,6 +151,51 @@ class UPGameHandler(object):
         self._project_buttons = {"Activate "+pname:"projectButton{}".format(pid) for pname, pid in UP_PROJECT_IDS.items()}
         self._all_buttons.update(self._project_buttons)
         self._all_actions = list(self._all_buttons.keys())
+        
+        # Action availability
+        self._avail_observations = [
+            'Paperclips',
+            'Available Funds',
+            'Price per Clip',
+            'Marketing Cost',
+            'Wire Inches',
+            'Wire Cost',
+            'Autoclipper Cost',
+            'Processors',
+            'Memory',
+            'Trust',
+            'Operations',
+            'Creativity',
+            #~ 'Riskiness',
+            'Yomi',
+            'Investment Engine Upgrade Cost',
+            'Tournament Cost'
+        ]
+        self._avail_observations += [pname+" Activated" for pname in UP_PROJECT_IDS.keys()]
+        
+        self._ac_avail_funcs = {
+            'Do Nothing': lambda x: True,
+            'Make Paperclip': lambda x: x['Wire Inches']>= 1,
+            'Lower Price': lambda x: x['Price per Clip']>0.01,
+            'Raise Price': lambda x: True,
+            'Expand Marketing': lambda x: x['Available Funds']>=x['Marketing Cost'],
+            'Buy Wire': lambda x: x['Available Funds']>=x['Wire Cost'],
+            'Buy Autoclipper': lambda x: x['Available Funds']>=x['Autoclipper Cost'],
+            'Add Processor': lambda x: x['Trust']>=x['Processors']+x['Memory'],
+            'Add Memory': lambda x: x['Trust']>=x['Processors']+x['Memory'],
+            #~ 'Set Investment Low': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 7,
+            #~ 'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 5,
+            #~ 'Set Investment High': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 1,
+            'Set Investment Low': lambda x: x['Algorithmic Trading Activated'],
+            'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'],
+            'Set Investment High': lambda x: x['Algorithmic Trading Activated'],
+            'Withdraw': lambda x: x['Algorithmic Trading Activated'],
+            'Deposit': lambda x: x['Algorithmic Trading Activated'],
+            'Upgrade Investment Engine': lambda x: x['Algorithmic Trading Activated'] and x['Yomi']>=x['Investment Engine Upgrade Cost'],
+            'Quantum Compute': lambda x: x['Quantum Computing Activated'] and x['Number of Photonic Chips'] != 0,
+            'Buy MegaClipper': lambda x: x['Available Funds']>=x['MegaClipper Cost'] and x['MegaClippers Activated'],
+            'Run New Tournament': lambda x: x['Strategic Modeling Activated'] and x['Operations']>=x['Tournament Cost']
+        }
         
         # Web driver setup
         self._webdriver_name = webdriver_name
@@ -274,27 +341,25 @@ class UPGameHandler(object):
             success = True       
         return success
     
-    def actionAvailable(self, ac_name):
-        # Actions that are buttons
-        if ac_name in self._all_buttons.keys():
+    def actionAvailable(self, ac_name, observation):
+        # Action availability that can be resolved with other observables
+        if ac_name in self._ac_avail_funcs.keys():
+            return self._ac_avail_funcs[ac_name](observation)
+        
+        # Other actions that are buttons
+        elif ac_name in self._all_buttons.keys():
             button, clickable = self._findButton(ac_name)
             return clickable
-            
-        if ac_name == "Do Nothing":
+        
+        # Other actions 
+        elif ac_name == "Do Nothing":
             return True
         else:
             raise Exception("Don't know how to determine availability of {}.".format(ac_name))
     
     def getAvailableActions(self, ac_names):
+        observation = self.makeObservation(self._avail_observations)
         acs_avail = []
         for ac_name in ac_names:
-            acs_avail.append(float(self.actionAvailable(ac_name)))
+            acs_avail.append(float(self.actionAvailable(ac_name, observation)))
         return acs_avail
-        
-    def _getAvailableActions(self):
-        available = []
-        for button_name in self._all_buttons:
-            button, clickable = self._findButton(button_name)
-            if clickable:
-                available.append(button_name)            
-        return available
