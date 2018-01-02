@@ -201,6 +201,7 @@ class UPGameHandler(object):
                      
         # Class constants
         self._all_buttons = {
+            #~ 'Do Nothing', # Implemented in takeAction
             'Make Paperclip': 'btnMakePaperclip',
             'Lower Price': 'btnLowerPrice',
             'Raise Price': 'btnRaisePrice',
@@ -208,7 +209,16 @@ class UPGameHandler(object):
             'Buy Wire': 'btnBuyWire',
             'Buy Autoclipper': 'btnMakeClipper',
             'Add Processor': 'btnAddProc',
-            'Add Memory': 'btnAddMem'
+            'Add Memory': 'btnAddMem',
+            #~ 'Set Investment Low', # Implemented in takeAction
+            #~ 'Set Investment Medium', # Implemented in takeAction
+            #~ 'Set Investment High', # Implemented in takeAction
+            'Withdraw': 'btnWithdraw',
+            'Deposit': 'btnInvest',
+            'Quantum Compute': 'btnQcompute',
+            'Buy MegaClipper': 'btnMakeMegaClipper',
+            'Upgrade Investment Engine': 'btnImproveInvestments'
+            #~ 'Run New Tournament' # Implemented in takeAction
         }
         self._project_buttons = {"Activate "+pname:"projectButton{}".format(pid) for pname, pid in UP_PROJECT_IDS.items()}
         self._all_buttons.update(self._project_buttons)
@@ -325,7 +335,28 @@ class UPGameHandler(object):
                 self.reset()
                 self.takeAction(action_name)
         elif action_name == "Do Nothing":
-            pass      
+            pass
+        elif action_name.startswith("Set Investment"):
+            invest_name = action_name[15:]                       
+            if invest_name = "Low":
+                invest_option = "low"
+            elif invest_name = "Medium":
+                invest_option = "med"
+            elif invest_name = "High":
+                invest_option = "hi"
+            else:
+                raise Exception("Don't understand invest option {}.".format(invest_name))
+            
+            invest_el = self._driver.find_elements_by_id('investStrat')[0]
+            clicked = False
+            for option in invest_el.find_elements_by_tag_name('option'):
+                if option.text == invest_option:
+                    option.click()
+                    clicked = True
+                    break
+                    
+            if not clicked:
+                raise Exception("Failed to select option {}.".format(invest_option))
         else:
             print("WARNING: Not sure what to do with action "+action_name+".")
             print("Doing nothing.")
