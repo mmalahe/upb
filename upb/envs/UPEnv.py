@@ -343,12 +343,8 @@ class UPEnv(Env):
     
     # Stage 6
     _action_intervals_stages.append(2.5)
-    _stage_6_required_projects = [        
-        'Strategic Modeling'
-    ]
+    _stage_6_required_projects = _stage_5_projects
     _stage_6_projects = [
-        #~ 'MegaClippers',
-        #~ 'Spectral Froth Annealment',
         'Improved MegaClippers',
         'Quantum Foam Annealment',
         'New Strategy: A100'
