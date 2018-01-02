@@ -83,7 +83,7 @@ class UPGameState(object):
     }
     _proj_avail_finders = {pname+' Available': ['id', 'projectButton'+UP_PROJECT_IDS[pname]] for pname in UP_PROJECT_IDS.keys()}
     
-    def __init__(self, driver):        
+    def __init__(self, driver, fields=None):        
         # The soup
         html_source = driver.find_element_by_xpath("//*").get_attribute("outerHTML")        
         html_parser = lxml.html.document_fromstring(html_source)
@@ -142,7 +142,7 @@ class UPGameState(object):
             element_id = 'qChip{}'.format(chip_number)
             element = driver.find_element_by_id(element_id)
             opacity = float(element.value_of_css_property("opacity"))
-            if opacity == 1: # Opacity is 1 when chip is inactive
+            if opacity == 1 or opacity == 0: # Opacity is 1 when chip is inactive
                 value = 0
             else:
                 n_chips += 1
@@ -151,22 +151,18 @@ class UPGameState(object):
         self._scalar_values['Number of Photonic Chips'] = n_chips
             
         # Investment riskiness
-        invest_selector = html_parser.get_element_by_id('investStrat')
-        riskiness = None
-        for option in invest_selector:
-            if 'selected' in option.attrib.keys():
-                if option.attrib['selected'] == 'selected':
-                    option_name = option.attrib['value']
-                    if option_name == 'low':
-                        riskiness = 7
-                    elif option_name == 'med':
-                        riskiness = 5
-                    elif option_name == 'hi':
-                        riskiness = 1
-                    else:
-                        raise Exception("Don't know what to do with \"{}\".".format(option_name))
-        if riskiness == None:
-            raise Exception("Should have a riskiness value.")
+        invest_el = driver.find_elements_by_id('investStrat')[0]
+        invest_selector = Select(invest_el)
+        invest_option = invest_selector.first_selected_option
+        option_name = invest_option.get_attribute("value")
+        if option_name == 'low':
+            riskiness = 7
+        elif option_name == 'med':
+            riskiness = 5
+        elif option_name == 'hi':
+            riskiness = 1
+        else:
+            raise Exception("Don't know what to do with \"{}\".".format(option_name))
         self._scalar_values['Riskiness'] = riskiness        
         
         # Add scalar values to combined values
@@ -243,7 +239,9 @@ class UPGameHandler(object):
             'Riskiness',
             'Yomi',
             'Investment Engine Upgrade Cost',
-            'Tournament Cost'
+            'Tournament Cost',
+            'MegaClipper Cost',
+            'Number of Photonic Chips'
         ]
         self._avail_observations += [pname+" Activated" for pname in UP_PROJECT_IDS.keys()]
         self._avail_observations += [pname+" Available" for pname in UP_PROJECT_IDS.keys()]
@@ -348,9 +346,15 @@ class UPGameHandler(object):
             
             invest_el = self._driver.find_elements_by_id('investStrat')[0]
             invest_selector = Select(invest_el)
-            invest_select.select_by_value(invest_option)
+            invest_selector.select_by_value(invest_option)
         elif action_name == "Run New Tournament":
-            self._clickButton("New Tournament")
+            # New tourney
+            self._clickButton("New Tournament")            
+            # For the moment, just pick strategy 0=RANDOM, but can be made random or selected in future
+            pick_el = self._driver.find_elements_by_id('stratPicker')[0]
+            pick_selector = Select(pick_el)
+            pick_selector.select_by_value("0")
+            # Run tourney
             self._clickButton("Run Tournament")
         else:
             print("WARNING: Not sure what to do with action "+action_name+".")
