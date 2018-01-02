@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-#~ from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.select import Select
 import selenium.common.exceptions
 import selenium.webdriver.chrome as chrome
 import lxml.html
@@ -217,7 +217,9 @@ class UPGameHandler(object):
             'Deposit': 'btnInvest',
             'Quantum Compute': 'btnQcompute',
             'Buy MegaClipper': 'btnMakeMegaClipper',
-            'Upgrade Investment Engine': 'btnImproveInvestments'
+            'Upgrade Investment Engine': 'btnImproveInvestments',
+            'New Tournament': 'btnNewTournament',
+            'Run Tournament': 'btnRunTournament'
             #~ 'Run New Tournament' # Implemented in takeAction
         }
         self._project_buttons = {"Activate "+pname:"projectButton{}".format(pid) for pname, pid in UP_PROJECT_IDS.items()}
@@ -259,15 +261,12 @@ class UPGameHandler(object):
             'Set Investment Low': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 7,
             'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 5,
             'Set Investment High': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 1,
-            'Set Investment Low': lambda x: x['Algorithmic Trading Activated'],
-            'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'],
-            'Set Investment High': lambda x: x['Algorithmic Trading Activated'],
             'Withdraw': lambda x: x['Algorithmic Trading Activated'],
             'Deposit': lambda x: x['Algorithmic Trading Activated'],
             'Upgrade Investment Engine': lambda x: x['Algorithmic Trading Activated'] and x['Yomi']>=x['Investment Engine Upgrade Cost'],
             'Quantum Compute': lambda x: x['Quantum Computing Activated'] and x['Number of Photonic Chips'] != 0,
-            'Buy MegaClipper': lambda x: x['Available Funds']>=x['MegaClipper Cost'] and x['MegaClippers Activated'],
-            'Run New Tournament': lambda x: x['Strategic Modeling Activated'] and x['Operations']>=x['Tournament Cost']
+            'Buy MegaClipper': lambda x: x['Available Funds']>=x['MegaClipper Cost'] and x['MegaClippers Activated']
+            #~ 'Run New Tournament': # Implemented in actionAvailable
         }
         
         # Web driver setup
@@ -338,25 +337,21 @@ class UPGameHandler(object):
             pass
         elif action_name.startswith("Set Investment"):
             invest_name = action_name[15:]                       
-            if invest_name = "Low":
+            if invest_name == "Low":
                 invest_option = "low"
-            elif invest_name = "Medium":
+            elif invest_name == "Medium":
                 invest_option = "med"
-            elif invest_name = "High":
+            elif invest_name == "High":
                 invest_option = "hi"
             else:
                 raise Exception("Don't understand invest option {}.".format(invest_name))
             
             invest_el = self._driver.find_elements_by_id('investStrat')[0]
-            clicked = False
-            for option in invest_el.find_elements_by_tag_name('option'):
-                if option.text == invest_option:
-                    option.click()
-                    clicked = True
-                    break
-                    
-            if not clicked:
-                raise Exception("Failed to select option {}.".format(invest_option))
+            invest_selector = Select(invest_el)
+            invest_select.select_by_value(invest_option)
+        elif action_name == "Run New Tournament":
+            self._clickButton("New Tournament")
+            self._clickButton("Run Tournament")
         else:
             print("WARNING: Not sure what to do with action "+action_name+".")
             print("Doing nothing.")
@@ -453,8 +448,14 @@ class UPGameHandler(object):
         elif ac_name in self._all_buttons.keys():
             button, clickable = self._findButton(ac_name)
             return clickable
-        
+            
         # Other actions 
+        elif ac_name == "Run New Tournament":
+            if observation['Strategic Modeling Activated']:
+                button, clickable = self._findButton("New Tournament")
+                return clickable
+            else:
+                return False
         elif ac_name == "Do Nothing":
             return True
         else:
