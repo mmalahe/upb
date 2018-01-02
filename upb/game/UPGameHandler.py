@@ -67,9 +67,17 @@ class UPGameState(object):
         'Next Trust': ['id','nextTrust'],
         'Operations': ['id','operations'],
         'Creativity': ['id','creativity'],
+        'Investment Bankroll': ['id', 'investmentBankroll'],
+        'Stocks': ['id', 'secValue'],        
         #~ 'Riskiness': ['id', 'investStrat'],
-        'Yomi': ['id', 'yomiDisplay'],
+        #~ 'Number of Photonic Chips',
+        #~ 'Photonic Chip 0 Level',
+        #~ 'Latest QOps',
+        #~ 'MegaClipper Cost',
+        #~ 'Number of MegaClippers',
+        #~ 'Investment Engine Level',
         'Investment Engine Upgrade Cost': ['id', 'investUpgradeCost'],
+        'Yomi': ['id', 'yomiDisplay'],
         'Tournament Cost': ['id', 'newTourneyCost']
     }
     _proj_avail_finders = {pname+' Available': ['id', 'projectButton'+UP_PROJECT_IDS[pname]] for pname in UP_PROJECT_IDS.keys()}
@@ -82,7 +90,7 @@ class UPGameState(object):
         # All kinds of values combined
         self._all_values = {}
         
-        # Scalar values
+        # Scalar values in the main text of elements
         for field, finder in self._scalar_values_finders.items():
             # Find value         
             if finder[0] == 'id':
@@ -122,6 +130,20 @@ class UPGameState(object):
                             multiplier /= 100.0
                     
                     self._scalar_values[field] = multiplier*float(value)
+        
+        # More involved scalar values
+        for chip_number in range(1):        
+            field = "Photonic Chip {} Level".format(chip_number)
+            element_id = 'qChip{}'.format(chip_number)
+            element = driver.find_element_by_id(element_id)
+            opacity = float(element.value_of_css_property("opacity"))
+            if opacity == 1: #Opacity is 1 when chip is inactive
+                value = 0
+            else:
+                value = opacity
+            self._scalar_values[field] = value
+        
+        # Add scalar values to combined values
         self._all_values.update(self._scalar_values)
         
         # Project availability
