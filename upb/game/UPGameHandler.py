@@ -73,10 +73,10 @@ class UPGameState(object):
         #~ 'Riskiness', # Complicated, so implemented in __init__
         #~ 'Number of Photonic Chips',# Complicated, so implemented in __init__
         #~ 'Photonic Chip 0 Level', # Complicated, so implemented in __init__
-        #~ 'Latest QOps',
-        #~ 'MegaClipper Cost',
-        #~ 'Number of MegaClippers',
-        #~ 'Investment Engine Level',
+        'Latest QOps': ['id', 'qCompDisplay'],
+        'MegaClipper Cost': ['id', 'megaClipperCost'],
+        'Number of MegaClippers': ['id', 'megaClipperLevel'],
+        'Investment Engine Level': ['id', 'investmentLevel'],
         'Investment Engine Upgrade Cost': ['id', 'investUpgradeCost'],
         'Yomi': ['id', 'yomiDisplay'],
         'Tournament Cost': ['id', 'newTourneyCost']
@@ -116,10 +116,21 @@ class UPGameState(object):
                     value = value.replace(u'\xa0',"")
                     
                     # Handle known cases where they're used to represent decimals
-                    if field == 'Autoclipper Cost':
+                    if field == 'Autoclipper Cost' or field == 'MegaClipper Cost':
                         multiplier /= 100.0
+                        
+                    # Case where no value is present yet
+                    all_blank = True
+                    for char in value:
+                        if char != " " and char != "\n" and char != "\r":
+                            all_blank = False
+                    if all_blank:
+                        value = "0"
                 
-                self._scalar_values[field] = multiplier*float(value)
+                try:
+                    self._scalar_values[field] = multiplier*float(value)
+                except:
+                    print(value)
         
         # More involved scalar values #
         ###############################
@@ -217,7 +228,7 @@ class UPGameHandler(object):
             'Trust',
             'Operations',
             'Creativity',
-            #~ 'Riskiness',
+            'Riskiness',
             'Yomi',
             'Investment Engine Upgrade Cost',
             'Tournament Cost'
@@ -235,9 +246,9 @@ class UPGameHandler(object):
             'Buy Autoclipper': lambda x: x['Available Funds']>=x['Autoclipper Cost'],
             'Add Processor': lambda x: x['Trust']>=x['Processors']+x['Memory'],
             'Add Memory': lambda x: x['Trust']>=x['Processors']+x['Memory'],
-            #~ 'Set Investment Low': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 7,
-            #~ 'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 5,
-            #~ 'Set Investment High': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 1,
+            'Set Investment Low': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 7,
+            'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 5,
+            'Set Investment High': lambda x: x['Algorithmic Trading Activated'] and x['Riskiness'] != 1,
             'Set Investment Low': lambda x: x['Algorithmic Trading Activated'],
             'Set Investment Medium': lambda x: x['Algorithmic Trading Activated'],
             'Set Investment High': lambda x: x['Algorithmic Trading Activated'],
