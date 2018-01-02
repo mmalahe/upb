@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+#~ from selenium.webdriver.support.select import Select
 import selenium.common.exceptions
 import selenium.webdriver.chrome as chrome
 import lxml.html
@@ -69,9 +70,9 @@ class UPGameState(object):
         'Creativity': ['id','creativity'],
         'Investment Bankroll': ['id', 'investmentBankroll'],
         'Stocks': ['id', 'secValue'],        
-        #~ 'Riskiness': ['id', 'investStrat'],
-        #~ 'Number of Photonic Chips',
-        #~ 'Photonic Chip 0 Level',
+        #~ 'Riskiness', # Complicated, so implemented in __init__
+        #~ 'Number of Photonic Chips',# Complicated, so implemented in __init__
+        #~ 'Photonic Chip 0 Level', # Complicated, so implemented in __init__
         #~ 'Latest QOps',
         #~ 'MegaClipper Cost',
         #~ 'Number of MegaClippers',
@@ -106,42 +107,56 @@ class UPGameState(object):
                 
                 try:
                     self._scalar_values[field] = float(value)
-                except:
-                    if value.endswith("Risk"):
-                        if value.startswith("Low"):
-                            value = 7
-                        elif value.startswith("Med"):
-                            value = 5
-                        elif value.startswith("High"):
-                            value = 1
-                        else:
-                            raise Exception("Don't know what to do with \"{}\".".format(value))
+                except:                    
+                    # Cases where html spaces have been used
+                    value = value.replace("&nbsp;","")
                     
-                    else:
-                        # Cases where html spaces have been used
-                        value = value.replace("&nbsp;","")
-                        
-                        # Assume commas are used to separate thousands, so simply remove them
-                        value = value.replace(",","")
-                        value = value.replace(u'\xa0',"")
-                        
-                        # Handle known cases where they're used to represent decimals
-                        if field == 'Autoclipper Cost':
-                            multiplier /= 100.0
+                    # Assume commas are used to separate thousands, so simply remove them
+                    value = value.replace(",","")
+                    value = value.replace(u'\xa0',"")
                     
-                    self._scalar_values[field] = multiplier*float(value)
+                    # Handle known cases where they're used to represent decimals
+                    if field == 'Autoclipper Cost':
+                        multiplier /= 100.0
+                
+                self._scalar_values[field] = multiplier*float(value)
         
-        # More involved scalar values
+        # More involved scalar values #
+        ###############################
+        
+        # Photonic chip levels
+        n_chips = 0
         for chip_number in range(1):        
             field = "Photonic Chip {} Level".format(chip_number)
             element_id = 'qChip{}'.format(chip_number)
             element = driver.find_element_by_id(element_id)
             opacity = float(element.value_of_css_property("opacity"))
-            if opacity == 1: #Opacity is 1 when chip is inactive
+            if opacity == 1: # Opacity is 1 when chip is inactive
                 value = 0
             else:
+                n_chips += 1
                 value = opacity
             self._scalar_values[field] = value
+        self._scalar_values['Number of Photonic Chips'] = n_chips
+            
+        # Investment riskiness
+        invest_selector = html_parser.get_element_by_id('investStrat')
+        riskiness = None
+        for option in invest_selector:
+            if 'selected' in option.attrib.keys():
+                if option.attrib['selected'] == 'selected':
+                    option_name = option.attrib['value']
+                    if option_name == 'low':
+                        riskiness = 7
+                    elif option_name == 'med':
+                        riskiness = 5
+                    elif option_name == 'hi':
+                        riskiness = 1
+                    else:
+                        raise Exception("Don't know what to do with \"{}\".".format(option_name))
+        if riskiness == None:
+            raise Exception("Should have a riskiness value.")
+        self._scalar_values['Riskiness'] = riskiness        
         
         # Add scalar values to combined values
         self._all_values.update(self._scalar_values)
